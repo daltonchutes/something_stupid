@@ -6,6 +6,9 @@
 #include "states.h"
 
 
+// VARIABLES
+int CurrentState; 
+
 void main()
 {
 	Init();
@@ -14,12 +17,11 @@ void main()
 
 void Init()
 {
-	CurrentState = 1;
+	CurrentState = MENUSTATE;
 
 	SHOW_BKG;
 	SHOW_SPRITES;
 	DISPLAY_ON;
-	puts("bro");
 }
 
 void Update()
@@ -35,13 +37,11 @@ void UpdateGame()
 {
 	switch(CurrentState)
 	{
-		case 0: // Menu State!
+		case MENUSTATE: // Menu State!
 			CurrentState = MenuState();
-			// Menu code goes here
 			break;
-		case 1: // Game State!
+		case GAMESTATE: // Game State!
 			CurrentState = GameState();
-			// Game code goes here
 			break;
 	}
 }
