@@ -1,7 +1,4 @@
-#include <gb/gb.h>
-#include <stdint.h>
-
-unsigned char SkaterSpriteData[] =
+unsigned char BalanceArrowSpriteData[] =
 {
    /* Tile 0x00 */
   0x07,0x07,0x18,0x1F,0x32,0x2D,0x71,0x4E,0x70,0x4F,0xF8,0x87,0xF8,0x87,0xF8,0x87,
@@ -40,39 +37,7 @@ unsigned char SkaterSpriteData[] =
   0xE2,0x1E,0xF2,0x0E,0x7C,0x84,0x7C,0x84,0xF8,0x08,0xF0,0x30,0xC0,0xC0,0x00,0x00
 };
 
-
-
-struct SSkaterBoi
+struct SBalanceArrow
 {
-    UBYTE SpriteIDs[4];
-    uint8_t XPos;
-    uint8_t YPos;
-    uint8_t RenderWidth;
-    uint8_t RenderHeight;
+    
 };
-
-void InitSkaterBoi(struct SSkaterBoi* SkaterBoiPtr)
-{
-    // He was a skater boi
-    set_sprite_data(0, 8, SkaterSpriteData); 
-	SkaterBoiPtr->XPos = 80;
-	SkaterBoiPtr->YPos = 80;
-	SkaterBoiPtr->RenderWidth = 16;
-	SkaterBoiPtr->RenderHeight = 16;
-
-	set_sprite_tile(0, 0);
-	SkaterBoiPtr->SpriteIDs[0] = 0;
-	set_sprite_tile(1, 1);
-	SkaterBoiPtr->SpriteIDs[1] = 1;
-	set_sprite_tile(2, 2);
-	SkaterBoiPtr->SpriteIDs[2] = 2;
-	set_sprite_tile(3, 3);
-	SkaterBoiPtr->SpriteIDs[3] = 3;
-
-	move_sprite(SkaterBoiPtr->SpriteIDs[0], SkaterBoiPtr->XPos, SkaterBoiPtr->YPos);
-	move_sprite(SkaterBoiPtr->SpriteIDs[1], SkaterBoiPtr->XPos, SkaterBoiPtr->YPos + 8);
-	move_sprite(SkaterBoiPtr->SpriteIDs[2], SkaterBoiPtr->XPos + 8, SkaterBoiPtr->YPos);
-	move_sprite(SkaterBoiPtr->SpriteIDs[3], SkaterBoiPtr->XPos + 8, SkaterBoiPtr->YPos + 8);
-
-    // She said see ya later boi
-}
