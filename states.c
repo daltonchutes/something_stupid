@@ -6,12 +6,15 @@
 #include "main.h"
 #include "Manual_data.c"
 #include "Manual_map.c"
+#include "skater_boi.c"
 
 #define BARMAX 100
 
 int ManualBar = 50;
 int ManualBarDar = -1;
 int ManualBarInfluence = 10;
+
+struct SSkaterBoi SkaterBoi;
 
 /////////////////////////////////////////////////////////////////////////
 // Returning values trasition states
@@ -37,6 +40,8 @@ int GameLoadState() // State 2
 {
     set_bkg_data(0, 73, Manual_data);
     set_bkg_tiles(0, 0, 20, 18, Manual_map);
+    InitSkaterBoi(&SkaterBoi);
+    
     SHOW_BKG;
     return GAMESTATE;
 }
