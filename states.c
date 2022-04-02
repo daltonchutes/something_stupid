@@ -35,7 +35,7 @@ int GameState() // State 1
 
 int GameLoadState() // State 2 
 {
-    set_bkg_data(0, 73, Manual_data);
+    set_bkg_data(0, 145, Manual_data);
     set_bkg_tiles(0, 0, 20, 18, Manual_map);
     SHOW_BKG;
     return GAMESTATE;
