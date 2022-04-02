@@ -43,6 +43,9 @@ void UpdateGame()
 		case GAMESTATE: // Game State!
 			CurrentState = GameState();
 			break;
+		case GAMESTATELOAD: // Game load State!
+			CurrentState = GameLoadState();
+			break;
 	}
 }
 

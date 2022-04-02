@@ -4,5 +4,6 @@
 //STATES
 int MenuState(void);
 int GameState(void);
+int GameLoadState(void);
 
 #endif

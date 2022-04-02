@@ -2,7 +2,10 @@
 #include <stdio.h>
 #include <stdint.h>
 #include <gb/drawing.h>
+
 #include "main.h"
+#include "Manual_data.c"
+#include "Manual_map.c"
 
 #define BARMAX 100
 
@@ -21,11 +24,19 @@ int ManualBarInfluence = 10;
 int MenuState() // State 0 
 {
     puts("Main Menu!");
-    return MENUSTATE;
+    return GAMESTATELOAD;
 }
 
 int GameState() // State 1 
 {
     ManualBar += ManualBarDar*ManualBarInfluence;
+    return GAMESTATE;
+}
+
+int GameLoadState() // State 2 
+{
+    set_bkg_data(0, 73, Manual_data);
+    set_bkg_tiles(0, 0, 20, 18, Manual_map);
+    SHOW_BKG;
     return GAMESTATE;
 }
