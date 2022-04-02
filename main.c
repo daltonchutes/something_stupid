@@ -2,19 +2,8 @@
 #include <stdio.h>
 #include <stdint.h>
 
-// FUNCTIONS
-void Init();
-void Update();
-void UpdateGame();
-
-// INPUT
-void PollInput();
-void OnPushUp();
-void OnPushDown();
-void OnPushLeft();
-void OnPushRight();
-
-// VARIABLES
+#include "main.h"
+#include "states.h"
 
 
 void main()
@@ -25,6 +14,8 @@ void main()
 
 void Init()
 {
+	CurrentState = 1;
+
 	SHOW_BKG;
 	SHOW_SPRITES;
 	DISPLAY_ON;
@@ -42,7 +33,17 @@ void Update()
 
 void UpdateGame()
 {
-	
+	switch(CurrentState)
+	{
+		case 0: // Menu State!
+			CurrentState = MenuState();
+			// Menu code goes here
+			break;
+		case 1: // Game State!
+			CurrentState = GameState();
+			// Game code goes here
+			break;
+	}
 }
 
 void PollInput()
