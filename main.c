@@ -18,7 +18,7 @@ void main()
 
 void Init()
 {
-	CurrentState = MENUSTATE;
+	CurrentState = SPLASHSTATELOAD;
 
 	SHOW_BKG;
 	SHOW_SPRITES;
@@ -38,6 +38,15 @@ void UpdateGame()
 {
 	switch(CurrentState)
 	{
+		case SPLASHSTATELOAD:
+			CurrentState = SplashLoadState();
+			break;
+		case SPLASHSTATE:
+			CurrentState = SplashState();
+			break;
+		case MENUSTATELOAD:
+			CurrentState = MenuLoadState();
+			break;
 		case MENUSTATE: // Menu State!
 			CurrentState = MenuState();
 			break;

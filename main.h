@@ -1,10 +1,14 @@
 #ifndef MAIN_H
 #define MAIN_H
 
-#define MENUSTATE 0
-#define GAMESTATE 1
-#define GAMESTATELOAD 2
-#define GAMESTATERESET 3
+#define SPLASHSTATE 0
+#define SPLASHSTATELOAD 1
+#define MENUSTATE 2
+#define MENUSTATELOAD 3
+#define GAMESTATE 4
+#define GAMESTATELOAD 5
+#define GAMESTATERESET 6
+
 
 // FUNCTIONS
 void Init();

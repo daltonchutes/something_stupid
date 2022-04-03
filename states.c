@@ -41,6 +41,24 @@ int CounterMaxLevelArray[] ={
 struct SSkaterBoi SkaterBoi;
 struct SBalanceArrow BalanceArrow;
 
+int SplashLoadState()
+{
+    puts("Loading splash");
+    return SPLASHSTATE;    
+}
+
+int SplashState()
+{
+    puts("In splash");
+    return MENUSTATELOAD;
+}
+
+int MenuLoadState()
+{
+    puts("Loading main menu");
+    return MENUSTATE;
+}
+
 int MenuState() // State 0 
 {
     puts("Main Menu!");
@@ -49,7 +67,6 @@ int MenuState() // State 0
 
 int GameState() // State 1 
 {
-
     Counter++;
     if(Counter > CounterMaxLevelArray[Level]){
 
