@@ -50,3 +50,19 @@ void InitSkaterBoi(struct SSkaterBoi* SkaterBoiPtr)
 	SetSpriteIndex(SkaterBoiPtr, 1);
     // She said see ya later boi
 }
+
+void SetSkaterBoiPos (struct SSkaterBoi* SkaterBoiPtr, uint8_t NewX, uint8_t NewY)
+{
+    if( NewX != SkaterBoiPtr->XPos)
+    {
+        SkaterBoiPtr->XPos = NewX;
+        SkaterBoiPtr->YPos = NewY;
+
+        move_sprite(3, SkaterBoiPtr->XPos, SkaterBoiPtr->YPos);
+        move_sprite(4, SkaterBoiPtr->XPos + 8, SkaterBoiPtr->YPos);
+        move_sprite(5, SkaterBoiPtr->XPos, SkaterBoiPtr->YPos + 8);
+        move_sprite(6, SkaterBoiPtr->XPos + 8, SkaterBoiPtr->YPos + 8);
+        move_sprite(7, SkaterBoiPtr->XPos, SkaterBoiPtr->YPos + 16);
+        move_sprite(8, SkaterBoiPtr->XPos + 8, SkaterBoiPtr->YPos + 16);
+    }
+}
