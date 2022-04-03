@@ -1,6 +1,6 @@
 #include <gb/gb.h>
 #include <stdint.h>
-#include "Sprite_Data.c"
+//#include "Sprite_Data.c"
 
 #define ARROW_TILE_START 0
 #define ARROW_TILE_NUM 3
@@ -30,20 +30,18 @@ void SetBalanceArrowPos(struct SBalanceArrow* BalanceArrow, uint8_t NewX, uint8_
 
 void InitBalanceArrow(struct SBalanceArrow* BalanceArrow)
 {
-    set_sprite_data(ARROW_TILE_START, ARROW_TILE_NUM, SpriteData); 
+    //set_sprite_data(ARROW_TILE_START, ARROW_TILE_NUM, SpriteData); 
 	BalanceArrow->RenderWidth = 16;
 	BalanceArrow->RenderHeight = 16;
 
-	set_sprite_tile(ARROW_TILE_START, ARROW_TILE_START);
-	BalanceArrow->SpriteIDs[0] = ARROW_TILE_START;
-	
-    UINT8 NextTileOffset = ARROW_TILE_START + 1;
-    set_sprite_tile(NextTileOffset, NextTileOffset);
-	BalanceArrow->SpriteIDs[1] = NextTileOffset;
+	set_sprite_tile(0, 0);
+	BalanceArrow->SpriteIDs[0] = 0;
+	 
+    set_sprite_tile(1, 1);
+	BalanceArrow->SpriteIDs[1] = 1;
 
-    NextTileOffset++;
-	set_sprite_tile(NextTileOffset, NextTileOffset);
-	BalanceArrow->SpriteIDs[2] = NextTileOffset;
+	set_sprite_tile(2, 2);
+	BalanceArrow->SpriteIDs[2] = 2;
 	
     SetBalanceArrowPos(BalanceArrow, ARROW_CENTER, 125);    
 

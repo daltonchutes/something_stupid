@@ -8,6 +8,7 @@
 #include "Manual_map.c"
 #include "skater_boi.c"
 #include "balance_arrow.c"
+#include "Sprite_Data.c"
 
 #define BARMAX 100
 
@@ -42,6 +43,8 @@ int GameLoadState() // State 2
 {
     set_bkg_data(0, 145, Manual_data);
     set_bkg_tiles(0, 0, 20, 18, Manual_map);
+
+    set_sprite_data(0, 21, SpriteData);
     InitSkaterBoi(&SkaterBoi);
     InitBalanceArrow(&BalanceArrow);
 
