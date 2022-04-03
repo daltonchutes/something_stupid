@@ -8,7 +8,22 @@ struct SSkaterBoi
     uint8_t YPos;
     uint8_t RenderWidth;
     uint8_t RenderHeight;
+
+    uint8_t BalanceState;
 };
+
+void SetSpriteIndex(struct SSkaterBoi* SkaterBoi, uint8_t Index)
+{
+    SkaterBoi->BalanceState = Index;
+    
+    uint8_t Offset = 3 + ((Index) * 6);
+    set_sprite_tile(3, Offset);
+    set_sprite_tile(4, Offset + 1);
+    set_sprite_tile(5, Offset + 2);
+    set_sprite_tile(6, Offset + 3);
+    set_sprite_tile(7, Offset + 4);
+    set_sprite_tile(8, Offset + 5);
+}
 
 void InitSkaterBoi(struct SSkaterBoi* SkaterBoiPtr)
 {
@@ -18,18 +33,14 @@ void InitSkaterBoi(struct SSkaterBoi* SkaterBoiPtr)
 	SkaterBoiPtr->RenderWidth = 16;
 	SkaterBoiPtr->RenderHeight = 16;
 
-	set_sprite_tile(3, 3);
-	SkaterBoiPtr->SpriteIDs[0] = 3;
-    set_sprite_tile(4, 4);
-	SkaterBoiPtr->SpriteIDs[1] = 4;
-    set_sprite_tile(5, 5);
-	SkaterBoiPtr->SpriteIDs[2] = 5;
-    set_sprite_tile(6, 6);
-	SkaterBoiPtr->SpriteIDs[3] = 6;
-    set_sprite_tile(7, 7);
-	SkaterBoiPtr->SpriteIDs[4] = 7;
-    set_sprite_tile(8, 8);
-	SkaterBoiPtr->SpriteIDs[5] = 8;
+    SkaterBoiPtr->SpriteIDs[0] = 3;
+    SkaterBoiPtr->SpriteIDs[1] = 4;
+    SkaterBoiPtr->SpriteIDs[2] = 5;
+    SkaterBoiPtr->SpriteIDs[3] = 6;
+    SkaterBoiPtr->SpriteIDs[4] = 7;
+    SkaterBoiPtr->SpriteIDs[5] = 8;
+
+	SetSpriteIndex(SkaterBoiPtr, 0);
 	
 	move_sprite(3, SkaterBoiPtr->XPos, SkaterBoiPtr->YPos);
 	move_sprite(4, SkaterBoiPtr->XPos + 8, SkaterBoiPtr->YPos);
@@ -38,5 +49,9 @@ void InitSkaterBoi(struct SSkaterBoi* SkaterBoiPtr)
     move_sprite(7, SkaterBoiPtr->XPos, SkaterBoiPtr->YPos + 16);
     move_sprite(8, SkaterBoiPtr->XPos + 8, SkaterBoiPtr->YPos + 16);
 
+    delay(1000);
+    SetSpriteIndex(SkaterBoiPtr, 1);
+    delay(1000);
+    //SetSpriteIndex(SkaterBoiPtr, 2);
     // She said see ya later boi
 }

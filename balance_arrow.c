@@ -27,7 +27,7 @@ void SetBalanceArrowPos(struct SBalanceArrow* BalanceArrow, uint8_t NewX, uint8_
 
 void InitBalanceArrow(struct SBalanceArrow* BalanceArrow)
 {
-    //set_sprite_data(ARROW_TILE_START, ARROW_TILE_NUM, SpriteData); 
+    //set_sprite_data(ARROW_TILE_START, ARROW_TILE_NUM, SpriteData);
 	BalanceArrow->RenderWidth = 16;
 	BalanceArrow->RenderHeight = 16;
 
