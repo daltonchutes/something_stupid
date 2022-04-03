@@ -1,0 +1,89 @@
+ASxxxx Assembler V02.00 + NoICE + SDCC mods  (GameBoy Z80-like CPU), page 1.
+Hexadecimal [24-Bits]
+
+Symbol Table
+
+    .__.$$$.                                                    =  002710 L
+    .__.ABS.                                                    =  000000 G
+    .__.CPU.                                                    =  000000 L
+    .__.H$L.                                                    =  000000 L
+  1 _BalanceArrow                                                  00000B GR
+  2 _Counter                                                       00022C GR
+  2 _CounterMaxLevelArray                                          00024C GR
+  0 _GameLoadState                                                 001066 GR
+  0 _GameResetState                                                0010C5 GR
+  0 _GameState                                                     000D77 GR
+  2 _InfluenceCounter                                              000230 GR
+  2 _InfluenceCounterMaxLevelArray                                 000238 GR
+  0 _InitBalanceArrow                                              000C9F GR
+  0 _InitLevelNumber                                               000CED GR
+  0 _InitSkaterBoi                                                 000AB8 GR
+    _LCDC_REG                                                      ****** GX
+  2 _Level                                                         000234 GR
+  2 _LevelProgress                                                 000236 GR
+  2 _ManualBar                                                     000226 GR
+  2 _ManualBarDar                                                  000228 GR
+  2 _ManualBarInfluence                                            00022A GR
+  0 _Manual_data                                                   000040 GR
+  0 _Manual_map                                                    000950 GR
+  0 _MenuLoadState                                                 000D42 GR
+  0 _MenuState                                                     000D60 GR
+  2 _NumbersArray                                                  000210 GR
+  2 _NumbersData                                                   000170 GR
+  2 _PlayerCounter                                                 00022E GR
+  2 _PlayerXOffset                                                 000232 GR
+  0 _SetBalanceArrowPos                                            000C34 GR
+  0 _SetSkaterBoiPos                                               000B9C GR
+  0 _SetSpriteIndex                                                000000 GR
+  1 _SkaterBoi                                                     000000 GR
+  0 _SplashLoadState                                               000D11 GR
+  0 _SplashState                                                   000D2C GR
+  2 _SpriteData                                                    000000 GR
+  0 _UpdateLevelNumber                                             000CFE GR
+  0 ___str_0                                                       000D1D R
+  0 ___str_1                                                       000D38 R
+  0 ___str_2                                                       000D4E R
+  0 ___str_3                                                       000D6C R
+  7 __xinit__Counter                                               00022C R
+  7 __xinit__CounterMaxLevelArray                                  00024C R
+  7 __xinit__InfluenceCounter                                      000230 R
+  7 __xinit__InfluenceCounterMaxLevelArray                         000238 R
+  7 __xinit__Level                                                 000234 R
+  7 __xinit__LevelProgress                                         000236 R
+  7 __xinit__ManualBar                                             000226 R
+  7 __xinit__ManualBarDar                                          000228 R
+  7 __xinit__ManualBarInfluence                                    00022A R
+  7 __xinit__NumbersArray                                          000210 R
+  7 __xinit__NumbersData                                           000170 R
+  7 __xinit__PlayerCounter                                         00022E R
+  7 __xinit__PlayerXOffset                                         000232 R
+  7 __xinit__SpriteData                                            000000 R
+ASxxxx Assembler V02.00 + NoICE + SDCC mods  (GameBoy Z80-like CPU), page 2.
+Hexadecimal [24-Bits]
+
+Symbol Table
+
+    _joypad                                                        ****** GX
+    _puts                                                          ****** GX
+    _rand                                                          ****** GX
+  0 _randomXD                                                      000CE2 GR
+    _set_bkg_data                                                  ****** GX
+    _set_bkg_tiles                                                 ****** GX
+    _set_sprite_data                                               ****** GX
+    _shadow_OAM                                                    ****** GX
+
+ASxxxx Assembler V02.00 + NoICE + SDCC mods  (GameBoy Z80-like CPU), page 3.
+Hexadecimal [24-Bits]
+
+Area Table
+
+   0 _CODE                                      size   1107   flags    0
+   1 _DATA                                      size     13   flags    0
+   2 _INITIALIZED                               size    260   flags    0
+   3 _DABS                                      size      0   flags    8
+   4 _HOME                                      size      0   flags    0
+   5 _GSINIT                                    size      0   flags    0
+   6 _GSFINAL                                   size      0   flags    0
+   7 _INITIALIZER                               size    260   flags    0
+   8 _CABS                                      size      0   flags    8
+

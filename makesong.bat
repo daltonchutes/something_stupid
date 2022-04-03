@@ -1,0 +1,1 @@
+mod2gbt manualtheme.mod ManualTheme -c 2

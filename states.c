@@ -30,12 +30,17 @@ int PlayerXOffset = 0;
 int Level = 1;
 int LevelProgress = 0;
 
+extern const unsigned char * ManualTheme_Data[];
+
 int InfluenceCounterMaxLevelArray[] ={
     1000, 800, 600, 500, 400, 300, 200, 100, 50, 25
 };
 
+//int CounterMaxLevelArray[] ={
+//    50, 50, 45, 45, 40, 40, 35, 35, 30, 25
+//};
 int CounterMaxLevelArray[] ={
-    50, 50, 45, 45, 40, 40, 35, 35, 30, 25
+    1, 1, 1, 1, 1, 1, 1, 1, 1, 1
 };
 
 struct SSkaterBoi SkaterBoi;

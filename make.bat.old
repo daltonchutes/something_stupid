@@ -1,0 +1,6 @@
+REM Automatically generated from Makefile
+mod2gbt video_demo.mod song -c 2
+
+..\gbdk\bin\lcc -Wa-l -Wl-m -Wl-j -o something_stupid.gb main.c states.c output.c gbt_player.s gbt_player_bank1.s
+
+del *.map *.noi

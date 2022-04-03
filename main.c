@@ -5,10 +5,14 @@
 #include "main.h"
 //#include "Sprite_Data.c"
 #include "states.h"
+#include "gbt_player.h"
 
 
 // VARIABLES
 int CurrentState; 
+int vbl_count;
+extern const unsigned char * song_Data[];
+extern const unsigned char * themesong_Data[];
 
 void main()
 {
@@ -16,9 +20,23 @@ void main()
 	Update();
 }
 
+void vbl_update() {
+ vbl_count ++;
+}
+
 void Init()
 {
 	CurrentState = SPLASHSTATELOAD;
+
+    disable_interrupts();
+	
+	add_VBL(vbl_update);
+
+    gbt_play(song_Data, 2, 7);
+    gbt_loop(1);
+
+    set_interrupts(VBL_IFLAG);
+    enable_interrupts();	
 
 	SHOW_BKG;
 	SHOW_SPRITES;
@@ -29,8 +47,15 @@ void Update()
 {
 	while (1)
 	{
-		PollInput();
+		if(vbl_count == 0){
+			wait_vbl_done();
+		}
+		vbl_count = 0;
+
+		//PollInput();
 		UpdateGame();
+		gbt_update();
+
 	}
 }
 
