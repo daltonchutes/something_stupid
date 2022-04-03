@@ -40,18 +40,18 @@ void InitSkaterBoi(struct SSkaterBoi* SkaterBoiPtr)
     SkaterBoiPtr->SpriteIDs[4] = 7;
     SkaterBoiPtr->SpriteIDs[5] = 8;
 
-	SetSpriteIndex(SkaterBoiPtr, 0);
-	
-	move_sprite(3, SkaterBoiPtr->XPos, SkaterBoiPtr->YPos);
+    move_sprite(3, SkaterBoiPtr->XPos, SkaterBoiPtr->YPos);
 	move_sprite(4, SkaterBoiPtr->XPos + 8, SkaterBoiPtr->YPos);
     move_sprite(5, SkaterBoiPtr->XPos, SkaterBoiPtr->YPos + 8);
     move_sprite(6, SkaterBoiPtr->XPos + 8, SkaterBoiPtr->YPos + 8);
     move_sprite(7, SkaterBoiPtr->XPos, SkaterBoiPtr->YPos + 16);
     move_sprite(8, SkaterBoiPtr->XPos + 8, SkaterBoiPtr->YPos + 16);
 
+	SetSpriteIndex(SkaterBoiPtr, 0);
+	
     delay(1000);
     SetSpriteIndex(SkaterBoiPtr, 1);
     delay(1000);
-    //SetSpriteIndex(SkaterBoiPtr, 2);
+    SetSpriteIndex(SkaterBoiPtr, 2);
     // She said see ya later boi
 }
