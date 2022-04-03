@@ -5,5 +5,6 @@
 int MenuState(void);
 int GameState(void);
 int GameLoadState(void);
+int GameResetState(void); 
 
 #endif

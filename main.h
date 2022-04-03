@@ -4,6 +4,7 @@
 #define MENUSTATE 0
 #define GAMESTATE 1
 #define GAMESTATELOAD 2
+#define GAMESTATERESET 3
 
 // FUNCTIONS
 void Init();
