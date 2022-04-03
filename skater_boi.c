@@ -48,10 +48,5 @@ void InitSkaterBoi(struct SSkaterBoi* SkaterBoiPtr)
     move_sprite(8, SkaterBoiPtr->XPos + 8, SkaterBoiPtr->YPos + 16);
 
 	SetSpriteIndex(SkaterBoiPtr, 0);
-	
-    delay(1000);
-    SetSpriteIndex(SkaterBoiPtr, 1);
-    delay(1000);
-    SetSpriteIndex(SkaterBoiPtr, 2);
     // She said see ya later boi
 }
