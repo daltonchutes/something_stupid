@@ -10,22 +10,16 @@
 #include "balance_arrow.c"
 #include "Sprite_Data.c"
 
-#define BARMAX 100
+#define BARMAX 146
+#define COUNTERMAX 100
 
-int ManualBar = 50;
+int ManualBar = 88;
 int ManualBarDar = -1;
-int ManualBarInfluence = 10;
+int ManualBarInfluence = 1;
+int Counter = 0;
 
 struct SSkaterBoi SkaterBoi;
 struct SBalanceArrow BalanceArrow;
-
-/////////////////////////////////////////////////////////////////////////
-// Returning values trasition states
-// 0 = Main Menu
-// 1 = 
-// 2 = Game Loop 
-//
-/////////////////////////////////////////////////////////////////////////
 
 int MenuState() // State 0 
 {
@@ -35,7 +29,25 @@ int MenuState() // State 0
 
 int GameState() // State 1 
 {
-    ManualBar += ManualBarDar*ManualBarInfluence;
+    Counter++;
+    if(Counter > COUNTERMAX){
+
+        ManualBar += ManualBarDar*ManualBarInfluence; // Increment the manual bar 
+
+        // High End 
+        if(ManualBar > 157){
+            ManualBar = 157;
+        }
+        // Low End 
+        if(ManualBar < 11){
+            ManualBar = 11;
+        }
+
+        // Reset the time counter 
+        Counter = 0;
+    }
+
+    SetBalanceArrowPos(&BalanceArrow, ManualBar, 125); // 11 - 157
     return GAMESTATE;
 }
 
@@ -44,7 +56,7 @@ int GameLoadState() // State 2
     set_bkg_data(0, 145, Manual_data);
     set_bkg_tiles(0, 0, 20, 18, Manual_map);
 
-    set_sprite_data(0, 21, SpriteData);
+    set_sprite_data(0, 22, SpriteData);
     InitSkaterBoi(&SkaterBoi);
     InitBalanceArrow(&BalanceArrow);
 
