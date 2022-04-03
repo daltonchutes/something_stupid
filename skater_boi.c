@@ -1,6 +1,9 @@
 #include <gb/gb.h>
 #include <stdint.h>
 
+#define SKATER_TILE_START 69
+#define SKATER_TILE_NUM 420
+
 unsigned char SkaterSpriteData[] =
 {
    /* Tile 0x00 */
@@ -54,25 +57,25 @@ struct SSkaterBoi
 void InitSkaterBoi(struct SSkaterBoi* SkaterBoiPtr)
 {
     // He was a skater boi
-    set_sprite_data(0, 8, SkaterSpriteData); 
+    set_sprite_data(4, 8, SkaterSpriteData); 
 	SkaterBoiPtr->XPos = 80;
 	SkaterBoiPtr->YPos = 80;
 	SkaterBoiPtr->RenderWidth = 16;
 	SkaterBoiPtr->RenderHeight = 16;
 
-	set_sprite_tile(0, 0);
-	SkaterBoiPtr->SpriteIDs[0] = 0;
-	set_sprite_tile(1, 1);
-	SkaterBoiPtr->SpriteIDs[1] = 1;
-	set_sprite_tile(2, 2);
-	SkaterBoiPtr->SpriteIDs[2] = 2;
-	set_sprite_tile(3, 3);
-	SkaterBoiPtr->SpriteIDs[3] = 3;
+	set_sprite_tile(4, 8);
+	SkaterBoiPtr->SpriteIDs[0] = 4;
+	set_sprite_tile(5, 9);
+	SkaterBoiPtr->SpriteIDs[1] = 5;
+	set_sprite_tile(6, 10);
+	SkaterBoiPtr->SpriteIDs[2] = 6;
+	set_sprite_tile(7, 11);
+	SkaterBoiPtr->SpriteIDs[3] = 7;
 
-	move_sprite(SkaterBoiPtr->SpriteIDs[0], SkaterBoiPtr->XPos, SkaterBoiPtr->YPos);
-	move_sprite(SkaterBoiPtr->SpriteIDs[1], SkaterBoiPtr->XPos, SkaterBoiPtr->YPos + 8);
-	move_sprite(SkaterBoiPtr->SpriteIDs[2], SkaterBoiPtr->XPos + 8, SkaterBoiPtr->YPos);
-	move_sprite(SkaterBoiPtr->SpriteIDs[3], SkaterBoiPtr->XPos + 8, SkaterBoiPtr->YPos + 8);
+	move_sprite(4, 8, 16);
+	//move_sprite(5, SkaterBoiPtr->XPos, SkaterBoiPtr->YPos + 8);
+	//move_sprite(6, SkaterBoiPtr->XPos + 8, SkaterBoiPtr->YPos);
+	//move_sprite(7, SkaterBoiPtr->XPos + 8, SkaterBoiPtr->YPos + 8);
 
     // She said see ya later boi
 }
