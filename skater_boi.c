@@ -1,11 +1,6 @@
 #include <gb/gb.h>
 #include <stdint.h>
 
-
-#define SKATER_TILE_START 3
-#define SKATER_TILE_NUM 16
-
-
 struct SSkaterBoi
 {
     UBYTE SpriteIDs[6];

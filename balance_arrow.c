@@ -1,9 +1,6 @@
 #include <gb/gb.h>
 #include <stdint.h>
-//#include "Sprite_Data.c"
 
-#define ARROW_TILE_START 0
-#define ARROW_TILE_NUM 3
 #define ARROW_CENTER 84
 
 struct SBalanceArrow
