@@ -4,5 +4,5 @@
 
 bool randomXD()
 {
-    return rand() > 0;
+    return rand() > 127;
 }

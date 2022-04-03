@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include <stdint.h>
 #include <gb/drawing.h>
+#include <stdbool.h>
 
 #include "main.h"
 #include "Manual_data.c"
@@ -9,13 +10,14 @@
 #include "skater_boi.c"
 #include "balance_arrow.c"
 #include "Sprite_Data.c"
+#include "random.c"
 
 #define BARMAX 146
 #define COUNTERMAX 50
-#define PLAYERCOUNTERMAX 200
+#define PLAYERCOUNTERMAX 200 // Countmax * 4
 #define SKATERCENTER 80
-#define PLAYERXOFFSETMAX 10
-#define PLAYERXOFFSETMIN -10
+#define PLAYERXOFFSETMAX 15
+#define PLAYERXOFFSETMIN -15
 
 int ManualBar = 88;
 int ManualBarDar = -1;
@@ -85,6 +87,15 @@ int GameState() // State 1
     PlayerCounter++;
     if(PlayerCounter > PLAYERCOUNTERMAX)
     {
+        if(randomXD() == true)
+        {
+            ManualBarInfluence++; 
+        }
+        else
+        {
+            ManualBarInfluence--; 
+        }
+
         if (ManualBar > 124)
         {
             PlayerXOffset++;
