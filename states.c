@@ -8,6 +8,7 @@
 #include "Manual_data.c"
 #include "Manual_map.c"
 #include "Splash_Data.c"
+#include "MainMenu_data.c"
 #include "skater_boi.c"
 #include "balance_arrow.c"
 #include "Sprite_Data.c"
@@ -46,7 +47,6 @@ int SplashLoadState()
 {
     set_bkg_data(0, 145, SplashBG_data);
     set_bkg_tiles(0, 0, 20, 18, SplashBG_map);
-    //puts("Loading splash");
     SHOW_BKG;
     return SPLASHSTATE;    
 }
@@ -65,14 +65,21 @@ int SplashState()
 
 int MenuLoadState()
 {
-    puts("Loading main menu");
+    set_bkg_data(0, 145, MainMenuBG_data);
+    set_bkg_tiles(0, 0, 20, 18, MainMenuBG_map);
+    SHOW_BKG;
     return MENUSTATE;
 }
 
 int MenuState() // State 0 
 {
-    puts("Main Menu!");
-    return GAMESTATELOAD;
+    switch(joypad())
+    {
+        case J_A:
+            return GAMESTATELOAD;
+            break;
+    }
+    return MENUSTATE;
 }
 
 int GameState() // State 1 
