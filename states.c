@@ -54,8 +54,30 @@ const int difficultyInfluence[] = {
     7, // Level 6
     8, // Level 7
     9, // Level 8
-    10, // Level 8
+    10, // Level 9
 
+};
+
+int difficultyMaxSpeed[] = {
+    50, // Level 0 
+    60, // Level 1
+    70, // Level 2
+    80, // Level 3
+    90, // Level 4
+    100, // Level 5
+    100, // Level 6
+    100, // Level 7
+    100, // Level 8
+    100 // Level 9
+
+};
+
+const int PickupXArray[] = {
+    50,  // S
+    120, // K
+    50,  // A
+    120, // T
+    50   // E
 };
 
 
@@ -133,11 +155,11 @@ int GameState() //Main Game state
 
     // Cap Marker Speed
     MarkerSpeed += difficultyInfluence[score4] * MarkerDirection;
-    if(MarkerSpeed > 100){
-        MarkerSpeed = 100;
+    if(MarkerSpeed > difficultyMaxSpeed[0]){
+        MarkerSpeed = 50;
     }
-    if(MarkerSpeed < -100){
-        MarkerSpeed = -100;
+    if(MarkerSpeed < -difficultyMaxSpeed[0]){
+        MarkerSpeed = -50;
     }
 
     MarkerPos += MarkerSpeed;
@@ -189,16 +211,12 @@ int GameState() //Main Game state
     }
 
     // Pickup Skate
-    if(PlayerPos>>4 < PickupX && PlayerPos>>4 > PickupX-16)
+    if(PlayerPos>>4 < PickupXArray[PickupNumber] && PlayerPos>>4 > PickupXArray[PickupNumber]-16)
     {
         // Move the pickup
         score3 += 5;
         PickupNumber++;
         ChangeSkatePickupSprite(PickupNumber);
-        while(PlayerPos>>4 < PickupX && PlayerPos>>4 > PickupX-16)
-        {
-            PickupX = randomPickup();
-        }
     }
 
 
@@ -206,7 +224,7 @@ int GameState() //Main Game state
     SetSkaterBoiPos(&SkaterBoi, PlayerPos>>4, 101); // 70 - 90 
     UpdateLevelScore(score1>>4, score2, score3, score4);
     SetBalanceArrowPos(&BalanceArrow, MarkerPos >> 4, 125); // 11 - 157
-    MoveSkatePickupSprite(PickupX,  116);
+    MoveSkatePickupSprite(PickupXArray[PickupNumber],  116);
 
     if(GotoFailState == 1){
         return GAMESTATELOADFAIL;
@@ -281,7 +299,6 @@ int GameLoadState() // State 2
     score2 = 0;
     score3 = 0;
     score4 = 0;
-    PickupX = 40
     PickupNumber = 0;
     ChangeSkatePickupSprite(0);
 
@@ -310,7 +327,6 @@ int GameResetState() // State 3
     MarkerSpeed = 0; 
     MarkerDirection = randomDir();
     ButtonPressed = 0;
-    PickupX = 40
     PickupNumber = 0;
     ChangeSkatePickupSprite(0);
 
