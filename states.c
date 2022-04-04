@@ -25,6 +25,7 @@
 #define MANUALBARCENTER 84
 #define PLAYERXOFFSETMAX 15
 #define PLAYERXOFFSETMIN -15
+#define PLAYERSPEED 2
 
 uint16_t MarkerPos;
 uint16_t PlayerPos;
@@ -39,6 +40,9 @@ uint16_t score1;
 uint8_t score2;
 uint8_t score3;
 uint8_t score4;
+
+uint8_t PickupX;
+uint8_t PickupNumber;
 
 const int difficultyInfluence[] = {
     1, // Level 0 
@@ -120,12 +124,12 @@ int GameState() //Main Game state
     }
 
     // Counting when we should shift the marker
-    Counter++;
-    if(Counter > COUNTERMAX){
-        MarkerDirection = randomDir();
-        MarkerSpeed += 10;
-        Counter = 0;
-    }
+    //Counter++;
+    //if(Counter > COUNTERMAX){
+    //    MarkerDirection = randomDir();
+    //    MarkerSpeed += 10;
+    //    Counter = 0;
+    //}
 
     // Cap Marker Speed
     MarkerSpeed += difficultyInfluence[score4] * MarkerDirection;
@@ -142,19 +146,19 @@ int GameState() //Main Game state
     if (MarkerPos>>4 > 108)
     {
         SetSpriteIndex(&SkaterBoi, 2);
-        PlayerPos++;
-        score1+=1;
+        PlayerPos+=PLAYERSPEED;
+        score1+=10;
     }
     else if (MarkerPos>>4 > 56)
     {
         SetSpriteIndex(&SkaterBoi, 1);
-        score1+=10;
+        score1+=5;
     }
     else
     {
         SetSpriteIndex(&SkaterBoi, 0);
-        PlayerPos--;
-        score1+=1;
+        PlayerPos-=PLAYERSPEED;
+        score1+=10;
     }
 
     // Modifiy the score
@@ -184,17 +188,32 @@ int GameState() //Main Game state
         SetSpriteIndex(&SkaterBoi, 3);
     }
 
+    // Pickup Skate
+    if(PlayerPos>>4 < PickupX && PlayerPos>>4 > PickupX-16)
+    {
+        // Move the pickup
+        score3 += 5;
+        PickupNumber++;
+        ChangeSkatePickupSprite(PickupNumber);
+        while(PlayerPos>>4 < PickupX && PlayerPos>>4 > PickupX-16)
+        {
+            PickupX = randomPickup();
+        }
+    }
+
 
     // Update scores and Positions of Sprites on the screen.
     SetSkaterBoiPos(&SkaterBoi, PlayerPos>>4, 101); // 70 - 90 
     UpdateLevelScore(score1>>4, score2, score3, score4);
     SetBalanceArrowPos(&BalanceArrow, MarkerPos >> 4, 125); // 11 - 157
+    MoveSkatePickupSprite(PickupX,  116);
 
     if(GotoFailState == 1){
         return GAMESTATELOADFAIL;
     }else{
         return GAMESTATE;
     }
+
     
 }
 
@@ -262,14 +281,18 @@ int GameLoadState() // State 2
     score2 = 0;
     score3 = 0;
     score4 = 0;
+    PickupX = 40
+    PickupNumber = 0;
+    ChangeSkatePickupSprite(0);
 
 
     set_sprite_data(0, 21, SpriteData);
     set_sprite_data(21, 12, SkaterFailSpriteData);
-    set_sprite_data(33, 10, NumbersData);
+    set_sprite_data(33, 15, NumbersData);
     
     InitSkaterBoi(&SkaterBoi);
     InitBalanceArrow(&BalanceArrow);
+    InitSkatePickupSprite();
     InitLevelScore();
 
     //UpdateLevelNumber(Level);
@@ -287,7 +310,9 @@ int GameResetState() // State 3
     MarkerSpeed = 0; 
     MarkerDirection = randomDir();
     ButtonPressed = 0;
- 
+    PickupX = 40
+    PickupNumber = 0;
+    ChangeSkatePickupSprite(0);
 
     Counter = 0;
     GotoFailState = 0;

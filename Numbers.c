@@ -7,7 +7,11 @@
 
 int NumbersArray[] = {
     // Array of tiles we're using for numbers
-    33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43
+    33, 34, 35, 36, 37, 38, 39, 40, 41, 42
+};
+
+int SkateArray[] = {
+    43, 44, 45, 46, 47
 };
 
 void InitLevelScore(){
@@ -26,4 +30,16 @@ void UpdateLevelScore(int s1, int s2, int s3, int s4){
     set_sprite_tile(10, NumbersArray[s2]);
     set_sprite_tile(11, NumbersArray[s3]);
     set_sprite_tile(12, NumbersArray[s4]);
+}
+
+void InitSkatePickupSprite(){
+    set_sprite_tile(13, 43);
+}
+
+void ChangeSkatePickupSprite(int index){
+    set_sprite_tile(13, SkateArray[index]);
+}
+
+void MoveSkatePickupSprite(int x, int y){
+    move_sprite(13, x, y);
 }

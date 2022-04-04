@@ -19,3 +19,10 @@ int8_t randomDir()
     }
 }
 
+int8_t randomPickup()
+{
+    r = rand() % 80;
+    r = r + 40;
+    return r;
+}
+

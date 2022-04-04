@@ -20,8 +20,12 @@
 	.globl _LoadMusic
 	.globl _gbt_loop
 	.globl _gbt_play
+	.globl _MoveSkatePickupSprite
+	.globl _ChangeSkatePickupSprite
+	.globl _InitSkatePickupSprite
 	.globl _UpdateLevelScore
 	.globl _InitLevelScore
+	.globl _randomPickup
 	.globl _randomDir
 	.globl _randomXD
 	.globl _rand
@@ -34,12 +38,15 @@
 	.globl _set_bkg_tiles
 	.globl _set_bkg_data
 	.globl _joypad
+	.globl _SkateArray
 	.globl _NumbersArray
 	.globl _SkaterFailSpriteData
 	.globl _NumbersData
 	.globl _SpriteData
 	.globl _BalanceArrow
 	.globl _SkaterBoi
+	.globl _PickupNumber
+	.globl _PickupX
 	.globl _score4
 	.globl _score3
 	.globl _score2
@@ -92,6 +99,10 @@ _score3::
 	.ds 1
 _score4::
 	.ds 1
+_PickupX::
+	.ds 1
+_PickupNumber::
+	.ds 1
 _SkaterBoi::
 	.ds 11
 _BalanceArrow::
@@ -103,11 +114,13 @@ _BalanceArrow::
 _SpriteData::
 	.ds 368
 _NumbersData::
-	.ds 160
+	.ds 240
 _SkaterFailSpriteData::
 	.ds 208
 _NumbersArray::
-	.ds 22
+	.ds 20
+_SkateArray::
+	.ds 10
 ;--------------------------------------------------------
 ; absolute external ram data
 ;--------------------------------------------------------
@@ -11677,30 +11690,53 @@ _randomDir::
 	ld	e, #0xff
 ;random.c:20: }
 	ret
-;numbers.c:13: void InitLevelScore(){
+;random.c:22: int8_t randomPickup()
+;	---------------------------------
+; Function randomPickup
+; ---------------------------------
+_randomPickup::
+;random.c:24: r = rand() % 80;
+	call	_rand
+	ld	d, #0x00
+	ld	bc, #0x0050
+	push	bc
+	push	de
+	call	__modsint
+	add	sp, #4
+	ld	hl, #_r
+	ld	(hl), e
+;random.c:25: r = r + 40;
+	ld	a, (hl)
+	add	a, #0x28
+	ld	(hl), a
+;random.c:26: return r;
+	ld	e, (hl)
+;random.c:27: }
+	ret
+;numbers.c:17: void InitLevelScore(){
 ;	---------------------------------
 ; Function InitLevelScore
 ; ---------------------------------
 _InitLevelScore::
-;numbers.c:14: set_sprite_tile(9,NumbersArray[0]);
+;numbers.c:18: set_sprite_tile(9,NumbersArray[0]);
 	ld	hl, #_NumbersArray
 	ld	c, (hl)
 ;C:/Users/rutha/Documents/GitHub/something_stupid/gbdk/include/gb/gb.h:1447: shadow_OAM[nb].tile=tile;
 	ld	hl, #(_shadow_OAM + 38)
 	ld	(hl), c
-;numbers.c:15: set_sprite_tile(10,NumbersArray[0]);
+;numbers.c:19: set_sprite_tile(10,NumbersArray[0]);
 	ld	hl, #_NumbersArray
 	ld	c, (hl)
 ;C:/Users/rutha/Documents/GitHub/something_stupid/gbdk/include/gb/gb.h:1447: shadow_OAM[nb].tile=tile;
 	ld	hl, #(_shadow_OAM + 42)
 	ld	(hl), c
-;numbers.c:16: set_sprite_tile(11,NumbersArray[0]);
+;numbers.c:20: set_sprite_tile(11,NumbersArray[0]);
 	ld	hl, #_NumbersArray
 	ld	c, (hl)
 ;C:/Users/rutha/Documents/GitHub/something_stupid/gbdk/include/gb/gb.h:1447: shadow_OAM[nb].tile=tile;
 	ld	hl, #(_shadow_OAM + 46)
 	ld	(hl), c
-;numbers.c:17: set_sprite_tile(12,NumbersArray[0]);
+;numbers.c:21: set_sprite_tile(12,NumbersArray[0]);
 	ld	hl, #_NumbersArray
 	ld	c, (hl)
 ;C:/Users/rutha/Documents/GitHub/something_stupid/gbdk/include/gb/gb.h:1447: shadow_OAM[nb].tile=tile;
@@ -11730,15 +11766,15 @@ _InitLevelScore::
 	ld	(hl), #0x11
 	inc	hl
 	ld	(hl), #0xa0
-;numbers.c:21: move_sprite(9,  160, 17);
-;numbers.c:22: }
+;numbers.c:25: move_sprite(9,  160, 17);
+;numbers.c:26: }
 	ret
-;numbers.c:24: void UpdateLevelScore(int s1, int s2, int s3, int s4){
+;numbers.c:28: void UpdateLevelScore(int s1, int s2, int s3, int s4){
 ;	---------------------------------
 ; Function UpdateLevelScore
 ; ---------------------------------
 _UpdateLevelScore::
-;numbers.c:25: set_sprite_tile(9, NumbersArray[s1]);
+;numbers.c:29: set_sprite_tile(9, NumbersArray[s1]);
 	ldhl	sp,#2
 	ld	a, (hl+)
 	ld	c, a
@@ -11751,7 +11787,7 @@ _UpdateLevelScore::
 ;C:/Users/rutha/Documents/GitHub/something_stupid/gbdk/include/gb/gb.h:1447: shadow_OAM[nb].tile=tile;
 	ld	hl, #(_shadow_OAM + 38)
 	ld	(hl), c
-;numbers.c:26: set_sprite_tile(10, NumbersArray[s2]);
+;numbers.c:30: set_sprite_tile(10, NumbersArray[s2]);
 	ldhl	sp,#4
 	ld	a, (hl+)
 	ld	c, a
@@ -11764,7 +11800,7 @@ _UpdateLevelScore::
 ;C:/Users/rutha/Documents/GitHub/something_stupid/gbdk/include/gb/gb.h:1447: shadow_OAM[nb].tile=tile;
 	ld	hl, #(_shadow_OAM + 42)
 	ld	(hl), c
-;numbers.c:27: set_sprite_tile(11, NumbersArray[s3]);
+;numbers.c:31: set_sprite_tile(11, NumbersArray[s3]);
 	ldhl	sp,#6
 	ld	a, (hl+)
 	ld	c, a
@@ -11777,7 +11813,7 @@ _UpdateLevelScore::
 ;C:/Users/rutha/Documents/GitHub/something_stupid/gbdk/include/gb/gb.h:1447: shadow_OAM[nb].tile=tile;
 	ld	hl, #(_shadow_OAM + 46)
 	ld	(hl), c
-;numbers.c:28: set_sprite_tile(12, NumbersArray[s4]);
+;numbers.c:32: set_sprite_tile(12, NumbersArray[s4]);
 	ldhl	sp,#8
 	ld	a, (hl+)
 	ld	c, a
@@ -11790,17 +11826,69 @@ _UpdateLevelScore::
 ;C:/Users/rutha/Documents/GitHub/something_stupid/gbdk/include/gb/gb.h:1447: shadow_OAM[nb].tile=tile;
 	ld	hl, #(_shadow_OAM + 50)
 	ld	(hl), c
-;numbers.c:28: set_sprite_tile(12, NumbersArray[s4]);
-;numbers.c:29: }
+;numbers.c:32: set_sprite_tile(12, NumbersArray[s4]);
+;numbers.c:33: }
 	ret
-;states.c:65: void LoadMusic(const unsigned char * MusicData[], int loop, int speed)
+;numbers.c:35: void InitSkatePickupSprite(){
+;	---------------------------------
+; Function InitSkatePickupSprite
+; ---------------------------------
+_InitSkatePickupSprite::
+;C:/Users/rutha/Documents/GitHub/something_stupid/gbdk/include/gb/gb.h:1447: shadow_OAM[nb].tile=tile;
+	ld	hl, #(_shadow_OAM + 54)
+	ld	(hl), #0x2b
+;numbers.c:36: set_sprite_tile(13, 43);
+;numbers.c:37: }
+	ret
+;numbers.c:39: void ChangeSkatePickupSprite(int index){
+;	---------------------------------
+; Function ChangeSkatePickupSprite
+; ---------------------------------
+_ChangeSkatePickupSprite::
+;numbers.c:40: set_sprite_tile(13, SkateArray[index]);
+	ldhl	sp,#2
+	ld	a, (hl+)
+	ld	c, a
+	ld	b, (hl)
+	sla	c
+	rl	b
+	ld	hl, #_SkateArray
+	add	hl, bc
+	ld	c, (hl)
+;C:/Users/rutha/Documents/GitHub/something_stupid/gbdk/include/gb/gb.h:1447: shadow_OAM[nb].tile=tile;
+	ld	hl, #(_shadow_OAM + 54)
+	ld	(hl), c
+;numbers.c:40: set_sprite_tile(13, SkateArray[index]);
+;numbers.c:41: }
+	ret
+;numbers.c:43: void MoveSkatePickupSprite(int x, int y){
+;	---------------------------------
+; Function MoveSkatePickupSprite
+; ---------------------------------
+_MoveSkatePickupSprite::
+;numbers.c:44: move_sprite(13, x, y);
+	ldhl	sp,	#4
+	ld	a, (hl-)
+	dec	hl
+	ld	b, a
+	ld	c, (hl)
+;C:/Users/rutha/Documents/GitHub/something_stupid/gbdk/include/gb/gb.h:1520: OAM_item_t * itm = &shadow_OAM[nb];
+	ld	hl, #(_shadow_OAM + 52)
+;C:/Users/rutha/Documents/GitHub/something_stupid/gbdk/include/gb/gb.h:1521: itm->y=y, itm->x=x;
+	ld	a, b
+	ld	(hl+), a
+	ld	(hl), c
+;numbers.c:44: move_sprite(13, x, y);
+;numbers.c:45: }
+	ret
+;states.c:69: void LoadMusic(const unsigned char * MusicData[], int loop, int speed)
 ;	---------------------------------
 ; Function LoadMusic
 ; ---------------------------------
 _LoadMusic::
 ;C:/Users/rutha/Documents/GitHub/something_stupid/gbdk/include/gb/gb.h:671: __asm__("di");
 	di
-;states.c:70: gbt_play(MusicData, 2, speed);
+;states.c:74: gbt_play(MusicData, 2, speed);
 	ldhl	sp,	#6
 	ld	a, (hl)
 	ldhl	sp,	#2
@@ -11813,7 +11901,7 @@ _LoadMusic::
 	push	bc
 	call	_gbt_play
 	add	sp, #4
-;states.c:71: gbt_loop(loop);
+;states.c:75: gbt_loop(loop);
 	ldhl	sp,	#4
 	ld	a, (hl)
 	push	af
@@ -11822,8 +11910,8 @@ _LoadMusic::
 	inc	sp
 ;C:/Users/rutha/Documents/GitHub/something_stupid/gbdk/include/gb/gb.h:655: __asm__("ei");
 	ei
-;states.c:73: enable_interrupts();	
-;states.c:74: }
+;states.c:77: enable_interrupts();	
+;states.c:78: }
 	ret
 _difficultyInfluence:
 	.dw #0x0001
@@ -11836,18 +11924,18 @@ _difficultyInfluence:
 	.dw #0x0008
 	.dw #0x0009
 	.dw #0x000a
-;states.c:80: int GameState() //Main Game state 
+;states.c:84: int GameState() //Main Game state 
 ;	---------------------------------
 ; Function GameState
 ; ---------------------------------
 _GameState::
 	add	sp, #-4
-;states.c:84: switch(joypad()){
+;states.c:88: switch(joypad()){
 	call	_joypad
 	ld	l, e
 ;	spillPairReg hl
 ;	spillPairReg hl
-;states.c:88: MarkerSpeed -= 15;
+;states.c:92: MarkerSpeed -= 15;
 	push	hl
 	ld	hl, #_MarkerSpeed
 	ld	b, (hl)
@@ -11856,25 +11944,25 @@ _GameState::
 	ld	h, a
 ;	spillPairReg hl
 ;	spillPairReg hl
-;states.c:104: MarkerSpeed += 15;
+;states.c:108: MarkerSpeed += 15;
 	ld	a, b
 	add	a, #0x0f
 	ld	e, a
 	ld	a, h
 	adc	a, #0x00
 	ld	d, a
-;states.c:84: switch(joypad()){
+;states.c:88: switch(joypad()){
 	ld	a, l
 	dec	a
 	jr	Z, 00107$
-;states.c:88: MarkerSpeed -= 15;
+;states.c:92: MarkerSpeed -= 15;
 	ld	a, b
 	add	a, #0xf1
 	ld	c, a
 	ld	a, h
 	adc	a, #0xff
 	ld	b, a
-;states.c:84: switch(joypad()){
+;states.c:88: switch(joypad()){
 	ld	a,l
 	cp	a,#0x02
 	jr	Z, 00101$
@@ -11883,117 +11971,90 @@ _GameState::
 	sub	a, #0x20
 	jr	Z, 00104$
 	jr	00113$
-;states.c:85: case J_LEFT: 
+;states.c:89: case J_LEFT: 
 00101$:
-;states.c:86: if(ButtonPressed == 0){
+;states.c:90: if(ButtonPressed == 0){
 	ld	a, (#_ButtonPressed)
 	or	a, a
 	jr	NZ, 00114$
-;states.c:87: MarkerDirection = -1;
+;states.c:91: MarkerDirection = -1;
 	ld	hl, #_MarkerDirection
 	ld	(hl), #0xff
-;states.c:88: MarkerSpeed -= 15;
+;states.c:92: MarkerSpeed -= 15;
 	ld	hl, #_MarkerSpeed
 	ld	a, c
 	ld	(hl+), a
 	ld	(hl), b
-;states.c:90: ButtonPressed = 1;
+;states.c:94: ButtonPressed = 1;
 	ld	hl, #_ButtonPressed
 	ld	(hl), #0x01
-;states.c:92: break;
+;states.c:96: break;
 	jr	00114$
-;states.c:93: case J_B: 
+;states.c:97: case J_B: 
 00104$:
-;states.c:94: if(ButtonPressed == 0){
+;states.c:98: if(ButtonPressed == 0){
 	ld	a, (#_ButtonPressed)
 	or	a, a
 	jr	NZ, 00114$
-;states.c:95: MarkerDirection = -1;
+;states.c:99: MarkerDirection = -1;
 	ld	hl, #_MarkerDirection
 	ld	(hl), #0xff
-;states.c:96: MarkerSpeed -= 15;
+;states.c:100: MarkerSpeed -= 15;
 	ld	hl, #_MarkerSpeed
 	ld	a, c
 	ld	(hl+), a
 	ld	(hl), b
-;states.c:98: ButtonPressed = 1;
+;states.c:102: ButtonPressed = 1;
 	ld	hl, #_ButtonPressed
 	ld	(hl), #0x01
-;states.c:100: break;
+;states.c:104: break;
 	jr	00114$
-;states.c:101: case J_RIGHT: 
+;states.c:105: case J_RIGHT: 
 00107$:
-;states.c:102: if(ButtonPressed == 0){
+;states.c:106: if(ButtonPressed == 0){
 	ld	a, (#_ButtonPressed)
 	or	a, a
 	jr	NZ, 00114$
-;states.c:103: MarkerDirection = 1;
+;states.c:107: MarkerDirection = 1;
 	ld	hl, #_MarkerDirection
 	ld	(hl), #0x01
-;states.c:104: MarkerSpeed += 15;
+;states.c:108: MarkerSpeed += 15;
 	ld	hl, #_MarkerSpeed
 	ld	a, e
 	ld	(hl+), a
 	ld	(hl), d
-;states.c:106: ButtonPressed = 1;
+;states.c:110: ButtonPressed = 1;
 	ld	hl, #_ButtonPressed
 	ld	(hl), #0x01
-;states.c:108: break;
+;states.c:112: break;
 	jr	00114$
-;states.c:109: case J_A: 
+;states.c:113: case J_A: 
 00110$:
-;states.c:110: if(ButtonPressed == 0){
+;states.c:114: if(ButtonPressed == 0){
 	ld	a, (#_ButtonPressed)
 	or	a, a
 	jr	NZ, 00114$
-;states.c:111: MarkerDirection = 1;
+;states.c:115: MarkerDirection = 1;
 	ld	hl, #_MarkerDirection
 	ld	(hl), #0x01
-;states.c:112: MarkerSpeed += 15;
+;states.c:116: MarkerSpeed += 15;
 	ld	hl, #_MarkerSpeed
 	ld	a, e
 	ld	(hl+), a
 	ld	(hl), d
-;states.c:114: ButtonPressed = 1;
+;states.c:118: ButtonPressed = 1;
 	ld	hl, #_ButtonPressed
 	ld	(hl), #0x01
-;states.c:116: break;
+;states.c:120: break;
 	jr	00114$
-;states.c:117: default:
+;states.c:121: default:
 00113$:
-;states.c:118: ButtonPressed = 0;
+;states.c:122: ButtonPressed = 0;
 	ld	hl, #_ButtonPressed
 	ld	(hl), #0x00
-;states.c:120: }
+;states.c:124: }
 00114$:
-;states.c:123: Counter++;
-	ld	hl, #_Counter
-	inc	(hl)
-;states.c:124: if(Counter > COUNTERMAX){
-	ld	a, #0xc8
-	sub	a, (hl)
-	jr	NC, 00116$
-;states.c:125: MarkerDirection = randomDir();
-	call	_randomDir
-	ld	hl, #_MarkerDirection
-	ld	(hl), e
-;states.c:126: MarkerSpeed += 10;
-	ld	hl, #_MarkerSpeed
-	ld	a, (hl+)
-	ld	b, (hl)
-	dec	hl
-	add	a, #0x0a
-	ld	c, a
-	ld	a, b
-	adc	a, #0x00
-	ld	(hl), c
-	inc	hl
-	ld	(hl), a
-;states.c:127: Counter = 0;
-	ld	hl, #_Counter
-	ld	(hl), #0x00
-00116$:
-;states.c:131: MarkerSpeed += difficultyInfluence[score4] * MarkerDirection;
+;states.c:135: MarkerSpeed += difficultyInfluence[score4] * MarkerDirection;
 	ld	bc, #_difficultyInfluence+0
 	ld	hl, #_score4
 	ld	l, (hl)
@@ -12030,7 +12091,7 @@ _GameState::
 	ld	hl, #_MarkerSpeed
 	ld	(hl), c
 	inc	hl
-;states.c:132: if(MarkerSpeed > 100){
+;states.c:136: if(MarkerSpeed > 100){
 	ld	(hl-), a
 	ld	a, (hl+)
 	ld	c, a
@@ -12042,25 +12103,25 @@ _GameState::
 	ld	a, #0x00
 	sbc	a, b
 	bit	7, e
-	jr	Z, 00241$
+	jr	Z, 00266$
 	bit	7, d
-	jr	NZ, 00242$
+	jr	NZ, 00267$
 	cp	a, a
-	jr	00242$
-00241$:
+	jr	00267$
+00266$:
 	bit	7, d
-	jr	Z, 00242$
+	jr	Z, 00267$
 	scf
-00242$:
-	jr	NC, 00118$
-;states.c:133: MarkerSpeed = 100;
+00267$:
+	jr	NC, 00116$
+;states.c:137: MarkerSpeed = 100;
 	ld	hl, #_MarkerSpeed
 	ld	a, #0x64
 	ld	(hl+), a
 	xor	a, a
 	ld	(hl), a
-00118$:
-;states.c:135: if(MarkerSpeed < -100){
+00116$:
+;states.c:139: if(MarkerSpeed < -100){
 	ld	hl, #_MarkerSpeed
 	ld	a, (hl+)
 	sub	a, #0x9c
@@ -12069,24 +12130,24 @@ _GameState::
 	ld	d, (hl)
 	ld	a, #0xff
 	bit	7,a
-	jr	Z, 00243$
+	jr	Z, 00268$
 	bit	7, d
-	jr	NZ, 00244$
+	jr	NZ, 00269$
 	cp	a, a
-	jr	00244$
-00243$:
+	jr	00269$
+00268$:
 	bit	7, d
-	jr	Z, 00244$
+	jr	Z, 00269$
 	scf
-00244$:
-	jr	NC, 00120$
-;states.c:136: MarkerSpeed = -100;
+00269$:
+	jr	NC, 00118$
+;states.c:140: MarkerSpeed = -100;
 	ld	hl, #_MarkerSpeed
 	ld	a, #0x9c
 	ld	(hl+), a
 	ld	(hl), #0xff
-00120$:
-;states.c:139: MarkerPos += MarkerSpeed;
+00118$:
+;states.c:143: MarkerPos += MarkerSpeed;
 	ld	hl, #_MarkerSpeed
 	ld	a, (hl+)
 	ld	c, a
@@ -12097,7 +12158,7 @@ _GameState::
 	ld	(hl+), a
 	ld	a, (hl)
 	adc	a, b
-;states.c:142: if (MarkerPos>>4 > 108)
+;states.c:146: if (MarkerPos>>4 > 108)
 	ld	(hl-), a
 	ld	a, (hl+)
 	ld	c, a
@@ -12114,8 +12175,8 @@ _GameState::
 	cp	a, c
 	ld	a, #0x00
 	sbc	a, b
-	jr	NC, 00125$
-;states.c:144: SetSpriteIndex(&SkaterBoi, 2);
+	jr	NC, 00123$
+;states.c:148: SetSpriteIndex(&SkaterBoi, 2);
 	ld	a, #0x02
 	push	af
 	inc	sp
@@ -12123,32 +12184,38 @@ _GameState::
 	push	de
 	call	_SetSpriteIndex
 	add	sp, #3
-;states.c:145: PlayerPos++;
+;states.c:149: PlayerPos+=PLAYERSPEED;
 	ld	hl, #_PlayerPos
-	inc	(hl)
-	jr	NZ, 00245$
-	inc	hl
-	inc	(hl)
-00245$:
-;states.c:146: score1+=1;
-	ld	hl, #_score1
 	ld	a, (hl+)
 	ld	c, a
 	ld	a, (hl-)
 	ld	b, a
 	inc	bc
+	inc	bc
 	ld	a, c
 	ld	(hl+), a
 	ld	(hl), b
-	jr	00126$
-00125$:
-;states.c:148: else if (MarkerPos>>4 > 56)
+;states.c:150: score1+=10;
+	ld	hl, #_score1
+	ld	a, (hl+)
+	ld	b, (hl)
+	dec	hl
+	add	a, #0x0a
+	ld	c, a
+	ld	a, b
+	adc	a, #0x00
+	ld	(hl), c
+	inc	hl
+	ld	(hl), a
+	jr	00124$
+00123$:
+;states.c:152: else if (MarkerPos>>4 > 56)
 	ld	a, #0x38
 	cp	a, c
 	ld	a, #0x00
 	sbc	a, b
-	jr	NC, 00122$
-;states.c:150: SetSpriteIndex(&SkaterBoi, 1);
+	jr	NC, 00120$
+;states.c:154: SetSpriteIndex(&SkaterBoi, 1);
 	ld	a, #0x01
 	push	af
 	inc	sp
@@ -12156,7 +12223,42 @@ _GameState::
 	push	de
 	call	_SetSpriteIndex
 	add	sp, #3
-;states.c:151: score1+=10;
+;states.c:155: score1+=5;
+	ld	hl, #_score1
+	ld	a, (hl+)
+	ld	c, a
+	ld	a, (hl-)
+	ld	b, a
+	inc	bc
+	inc	bc
+	inc	bc
+	inc	bc
+	inc	bc
+	ld	a, c
+	ld	(hl+), a
+	ld	(hl), b
+	jr	00124$
+00120$:
+;states.c:159: SetSpriteIndex(&SkaterBoi, 0);
+	xor	a, a
+	push	af
+	inc	sp
+	ld	de, #_SkaterBoi
+	push	de
+	call	_SetSpriteIndex
+	add	sp, #3
+;states.c:160: PlayerPos-=PLAYERSPEED;
+	ld	hl, #_PlayerPos
+	ld	a, (hl+)
+	ld	c, a
+	ld	a, (hl-)
+	ld	b, a
+	dec	bc
+	dec	bc
+	ld	a, c
+	ld	(hl+), a
+	ld	(hl), b
+;states.c:161: score1+=10;
 	ld	hl, #_score1
 	ld	a, (hl+)
 	ld	c, (hl)
@@ -12168,38 +12270,8 @@ _GameState::
 	ld	(hl), b
 	inc	hl
 	ld	(hl), a
-	jr	00126$
-00122$:
-;states.c:155: SetSpriteIndex(&SkaterBoi, 0);
-	xor	a, a
-	push	af
-	inc	sp
-	ld	de, #_SkaterBoi
-	push	de
-	call	_SetSpriteIndex
-	add	sp, #3
-;states.c:156: PlayerPos--;
-	ld	hl, #_PlayerPos
-	ld	a, (hl+)
-	ld	e, a
-	ld	a, (hl-)
-	ld	d, a
-	dec	de
-	ld	a, e
-	ld	(hl+), a
-	ld	(hl), d
-;states.c:157: score1+=1;
-	ld	hl, #_score1
-	ld	a, (hl+)
-	ld	c, a
-	ld	a, (hl-)
-	ld	b, a
-	inc	bc
-	ld	a, c
-	ld	(hl+), a
-	ld	(hl), b
-00126$:
-;states.c:161: if(score1>>4 >= 10){
+00124$:
+;states.c:165: if(score1>>4 >= 10){
 	ld	hl, #_score1
 	ld	a, (hl+)
 	ld	c, a
@@ -12216,39 +12288,39 @@ _GameState::
 	sub	a, #0x0a
 	ld	a, b
 	sbc	a, #0x00
-	jr	C, 00128$
-;states.c:162: score1 = 0;
+	jr	C, 00126$
+;states.c:166: score1 = 0;
 	dec	hl
 	xor	a, a
 	ld	(hl+), a
 	ld	(hl), a
-;states.c:163: score2++;
+;states.c:167: score2++;
 	ld	hl, #_score2
 	inc	(hl)
-00128$:
-;states.c:165: if(score2 >= 10){
+00126$:
+;states.c:169: if(score2 >= 10){
 	ld	hl, #_score2
+	ld	a, (hl)
+	sub	a, #0x0a
+	jr	C, 00128$
+;states.c:170: score2 = 0;
+	ld	(hl), #0x00
+;states.c:171: score3++;
+	ld	hl, #_score3
+	inc	(hl)
+00128$:
+;states.c:173: if(score3 >= 10){
+	ld	hl, #_score3
 	ld	a, (hl)
 	sub	a, #0x0a
 	jr	C, 00130$
-;states.c:166: score2 = 0;
+;states.c:174: score3 = 0;
 	ld	(hl), #0x00
-;states.c:167: score3++;
-	ld	hl, #_score3
-	inc	(hl)
-00130$:
-;states.c:169: if(score3 >= 10){
-	ld	hl, #_score3
-	ld	a, (hl)
-	sub	a, #0x0a
-	jr	C, 00132$
-;states.c:170: score3 = 0;
-	ld	(hl), #0x00
-;states.c:171: score4++; 
+;states.c:175: score4++; 
 	ld	hl, #_score4
 	inc	(hl)
-00132$:
-;states.c:175: if(MarkerPos>>4 > 157){
+00130$:
+;states.c:179: if(MarkerPos>>4 > 157){
 	ld	hl, #_MarkerPos
 	ld	a, (hl+)
 	ld	c, a
@@ -12265,16 +12337,16 @@ _GameState::
 	cp	a, c
 	ld	a, #0x00
 	sbc	a, b
-	jr	NC, 00134$
-;states.c:176: GotoFailState = 1;
+	jr	NC, 00132$
+;states.c:180: GotoFailState = 1;
 	ld	hl, #_GotoFailState
 	ld	(hl), #0x01
-;states.c:177: MarkerPos = 157 << 4;
+;states.c:181: MarkerPos = 157 << 4;
 	ld	hl, #_MarkerPos
 	ld	a, #0xd0
 	ld	(hl+), a
 	ld	(hl), #0x09
-;states.c:178: SetSpriteIndex(&SkaterBoi, 4);
+;states.c:182: SetSpriteIndex(&SkaterBoi, 4);
 	ld	a, #0x04
 	push	af
 	inc	sp
@@ -12282,8 +12354,8 @@ _GameState::
 	push	de
 	call	_SetSpriteIndex
 	add	sp, #3
-00134$:
-;states.c:181: if(MarkerPos>>4 < 11){
+00132$:
+;states.c:185: if(MarkerPos>>4 < 11){
 	ld	hl, #_MarkerPos
 	ld	a, (hl+)
 	ld	c, a
@@ -12300,17 +12372,17 @@ _GameState::
 	sub	a, #0x0b
 	ld	a, b
 	sbc	a, #0x00
-	jr	NC, 00136$
-;states.c:182: GotoFailState = 1;
+	jr	NC, 00134$
+;states.c:186: GotoFailState = 1;
 	ld	hl, #_GotoFailState
 	ld	(hl), #0x01
-;states.c:183: MarkerPos = 11 << 4;
+;states.c:187: MarkerPos = 11 << 4;
 	ld	hl, #_MarkerPos
 	ld	a, #0xb0
 	ld	(hl+), a
 	xor	a, a
 	ld	(hl), a
-;states.c:184: SetSpriteIndex(&SkaterBoi, 3);
+;states.c:188: SetSpriteIndex(&SkaterBoi, 3);
 	ld	a, #0x03
 	push	af
 	inc	sp
@@ -12318,8 +12390,8 @@ _GameState::
 	push	de
 	call	_SetSpriteIndex
 	add	sp, #3
-00136$:
-;states.c:189: SetSkaterBoiPos(&SkaterBoi, PlayerPos>>4, 101); // 70 - 90 
+00134$:
+;states.c:192: if(PlayerPos>>4 < PickupX && PlayerPos>>4 > PickupX-16)
 	ld	hl, #_PlayerPos
 	ld	a, (hl+)
 	ld	b, a
@@ -12332,6 +12404,95 @@ _GameState::
 	rr	b
 	srl	c
 	rr	b
+	ld	hl, #_PickupX
+	ld	e, (hl)
+	ld	d, #0x00
+	ld	a, b
+	sub	a, e
+	ld	a, c
+	sbc	a, d
+	jr	NC, 00140$
+	ld	a, (hl)
+	ld	e, #0x00
+	add	a, #0xf0
+	ld	l, a
+;	spillPairReg hl
+;	spillPairReg hl
+	ld	a, e
+	adc	a, #0xff
+	ld	e, b
+	ld	d, c
+	ld	h, a
+;	spillPairReg hl
+;	spillPairReg hl
+	ld	a, l
+	sub	a, e
+	ld	a, h
+	sbc	a, d
+	jr	NC, 00140$
+;states.c:195: score3 += 5;
+	ld	hl, #_score3
+	ld	a, (hl)
+	add	a, #0x05
+	ld	(hl), a
+;states.c:196: PickupNumber++;
+	ld	hl, #_PickupNumber
+	inc	(hl)
+;states.c:197: ChangeSkatePickupSprite(PickupNumber);
+	ld	c, (hl)
+	ld	b, #0x00
+	push	bc
+	call	_ChangeSkatePickupSprite
+	pop	hl
+;states.c:198: while(PlayerPos>>4 < PickupX && PlayerPos>>4 > PickupX-16)
+00136$:
+;states.c:192: if(PlayerPos>>4 < PickupX && PlayerPos>>4 > PickupX-16)
+	ld	hl, #_PlayerPos
+	ld	a, (hl+)
+	ld	b, a
+	ld	c, (hl)
+	srl	c
+	rr	b
+	srl	c
+	rr	b
+	srl	c
+	rr	b
+	srl	c
+	rr	b
+;states.c:198: while(PlayerPos>>4 < PickupX && PlayerPos>>4 > PickupX-16)
+	ld	hl, #_PickupX
+	ld	e, (hl)
+	ld	d, #0x00
+	ld	a, b
+	sub	a, e
+	ld	a, c
+	sbc	a, d
+	jr	NC, 00140$
+	ld	a, (hl)
+	ld	e, #0x00
+	add	a, #0xf0
+	ld	l, a
+;	spillPairReg hl
+;	spillPairReg hl
+	ld	a, e
+	adc	a, #0xff
+	ld	h, a
+;	spillPairReg hl
+;	spillPairReg hl
+	ld	e, b
+	ld	d, c
+	ld	a, l
+	sub	a, e
+	ld	a, h
+	sbc	a, d
+	jr	NC, 00140$
+;states.c:200: PickupX = randomPickup();
+	call	_randomPickup
+	ld	hl, #_PickupX
+	ld	(hl), e
+	jr	00136$
+00140$:
+;states.c:206: SetSkaterBoiPos(&SkaterBoi, PlayerPos>>4, 101); // 70 - 90 
 	ld	a, #0x65
 	push	af
 	inc	sp
@@ -12341,7 +12502,7 @@ _GameState::
 	push	de
 	call	_SetSkaterBoiPos
 	add	sp, #4
-;states.c:190: UpdateLevelScore(score1>>4, score2, score3, score4);
+;states.c:207: UpdateLevelScore(score1>>4, score2, score3, score4);
 	ld	hl, #_score4
 	ld	c, (hl)
 	ld	b, #0x00
@@ -12379,7 +12540,7 @@ _GameState::
 	push	de
 	call	_UpdateLevelScore
 	add	sp, #8
-;states.c:191: SetBalanceArrowPos(&BalanceArrow, MarkerPos >> 4, 125); // 11 - 157
+;states.c:208: SetBalanceArrowPos(&BalanceArrow, MarkerPos >> 4, 125); // 11 - 157
 	ld	hl, #_MarkerPos
 	ld	a, (hl+)
 	ld	b, a
@@ -12401,33 +12562,42 @@ _GameState::
 	push	de
 	call	_SetBalanceArrowPos
 	add	sp, #4
-;states.c:193: if(GotoFailState == 1){
+;states.c:209: MoveSkatePickupSprite(PickupX,  116);
+	ld	hl, #_PickupX
+	ld	c, (hl)
+	ld	b, #0x00
+	ld	de, #0x0074
+	push	de
+	push	bc
+	call	_MoveSkatePickupSprite
+	add	sp, #4
+;states.c:211: if(GotoFailState == 1){
 	ld	a, (#_GotoFailState)
 	dec	a
-	jr	NZ, 00138$
-;states.c:194: return GAMESTATELOADFAIL;
+	jr	NZ, 00143$
+;states.c:212: return GAMESTATELOADFAIL;
 	ld	de, #0x0008
-	jr	00140$
-00138$:
-;states.c:196: return GAMESTATE;
+	jr	00145$
+00143$:
+;states.c:214: return GAMESTATE;
 	ld	de, #0x0004
-00140$:
-;states.c:199: }
+00145$:
+;states.c:218: }
 	add	sp, #4
 	ret
-;states.c:205: int SplashLoadState()
+;states.c:224: int SplashLoadState()
 ;	---------------------------------
 ; Function SplashLoadState
 ; ---------------------------------
 _SplashLoadState::
-;states.c:207: set_bkg_data(0, 145, SplashBG_data);
+;states.c:226: set_bkg_data(0, 145, SplashBG_data);
 	ld	de, #_SplashBG_data
 	push	de
 	ld	hl, #0x9100
 	push	hl
 	call	_set_bkg_data
 	add	sp, #4
-;states.c:208: set_bkg_tiles(0, 0, 20, 18, SplashBG_map);
+;states.c:227: set_bkg_tiles(0, 0, 20, 18, SplashBG_map);
 	ld	de, #_SplashBG_map
 	push	de
 	ld	hl, #0x1214
@@ -12437,7 +12607,7 @@ _SplashLoadState::
 	push	af
 	call	_set_bkg_tiles
 	add	sp, #6
-;states.c:210: LoadMusic(ManualStart_Data, 1, 7);
+;states.c:229: LoadMusic(ManualStart_Data, 1, 7);
 	ld	de, #0x0007
 	push	de
 	ld	de, #0x0001
@@ -12446,50 +12616,50 @@ _SplashLoadState::
 	push	de
 	call	_LoadMusic
 	add	sp, #6
-;states.c:212: SHOW_BKG;
+;states.c:231: SHOW_BKG;
 	ldh	a, (_LCDC_REG + 0)
 	or	a, #0x01
 	ldh	(_LCDC_REG + 0), a
-;states.c:213: return SPLASHSTATE;    
+;states.c:232: return SPLASHSTATE;    
 	ld	de, #0x0000
-;states.c:214: }
+;states.c:233: }
 	ret
-;states.c:216: int SplashState()
+;states.c:235: int SplashState()
 ;	---------------------------------
 ; Function SplashState
 ; ---------------------------------
 _SplashState::
-;states.c:218: switch(joypad())
+;states.c:237: switch(joypad())
 	call	_joypad
 	ld	a, e
 	cp	a, #0x10
 	jr	Z, 00102$
 	sub	a, #0x80
 	jr	NZ, 00103$
-;states.c:221: case J_A: 
+;states.c:240: case J_A: 
 00102$:
-;states.c:222: return MENUSTATELOAD;
+;states.c:241: return MENUSTATELOAD;
 	ld	de, #0x0003
 	ret
-;states.c:224: }
+;states.c:243: }
 00103$:
-;states.c:225: return SPLASHSTATE;
+;states.c:244: return SPLASHSTATE;
 	ld	de, #0x0000
-;states.c:226: }
+;states.c:245: }
 	ret
-;states.c:228: int MenuLoadState()
+;states.c:247: int MenuLoadState()
 ;	---------------------------------
 ; Function MenuLoadState
 ; ---------------------------------
 _MenuLoadState::
-;states.c:230: set_bkg_data(0, 148, Manual_Manny_data);
+;states.c:249: set_bkg_data(0, 148, Manual_Manny_data);
 	ld	de, #_Manual_Manny_data
 	push	de
 	ld	hl, #0x9400
 	push	hl
 	call	_set_bkg_data
 	add	sp, #4
-;states.c:231: set_bkg_tiles(0, 0, 20, 18, Manual_Manny_map);
+;states.c:250: set_bkg_tiles(0, 0, 20, 18, Manual_Manny_map);
 	ld	de, #_Manual_Manny_map
 	push	de
 	ld	hl, #0x1214
@@ -12499,7 +12669,7 @@ _MenuLoadState::
 	push	af
 	call	_set_bkg_tiles
 	add	sp, #6
-;states.c:233: LoadMusic(ManualStart_Data, 1, 7);
+;states.c:252: LoadMusic(ManualStart_Data, 1, 7);
 	ld	de, #0x0007
 	push	de
 	ld	de, #0x0001
@@ -12508,46 +12678,46 @@ _MenuLoadState::
 	push	de
 	call	_LoadMusic
 	add	sp, #6
-;states.c:235: SHOW_BKG;
+;states.c:254: SHOW_BKG;
 	ldh	a, (_LCDC_REG + 0)
 	or	a, #0x01
 	ldh	(_LCDC_REG + 0), a
-;states.c:236: return MENUSTATE;
+;states.c:255: return MENUSTATE;
 	ld	de, #0x0002
-;states.c:237: }
+;states.c:256: }
 	ret
-;states.c:239: int MenuState() // State 0 
+;states.c:258: int MenuState() // State 0 
 ;	---------------------------------
 ; Function MenuState
 ; ---------------------------------
 _MenuState::
-;states.c:241: switch(joypad())
+;states.c:260: switch(joypad())
 	call	_joypad
 	ld	a, e
 	sub	a, #0x80
 	jr	NZ, 00102$
-;states.c:244: return GAMESTATELOAD;
+;states.c:263: return GAMESTATELOAD;
 	ld	de, #0x0005
 	ret
-;states.c:246: }
+;states.c:265: }
 00102$:
-;states.c:247: return MENUSTATE;
+;states.c:266: return MENUSTATE;
 	ld	de, #0x0002
-;states.c:248: }
+;states.c:267: }
 	ret
-;states.c:250: int GameLoadState() // State 2 
+;states.c:269: int GameLoadState() // State 2 
 ;	---------------------------------
 ; Function GameLoadState
 ; ---------------------------------
 _GameLoadState::
-;states.c:252: set_bkg_data(0, 154, Manual_data);
+;states.c:271: set_bkg_data(0, 154, Manual_data);
 	ld	de, #_Manual_data
 	push	de
 	ld	hl, #0x9a00
 	push	hl
 	call	_set_bkg_data
 	add	sp, #4
-;states.c:253: set_bkg_tiles(0, 0, 20, 18, Manual_map);
+;states.c:272: set_bkg_tiles(0, 0, 20, 18, Manual_map);
 	ld	de, #_Manual_map
 	push	de
 	ld	hl, #0x1214
@@ -12557,7 +12727,7 @@ _GameLoadState::
 	push	af
 	call	_set_bkg_tiles
 	add	sp, #6
-;states.c:255: LoadMusic(ThemeSong_Data, 1, 7);
+;states.c:274: LoadMusic(ThemeSong_Data, 1, 7);
 	ld	de, #0x0007
 	push	de
 	ld	de, #0x0001
@@ -12566,84 +12736,98 @@ _GameLoadState::
 	push	de
 	call	_LoadMusic
 	add	sp, #6
-;states.c:257: MarkerPos = MANUALBARCENTER << 4;
+;states.c:276: MarkerPos = MANUALBARCENTER << 4;
 	ld	hl, #_MarkerPos
 	ld	a, #0x40
 	ld	(hl+), a
 	ld	(hl), #0x05
-;states.c:258: PlayerPos = SKATERCENTER << 4;
+;states.c:277: PlayerPos = SKATERCENTER << 4;
 	ld	hl, #_PlayerPos
 	xor	a, a
 	ld	(hl+), a
 	ld	(hl), #0x05
-;states.c:259: MarkerDirection = randomDir();
+;states.c:278: MarkerDirection = randomDir();
 	call	_randomDir
 	ld	hl, #_MarkerDirection
 	ld	(hl), e
-;states.c:260: ButtonPressed = 0;
+;states.c:279: ButtonPressed = 0;
 	ld	hl, #_ButtonPressed
 	ld	(hl), #0x00
-;states.c:261: score1 = 0;
+;states.c:280: score1 = 0;
 	xor	a, a
 	ld	hl, #_score1
 	ld	(hl+), a
 	ld	(hl), a
-;states.c:262: score2 = 0;
+;states.c:281: score2 = 0;
 	ld	hl, #_score2
 	ld	(hl), #0x00
-;states.c:263: score3 = 0;
+;states.c:282: score3 = 0;
 	ld	hl, #_score3
 	ld	(hl), #0x00
-;states.c:264: score4 = 0;
+;states.c:283: score4 = 0;
 	ld	hl, #_score4
 	ld	(hl), #0x00
-;states.c:267: set_sprite_data(0, 21, SpriteData);
+;states.c:284: PickupX = randomPickup();
+	call	_randomPickup
+	ld	hl, #_PickupX
+	ld	(hl), e
+;states.c:285: PickupNumber = 0;
+	ld	hl, #_PickupNumber
+;states.c:286: ChangeSkatePickupSprite(0);
+	ld	de, #0x0000
+	ld	(hl), e
+	push	de
+	call	_ChangeSkatePickupSprite
+	pop	hl
+;states.c:289: set_sprite_data(0, 21, SpriteData);
 	ld	de, #_SpriteData
 	push	de
 	ld	hl, #0x1500
 	push	hl
 	call	_set_sprite_data
 	add	sp, #4
-;states.c:268: set_sprite_data(21, 12, SkaterFailSpriteData);
+;states.c:290: set_sprite_data(21, 12, SkaterFailSpriteData);
 	ld	de, #_SkaterFailSpriteData
 	push	de
 	ld	hl, #0xc15
 	push	hl
 	call	_set_sprite_data
 	add	sp, #4
-;states.c:269: set_sprite_data(33, 10, NumbersData);
+;states.c:291: set_sprite_data(33, 15, NumbersData);
 	ld	de, #_NumbersData
 	push	de
-	ld	hl, #0xa21
+	ld	hl, #0xf21
 	push	hl
 	call	_set_sprite_data
 	add	sp, #4
-;states.c:271: InitSkaterBoi(&SkaterBoi);
+;states.c:293: InitSkaterBoi(&SkaterBoi);
 	ld	de, #_SkaterBoi
 	push	de
 	call	_InitSkaterBoi
 	pop	hl
-;states.c:272: InitBalanceArrow(&BalanceArrow);
+;states.c:294: InitBalanceArrow(&BalanceArrow);
 	ld	de, #_BalanceArrow
 	push	de
 	call	_InitBalanceArrow
 	pop	hl
-;states.c:273: InitLevelScore();
+;states.c:295: InitSkatePickupSprite();
+	call	_InitSkatePickupSprite
+;states.c:296: InitLevelScore();
 	call	_InitLevelScore
-;states.c:277: SHOW_BKG;
+;states.c:300: SHOW_BKG;
 	ldh	a, (_LCDC_REG + 0)
 	or	a, #0x01
 	ldh	(_LCDC_REG + 0), a
-;states.c:278: return GAMESTATE;
+;states.c:301: return GAMESTATE;
 	ld	de, #0x0004
-;states.c:279: }
+;states.c:302: }
 	ret
-;states.c:281: int GameResetState() // State 3  
+;states.c:304: int GameResetState() // State 3  
 ;	---------------------------------
 ; Function GameResetState
 ; ---------------------------------
 _GameResetState::
-;states.c:283: LoadMusic(ThemeSong_Data, 1, 7);
+;states.c:306: LoadMusic(ThemeSong_Data, 1, 7);
 	ld	de, #0x0007
 	push	de
 	ld	de, #0x0001
@@ -12652,58 +12836,70 @@ _GameResetState::
 	push	de
 	call	_LoadMusic
 	add	sp, #6
-;states.c:285: MarkerPos = MANUALBARCENTER << 4;
+;states.c:308: MarkerPos = MANUALBARCENTER << 4;
 	ld	hl, #_MarkerPos
 	ld	a, #0x40
 	ld	(hl+), a
 	ld	(hl), #0x05
-;states.c:286: PlayerPos = SKATERCENTER << 4;
+;states.c:309: PlayerPos = SKATERCENTER << 4;
 	ld	hl, #_PlayerPos
 	xor	a, a
 	ld	(hl+), a
 	ld	(hl), #0x05
-;states.c:287: MarkerSpeed = 0; 
+;states.c:310: MarkerSpeed = 0; 
 	xor	a, a
 	ld	hl, #_MarkerSpeed
 	ld	(hl+), a
 	ld	(hl), a
-;states.c:288: MarkerDirection = randomDir();
+;states.c:311: MarkerDirection = randomDir();
 	call	_randomDir
 	ld	hl, #_MarkerDirection
 	ld	(hl), e
-;states.c:289: ButtonPressed = 0;
+;states.c:312: ButtonPressed = 0;
 	ld	hl, #_ButtonPressed
 	ld	(hl), #0x00
-;states.c:292: Counter = 0;
+;states.c:313: PickupX = randomPickup();
+	call	_randomPickup
+	ld	hl, #_PickupX
+	ld	(hl), e
+;states.c:314: PickupNumber = 0;
+	ld	hl, #_PickupNumber
+;states.c:315: ChangeSkatePickupSprite(0);
+	ld	de, #0x0000
+	ld	(hl), e
+	push	de
+	call	_ChangeSkatePickupSprite
+	pop	hl
+;states.c:317: Counter = 0;
 	ld	hl, #_Counter
 	ld	(hl), #0x00
-;states.c:293: GotoFailState = 0;
+;states.c:318: GotoFailState = 0;
 	ld	hl, #_GotoFailState
 	ld	(hl), #0x00
-;states.c:295: score1 = 0;
+;states.c:320: score1 = 0;
 	xor	a, a
 	ld	hl, #_score1
 	ld	(hl+), a
 	ld	(hl), a
-;states.c:296: score2 = 0;
+;states.c:321: score2 = 0;
 	ld	hl, #_score2
 	ld	(hl), #0x00
-;states.c:297: score3 = 0;
+;states.c:322: score3 = 0;
 	ld	hl, #_score3
 	ld	(hl), #0x00
-;states.c:298: score4 = 0;
+;states.c:323: score4 = 0;
 	ld	hl, #_score4
-;states.c:299: return GAMESTATE;
+;states.c:324: return GAMESTATE;
 	ld	de, #0x0004
 	ld	(hl), d
-;states.c:300: }
+;states.c:325: }
 	ret
-;states.c:302: int GameLoadFailState()
+;states.c:327: int GameLoadFailState()
 ;	---------------------------------
 ; Function GameLoadFailState
 ; ---------------------------------
 _GameLoadFailState::
-;states.c:304: LoadMusic(GameOver_Data, 0, 7);
+;states.c:329: LoadMusic(GameOver_Data, 0, 7);
 	ld	de, #0x0007
 	push	de
 	ld	de, #0x0000
@@ -12712,34 +12908,28 @@ _GameLoadFailState::
 	push	de
 	call	_LoadMusic
 	add	sp, #6
-;states.c:305: gbt_loop(0);
-	xor	a, a
-	push	af
-	inc	sp
-	call	_gbt_loop
-	inc	sp
-;states.c:306: return GAMESTATEFAIL;
+;states.c:330: return GAMESTATEFAIL;
 	ld	de, #0x0006
-;states.c:307: }
+;states.c:331: }
 	ret
-;states.c:309: int GameFailState()
+;states.c:333: int GameFailState()
 ;	---------------------------------
 ; Function GameFailState
 ; ---------------------------------
 _GameFailState::
-;states.c:311: switch(joypad()){
+;states.c:335: switch(joypad()){
 	call	_joypad
 	ld	a, e
 	sub	a, #0x80
 	jr	NZ, 00102$
-;states.c:313: return GAMESTATERESET;
+;states.c:337: return GAMESTATERESET;
 	ld	de, #0x0007
 	ret
-;states.c:314: }
+;states.c:338: }
 00102$:
-;states.c:315: return GAMESTATEFAIL;
+;states.c:339: return GAMESTATEFAIL;
 	ld	de, #0x0006
-;states.c:316: }
+;states.c:340: }
 	ret
 	.area _CODE
 	.area _INITIALIZER
@@ -13273,6 +13463,86 @@ __xinit__NumbersData:
 	.db #0x00	; 0
 	.db #0x00	; 0
 	.db #0x00	; 0
+	.db #0x78	; 120	'x'
+	.db #0x78	; 120	'x'
+	.db #0xc0	; 192
+	.db #0xc0	; 192
+	.db #0x78	; 120	'x'
+	.db #0x78	; 120	'x'
+	.db #0x1c	; 28
+	.db #0x1c	; 28
+	.db #0x9c	; 156
+	.db #0x9c	; 156
+	.db #0x78	; 120	'x'
+	.db #0x78	; 120	'x'
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0xcc	; 204
+	.db #0xcc	; 204
+	.db #0xd8	; 216
+	.db #0xd8	; 216
+	.db #0xf0	; 240
+	.db #0xf0	; 240
+	.db #0xf0	; 240
+	.db #0xf0	; 240
+	.db #0xd8	; 216
+	.db #0xd8	; 216
+	.db #0xcc	; 204
+	.db #0xcc	; 204
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x78	; 120	'x'
+	.db #0x78	; 120	'x'
+	.db #0x9c	; 156
+	.db #0x9c	; 156
+	.db #0x9c	; 156
+	.db #0x9c	; 156
+	.db #0xfc	; 252
+	.db #0xfc	; 252
+	.db #0x9c	; 156
+	.db #0x9c	; 156
+	.db #0x9c	; 156
+	.db #0x9c	; 156
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0xfc	; 252
+	.db #0xfc	; 252
+	.db #0x30	; 48	'0'
+	.db #0x30	; 48	'0'
+	.db #0x30	; 48	'0'
+	.db #0x30	; 48	'0'
+	.db #0x30	; 48	'0'
+	.db #0x30	; 48	'0'
+	.db #0x30	; 48	'0'
+	.db #0x30	; 48	'0'
+	.db #0x30	; 48	'0'
+	.db #0x30	; 48	'0'
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0xfc	; 252
+	.db #0xfc	; 252
+	.db #0xc0	; 192
+	.db #0xc0	; 192
+	.db #0xf8	; 248
+	.db #0xf8	; 248
+	.db #0xc0	; 192
+	.db #0xc0	; 192
+	.db #0xc0	; 192
+	.db #0xc0	; 192
+	.db #0xfc	; 252
+	.db #0xfc	; 252
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
 __xinit__SkaterFailSpriteData:
 	.db #0x00	; 0
 	.db #0x00	; 0
@@ -13493,5 +13763,10 @@ __xinit__NumbersArray:
 	.dw #0x0028
 	.dw #0x0029
 	.dw #0x002a
+__xinit__SkateArray:
 	.dw #0x002b
+	.dw #0x002c
+	.dw #0x002d
+	.dw #0x002e
+	.dw #0x002f
 	.area _CABS (ABS)
