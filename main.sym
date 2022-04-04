@@ -8,6 +8,7 @@ Symbol Table
     .__.CPU.                                                    =  000000 L
     .__.H$L.                                                    =  000000 L
   1 _CurrentState                                                  000000 GR
+    _GameFailState                                                 ****** GX
     _GameLoadState                                                 ****** GX
     _GameResetState                                                ****** GX
     _GameState                                                     ****** GX
@@ -15,25 +16,14 @@ Symbol Table
     _LCDC_REG                                                      ****** GX
     _MenuLoadState                                                 ****** GX
     _MenuState                                                     ****** GX
-  0 _OnPushDown                                                    000111 GR
-  0 _OnPushLeft                                                    000112 GR
-  0 _OnPushRight                                                   000113 GR
-  0 _OnPushUp                                                      000110 GR
-  0 _PollInput                                                     0000F3 GR
     _SplashLoadState                                               ****** GX
     _SplashState                                                   ****** GX
-  0 _Update                                                        000050 GR
-  0 _UpdateGame                                                    000068 GR
-    _add_VBL                                                       ****** GX
-    _gbt_loop                                                      ****** GX
-    _gbt_play                                                      ****** GX
+  0 _Update                                                        000029 GR
+  0 _UpdateGame                                                    000041 GR
     _gbt_update                                                    ****** GX
-    _joypad                                                        ****** GX
-  0 _main                                                          000000 GR
-    _set_interrupts                                                ****** GX
-    _song_Data                                                     ****** GX
+  0 _main                                                          000008 GR
   1 _vbl_count                                                     000002 GR
-  0 _vbl_update                                                    000006 GR
+  0 _vbl_update                                                    000000 GR
     _wait_vbl_done                                                 ****** GX
 
 
@@ -42,7 +32,7 @@ Hexadecimal [24-Bits]
 
 Area Table
 
-   0 _CODE                                      size    114   flags    0
+   0 _CODE                                      size     D9   flags    0
    1 _DATA                                      size      4   flags    0
    2 _INITIALIZED                               size      0   flags    0
    3 _DABS                                      size      0   flags    8

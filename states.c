@@ -7,6 +7,8 @@
 #include "main.h"
 #include "Manual_data.c"
 #include "Manual_map.c"
+#include "Title_data.c"
+#include "Title_map.c"
 #include "Splash_Data.c"
 #include "MainMenu_data.c"
 #include "skater_boi.c"
@@ -14,6 +16,7 @@
 #include "Sprite_Data.c"
 #include "random.c"
 #include "numbers.c"
+#include "gbt_player.h"
 
 #define BARMAX 146
 #define COUNTERMAX 50
@@ -32,7 +35,9 @@ int PlayerXOffset = 0;
 int Level = 1;
 int LevelProgress = 0;
 
-extern const unsigned char * ManualTheme_Data[];
+extern const unsigned char * GameOver_Data[];
+extern const unsigned char * ThemeSong_Data[];
+extern const unsigned char * ManualStart_Data[];
 
 int InfluenceCounterMaxLevelArray[] ={
     1000, 800, 600, 500, 400, 300, 200, 100, 50, 25
@@ -48,10 +53,27 @@ int CounterMaxLevelArray[] ={
 struct SSkaterBoi SkaterBoi;
 struct SBalanceArrow BalanceArrow;
 
+void LoadMusic(const unsigned char * MusicData[], int loop, int speed)
+{
+    // Load The Music
+    disable_interrupts();
+	
+	add_VBL(vbl_update);
+
+    gbt_play(MusicData, 2, speed);
+    gbt_loop(loop);
+
+    set_interrupts(VBL_IFLAG);
+    enable_interrupts();	
+}
+
 int SplashLoadState()
 {
     set_bkg_data(0, 145, SplashBG_data);
     set_bkg_tiles(0, 0, 20, 18, SplashBG_map);
+
+    LoadMusic(ManualStart_Data, 1, 7);
+
     SHOW_BKG;
     return SPLASHSTATE;    
 }
@@ -70,8 +92,11 @@ int SplashState()
 
 int MenuLoadState()
 {
-    set_bkg_data(0, 145, MainMenuBG_data);
-    set_bkg_tiles(0, 0, 20, 18, MainMenuBG_map);
+    set_bkg_data(0, 148, Manual_Manny_data);
+    set_bkg_tiles(0, 0, 20, 18, Manual_Manny_map);
+
+    LoadMusic(ManualStart_Data, 1, 7);
+
     SHOW_BKG;
     return MENUSTATE;
 }
@@ -192,8 +217,11 @@ int GameLoadState() // State 2
     set_bkg_data(0, 145, Manual_data);
     set_bkg_tiles(0, 0, 20, 18, Manual_map);
 
+    LoadMusic(ThemeSong_Data, 1, 7);
+
     set_sprite_data(0, 21, SpriteData);
     set_sprite_data(21, 10, NumbersData);
+    set_sprite_data(31, 9, SkaterFailSpriteData);
     InitSkaterBoi(&SkaterBoi);
     InitBalanceArrow(&BalanceArrow);
     InitLevelNumber();
@@ -215,5 +243,10 @@ int GameResetState() // State 3
     PlayerXOffset = 0;
     Level = 1;
     LevelProgress = 0;
-    return GAMESTATELOAD;
+    return GAMESTATE;
+}
+
+int GameFailState()
+{
+    return GAMESTATE;
 }

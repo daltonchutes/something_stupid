@@ -7,13 +7,15 @@
 #define MENUSTATELOAD 3
 #define GAMESTATE 4
 #define GAMESTATELOAD 5
-#define GAMESTATERESET 6
+#define GAMESTATEFAIL 6
+#define GAMESTATERESET 7
 
 
 // FUNCTIONS
 void Init();
 void Update();
 void UpdateGame();
+void vbl_update();
 
 // INPUT
 void PollInput();
