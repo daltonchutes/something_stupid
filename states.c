@@ -337,6 +337,7 @@ int GameResetState() // State 3
 
 int GameLoadFailState()
 {
+    FailStateTimer = 0;
     LoadMusic(GameOver_Data, 2, 7);
     return GAMESTATEFAIL;
 }
@@ -347,11 +348,15 @@ int GameFailState()
     if (FailStateTimer > 100)
     {
         LoadMusic(GameOver_Data, 0, 0);
-    }
-    switch(joypad()){
-        case J_START:
-            FailStateTimer = 0;
-            return GAMESTATERESET;
+    
+        switch(joypad()){
+            case J_START:
+            case J_SELECT:
+            case J_A:
+            case J_B:
+                FailStateTimer = 0;
+                return GAMESTATERESET;
+        }
     }
     return GAMESTATEFAIL;
 }

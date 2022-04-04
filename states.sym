@@ -12,7 +12,7 @@ Symbol Table
   0 _ChangeSkatePickupSprite                                       002358 GR
   1 _Counter                                                       000009 GR
   2 _FailStateTimer                                                00034E GR
-  0 _GameFailState                                                 0028B0 GR
+  0 _GameFailState                                                 0028B4 GR
   0 _GameLoadFailState                                             00289B GR
   0 _GameLoadState                                                 00278A GR
     _GameOver_Data                                                 ****** GX
@@ -94,7 +94,7 @@ Hexadecimal [24-Bits]
 
 Area Table
 
-   0 _CODE                                      size   28DB   flags    0
+   0 _CODE                                      size   28EB   flags    0
    1 _DATA                                      size     25   flags    0
    2 _INITIALIZED                               size    363   flags    0
    3 _DABS                                      size      0   flags    8

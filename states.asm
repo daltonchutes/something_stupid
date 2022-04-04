@@ -10197,8 +10197,11 @@ _GameResetState::
 ; Function GameLoadFailState
 ; ---------------------------------
 _GameLoadFailState::
-;states.c:340: LoadMusic(GameOver_Data, 2, 7);
+;states.c:340: FailStateTimer = 0;
+	ld	hl, #_FailStateTimer
+;states.c:341: LoadMusic(GameOver_Data, 2, 7);
 	ld	de, #0x0007
+	ld	(hl), d
 	push	de
 	ld	de, #0x0002
 	push	de
@@ -10206,23 +10209,23 @@ _GameLoadFailState::
 	push	de
 	call	_LoadMusic
 	add	sp, #6
-;states.c:341: return GAMESTATEFAIL;
+;states.c:342: return GAMESTATEFAIL;
 	ld	de, #0x0006
-;states.c:342: }
+;states.c:343: }
 	ret
-;states.c:344: int GameFailState()
+;states.c:345: int GameFailState()
 ;	---------------------------------
 ; Function GameFailState
 ; ---------------------------------
 _GameFailState::
-;states.c:346: FailStateTimer++;
+;states.c:347: FailStateTimer++;
 	ld	hl, #_FailStateTimer
 	inc	(hl)
-;states.c:347: if (FailStateTimer > 100)
+;states.c:348: if (FailStateTimer > 100)
 	ld	a, #0x64
 	sub	a, (hl)
-	jr	NC, 00102$
-;states.c:349: LoadMusic(GameOver_Data, 0, 0);
+	jr	NC, 00107$
+;states.c:350: LoadMusic(GameOver_Data, 0, 0);
 	ld	de, #0x0000
 	push	de
 	push	de
@@ -10230,23 +10233,30 @@ _GameFailState::
 	push	de
 	call	_LoadMusic
 	add	sp, #6
-00102$:
-;states.c:351: switch(joypad()){
+;states.c:352: switch(joypad()){
 	call	_joypad
 	ld	a, e
+	cp	a, #0x10
+	jr	Z, 00104$
+	cp	a, #0x20
+	jr	Z, 00104$
+	cp	a, #0x40
+	jr	Z, 00104$
 	sub	a, #0x80
-	jr	NZ, 00104$
-;states.c:353: FailStateTimer = 0;
+	jr	NZ, 00107$
+;states.c:356: case J_B:
+00104$:
+;states.c:357: FailStateTimer = 0;
 	ld	hl, #_FailStateTimer
-;states.c:354: return GAMESTATERESET;
+;states.c:358: return GAMESTATERESET;
 	ld	de, #0x0007
 	ld	(hl), d
 	ret
-;states.c:355: }
-00104$:
-;states.c:356: return GAMESTATEFAIL;
+;states.c:359: }
+00107$:
+;states.c:361: return GAMESTATEFAIL;
 	ld	de, #0x0006
-;states.c:357: }
+;states.c:362: }
 	ret
 	.area _CODE
 	.area _INITIALIZER
