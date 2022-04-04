@@ -48,28 +48,14 @@ uint8_t FailStateTimer = 0;
 const int difficultyInfluence[] = {
     1, // Level 0 
     2, // Level 1
-    3, // Level 2
-    4, // Level 3
-    5, // Level 4
-    6, // Level 5
-    7, // Level 6
-    8, // Level 7
-    9, // Level 8
-    10, // Level 9
-
-};
-
-int difficultyMaxSpeed[] = {
-    50, // Level 0 
-    60, // Level 1
-    70, // Level 2
-    80, // Level 3
-    90, // Level 4
-    100, // Level 5
-    100, // Level 6
-    100, // Level 7
-    100, // Level 8
-    100 // Level 9
+    4, // Level 2
+    6, // Level 3
+    8, // Level 4
+    10, // Level 5
+    14, // Level 6
+    18, // Level 7
+    22, // Level 8
+    30, // Level 9
 
 };
 
@@ -156,10 +142,10 @@ int GameState() //Main Game state
 
     // Cap Marker Speed
     MarkerSpeed += difficultyInfluence[score4] * MarkerDirection;
-    if(MarkerSpeed > difficultyMaxSpeed[0]){
+    if(MarkerSpeed > 50 ){
         MarkerSpeed = 50;
     }
-    if(MarkerSpeed < -difficultyMaxSpeed[0]){
+    if(MarkerSpeed < -50 ){
         MarkerSpeed = -50;
     }
 
@@ -215,9 +201,10 @@ int GameState() //Main Game state
     if(PlayerPos>>4 < PickupXArray[PickupNumber] && PlayerPos>>4 > PickupXArray[PickupNumber]-16)
     {
         // Move the pickup
-        score3 += 5;
+        score4 += 1;
         PickupNumber++;
         ChangeSkatePickupSprite(PickupNumber);
+        SkateDisplayShowNext(PickupNumber);
     }
 
 
@@ -247,13 +234,6 @@ int SplashLoadState()
 
 int SplashState()
 {
-    switch(joypad())
-    {
-        case J_START:
-        case J_A: 
-            return MENUSTATELOAD;
-            break;
-    }
     return SPLASHSTATE;
 }
 
@@ -306,12 +286,15 @@ int GameLoadState() // State 2
     InitBalanceArrow(&BalanceArrow);
     InitSkatePickupSprite();
     InitLevelScore();
+    InitSkateDisplay();
+    SkateDisplayShowNext(0);
 
     //UpdateLevelNumber(Level);
 
     SHOW_BKG;
     return GAMESTATE;
 }
+
 
 int GameResetState() // State 3  
 {

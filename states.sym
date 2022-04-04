@@ -11,20 +11,21 @@ Symbol Table
   1 _ButtonPressed                                                 000008 GR
   0 _ChangeSkatePickupSprite                                       002358 GR
   1 _Counter                                                       000009 GR
-  2 _FailStateTimer                                                00034E GR
-  0 _GameFailState                                                 0028B0 GR
-  0 _GameLoadFailState                                             00289B GR
-  0 _GameLoadState                                                 00278A GR
+  2 _FailStateTimer                                                000350 GR
+  0 _GameFailState                                                 002A16 GR
+  0 _GameLoadFailState                                             002A01 GR
+  0 _GameLoadState                                                 0028E5 GR
     _GameOver_Data                                                 ****** GX
-  0 _GameResetState                                                00283B GR
-  0 _GameState                                                     0023B4 GR
+  0 _GameResetState                                                0029A1 GR
+  0 _GameState                                                     00252D GR
   1 _GotoFailState                                                 00000A GR
   0 _InitBalanceArrow                                              00224F GR
   0 _InitLevelScore                                                0022C8 GR
+  0 _InitSkateDisplay                                              002378 GR
   0 _InitSkatePickupSprite                                         002352 GR
   0 _InitSkaterBoi                                                 002068 GR
     _LCDC_REG                                                      ****** GX
-  0 _LoadMusic                                                     002378 GR
+  0 _LoadMusic                                                     0024F1 GR
   0 _MainMenuBG_data                                               001758 GR
   0 _MainMenuBG_map                                                0015F0 GR
     _ManualStart_Data                                              ****** GX
@@ -35,42 +36,41 @@ Symbol Table
   1 _MarkerDirection                                               000007 GR
   1 _MarkerPos                                                     000001 GR
   1 _MarkerSpeed                                                   000005 GR
-  0 _MenuLoadState                                                 002742 GR
-  0 _MenuState                                                     00277A GR
+  0 _MenuLoadState                                                 00289D GR
+  0 _MenuState                                                     0028D5 GR
   0 _MoveSkatePickupSprite                                         00236B GR
   2 _NumbersArray                                                  000330 GR
   2 _NumbersData                                                   000170 GR
   1 _PickupNumber                                                  000011 GR
   1 _PickupX                                                       000010 GR
-  0 _PickupXArray                                                  0023AA GR
+  0 _PickupXArray                                                  002523 GR
   1 _PlayerPos                                                     000003 GR
   0 _SetBalanceArrowPos                                            0021E4 GR
   0 _SetSkaterBoiPos                                               00214C GR
   0 _SetSpriteIndex                                                000000 GR
   2 _SkateArray                                                    000344 GR
+  0 _SkateDisplayShowNext                                          0023C9 GR
   1 _SkaterBoi                                                     000012 GR
   2 _SkaterFailSpriteData                                          000260 GR
-  0 _SplashLoadState                                               00272A GR
-  0 _SplashState                                                   00272E GR
+  0 _SplashLoadState                                               002895 GR
+  0 _SplashState                                                   002899 GR
   2 _SpriteData                                                    000000 GR
     _ThemeSong_Data                                                ****** GX
   0 _UpdateLevelScore                                              002309 GR
     __modsint                                                      ****** GX
-    __mulint                                                       ****** GX
-  7 __xinit__FailStateTimer                                        00034E R
 ASxxxx Assembler V02.00 + NoICE + SDCC mods  (GameBoy Z80-like CPU), page 2.
 Hexadecimal [24-Bits]
 
 Symbol Table
 
+    __mulint                                                       ****** GX
+  7 __xinit__FailStateTimer                                        000350 R
   7 __xinit__NumbersArray                                          000330 R
   7 __xinit__NumbersData                                           000170 R
   7 __xinit__SkateArray                                            000344 R
   7 __xinit__SkaterFailSpriteData                                  000260 R
   7 __xinit__SpriteData                                            000000 R
-  7 __xinit__difficultyMaxSpeed                                    00034F R
-  0 _difficultyInfluence                                           002396 GR
-  2 _difficultyMaxSpeed                                            00034F GR
+  0 _difficultyInfluence                                           00250F GR
     _gbt_loop                                                      ****** GX
     _gbt_play                                                      ****** GX
     _joypad                                                        ****** GX
@@ -94,13 +94,13 @@ Hexadecimal [24-Bits]
 
 Area Table
 
-   0 _CODE                                      size   28DB   flags    0
+   0 _CODE                                      size   2A41   flags    0
    1 _DATA                                      size     25   flags    0
-   2 _INITIALIZED                               size    363   flags    0
+   2 _INITIALIZED                               size    351   flags    0
    3 _DABS                                      size      0   flags    8
    4 _HOME                                      size      0   flags    0
    5 _GSINIT                                    size      0   flags    0
    6 _GSFINAL                                   size      0   flags    0
-   7 _INITIALIZER                               size    363   flags    0
+   7 _INITIALIZER                               size    351   flags    0
    8 _CABS                                      size      0   flags    8
 

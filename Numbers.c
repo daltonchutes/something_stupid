@@ -11,7 +11,7 @@ int NumbersArray[] = {
 };
 
 int SkateArray[] = {
-    43, 44, 45, 46, 47
+    43, 44, 45, 46, 47, 48 // 48 is blank
 };
 
 void InitLevelScore(){
@@ -42,4 +42,64 @@ void ChangeSkatePickupSprite(int index){
 
 void MoveSkatePickupSprite(int x, int y){
     move_sprite(13, x, y);
+}
+
+void InitSkateDisplay(){
+    set_sprite_tile(14, SkateArray[5]);
+    set_sprite_tile(15, SkateArray[5]);
+    set_sprite_tile(16, SkateArray[5]);
+    set_sprite_tile(17, SkateArray[5]);
+    set_sprite_tile(18, SkateArray[5]);
+    move_sprite(14, 8, 16);
+    move_sprite(15, 16, 16);
+    move_sprite(16, 24, 16);
+    move_sprite(17, 32, 16);
+    move_sprite(18, 40, 16);
+}
+
+void SkateDisplayShowNext(int stage){
+    switch(stage){
+        case 0:
+            set_sprite_tile(14, SkateArray[5]);
+            set_sprite_tile(15, SkateArray[5]);
+            set_sprite_tile(16, SkateArray[5]);
+            set_sprite_tile(17, SkateArray[5]);
+            set_sprite_tile(18, SkateArray[5]);
+            break;
+        case 1:
+            set_sprite_tile(14, SkateArray[0]);
+            set_sprite_tile(15, SkateArray[5]);
+            set_sprite_tile(16, SkateArray[5]);
+            set_sprite_tile(17, SkateArray[5]);
+            set_sprite_tile(18, SkateArray[5]);
+            break;
+        case 2:
+            set_sprite_tile(14, SkateArray[0]);
+            set_sprite_tile(15, SkateArray[1]);
+            set_sprite_tile(16, SkateArray[5]);
+            set_sprite_tile(17, SkateArray[5]);
+            set_sprite_tile(18, SkateArray[5]);
+            break;
+        case 3:
+            set_sprite_tile(14, SkateArray[0]);
+            set_sprite_tile(15, SkateArray[1]);
+            set_sprite_tile(16, SkateArray[2]);
+            set_sprite_tile(17, SkateArray[5]);
+            set_sprite_tile(18, SkateArray[5]);
+            break;
+        case 4:
+            set_sprite_tile(14, SkateArray[0]);
+            set_sprite_tile(15, SkateArray[1]);
+            set_sprite_tile(16, SkateArray[2]);
+            set_sprite_tile(17, SkateArray[3]);
+            set_sprite_tile(18, SkateArray[5]);
+            break;
+        case 5:
+            set_sprite_tile(14, SkateArray[0]);
+            set_sprite_tile(15, SkateArray[1]);
+            set_sprite_tile(16, SkateArray[2]);
+            set_sprite_tile(17, SkateArray[3]);
+            set_sprite_tile(18, SkateArray[4]);
+            break;
+    }
 }
