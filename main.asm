@@ -94,7 +94,7 @@ _main::
 ; Function Init
 ; ---------------------------------
 _Init::
-;C:/Users/rutha/Documents/GitHub/something_stupid/gbdk/include/gb/gb.h:671: __asm__("di");
+;C:/Users/dalto/Documents/GameboyDevelopment/something_stupid/gbdk/include/gb/gb.h:671: __asm__("di");
 	di
 ;main.c:30: add_VBL(vbl_update);
 	ld	de, #_vbl_update
@@ -107,7 +107,7 @@ _Init::
 	inc	sp
 	call	_set_interrupts
 	inc	sp
-;C:/Users/rutha/Documents/GitHub/something_stupid/gbdk/include/gb/gb.h:655: __asm__("ei");
+;C:/Users/dalto/Documents/GameboyDevelopment/something_stupid/gbdk/include/gb/gb.h:655: __asm__("ei");
 	ei
 ;main.c:34: CurrentState = MENUSTATELOAD;
 	ld	hl, #_CurrentState

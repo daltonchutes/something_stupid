@@ -9,7 +9,6 @@
 #include "Manual_map.c"
 #include "Title_data.c"
 #include "Title_map.c"
-#include "Splash_Data.c"
 #include "MainMenu_data.c"
 #include "skater_boi.c"
 #include "balance_arrow.c"
@@ -43,6 +42,8 @@ uint8_t score4;
 
 uint8_t PickupX;
 uint8_t PickupNumber;
+
+uint8_t FailStateTimer = 0;
 
 const int difficultyInfluence[] = {
     1, // Level 0 
@@ -241,12 +242,6 @@ int GameState() //Main Game state
 
 int SplashLoadState()
 {
-    set_bkg_data(0, 145, SplashBG_data);
-    set_bkg_tiles(0, 0, 20, 18, SplashBG_map);
-
-    LoadMusic(ManualStart_Data, 1, 7);
-
-    SHOW_BKG;
     return SPLASHSTATE;    
 }
 
@@ -342,14 +337,20 @@ int GameResetState() // State 3
 
 int GameLoadFailState()
 {
-    LoadMusic(GameOver_Data, 0, 7);
+    LoadMusic(GameOver_Data, 2, 7);
     return GAMESTATEFAIL;
 }
 
 int GameFailState()
 {
+    FailStateTimer++;
+    if (FailStateTimer > 100)
+    {
+        LoadMusic(GameOver_Data, 0, 0);
+    }
     switch(joypad()){
         case J_START:
+            FailStateTimer = 0;
             return GAMESTATERESET;
     }
     return GAMESTATEFAIL;
