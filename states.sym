@@ -7,95 +7,88 @@ Symbol Table
     .__.ABS.                                                    =  000000 G
     .__.CPU.                                                    =  000000 L
     .__.H$L.                                                    =  000000 L
-  1 _BalanceArrow                                                  00000B GR
-  2 _Counter                                                       0002BC GR
-  2 _CounterMaxLevelArray                                          0002DC GR
-  0 _GameFailState                                                 003119 GR
-  0 _GameLoadState                                                 00305A GR
-  0 _GameResetState                                                0030D7 GR
-  0 _GameState                                                     002D6B GR
-  2 _InfluenceCounter                                              0002C0 GR
-  2 _InfluenceCounterMaxLevelArray                                 0002C8 GR
-  0 _InitBalanceArrow                                              002C37 GR
-  0 _InitLevelNumber                                               002C85 GR
-  0 _InitSkaterBoi                                                 002A50 GR
+  1 _BalanceArrow                                                  00001B GR
+  1 _ButtonPressed                                                 000008 GR
+  1 _Counter                                                       000009 GR
+  0 _GameFailState                                                 00329D GR
+  0 _GameLoadFailState                                             003281 GR
+  0 _GameLoadState                                                 00318B GR
+    _GameOver_Data                                                 ****** GX
+  0 _GameResetState                                                00322D GR
+  0 _GameState                                                     002DE3 GR
+  1 _GotoFailState                                                 00000A GR
+  0 _InitBalanceArrow                                              002CC7 GR
+  0 _InitLevelScore                                                002D27 GR
+  0 _InitSkaterBoi                                                 002AE0 GR
     _LCDC_REG                                                      ****** GX
-  2 _Level                                                         0002C4 GR
-  2 _LevelProgress                                                 0002C6 GR
-  0 _LoadMusic                                                     002CA9 GR
-  0 _MainMenuBG_data                                               002140 GR
-  0 _MainMenuBG_map                                                001FD8 GR
-  2 _ManualBar                                                     0002B6 GR
-  2 _ManualBarDar                                                  0002B8 GR
-  2 _ManualBarInfluence                                            0002BA GR
+  0 _LoadMusic                                                     002DB1 GR
+  0 _MainMenuBG_data                                               0021D0 GR
+  0 _MainMenuBG_map                                                002068 GR
     _ManualStart_Data                                              ****** GX
-  0 _Manual_Manny_data                                             000AB8 GR
-  0 _Manual_Manny_map                                              0013F8 GR
+  0 _Manual_Manny_data                                             000B48 GR
+  0 _Manual_Manny_map                                              001488 GR
   0 _Manual_data                                                   000040 GR
-  0 _Manual_map                                                    000950 GR
-  0 _MenuLoadState                                                 002D23 GR
-  0 _MenuState                                                     002D5B GR
-  2 _NumbersArray                                                  0002A0 GR
+  0 _Manual_map                                                    0009E0 GR
+  1 _MarkerDirection                                               000007 GR
+  1 _MarkerPos                                                     000001 GR
+  1 _MarkerSpeed                                                   000005 GR
+  0 _MenuLoadState                                                 003143 GR
+  0 _MenuState                                                     00317B GR
+  2 _NumbersArray                                                  0002E0 GR
   2 _NumbersData                                                   000170 GR
-  2 _PlayerCounter                                                 0002BE GR
-  2 _PlayerXOffset                                                 0002C2 GR
-  0 _SetBalanceArrowPos                                            002BCC GR
-  0 _SetSkaterBoiPos                                               002B34 GR
+  1 _PlayerPos                                                     000003 GR
+  0 _SetBalanceArrowPos                                            002C5C GR
+  0 _SetSkaterBoiPos                                               002BC4 GR
   0 _SetSpriteIndex                                                000000 GR
-  1 _SkaterBoi                                                     000000 GR
+  1 _SkaterBoi                                                     000010 GR
   2 _SkaterFailSpriteData                                          000210 GR
-  0 _SplashBG_data                                                 0016C8 GR
-  0 _SplashBG_map                                                  001560 GR
-  0 _SplashLoadState                                               002CD7 GR
-  0 _SplashState                                                   002D0F GR
+  0 _SplashBG_data                                                 001758 GR
+  0 _SplashBG_map                                                  0015F0 GR
+  0 _SplashLoadState                                               0030F7 GR
+  0 _SplashState                                                   00312F GR
   2 _SpriteData                                                    000000 GR
     _ThemeSong_Data                                                ****** GX
-  0 _UpdateLevelNumber                                             002C96 GR
-  7 __xinit__Counter                                               0002BC R
-  7 __xinit__CounterMaxLevelArray                                  0002DC R
-  7 __xinit__InfluenceCounter                                      0002C0 R
-  7 __xinit__InfluenceCounterMaxLevelArray                         0002C8 R
-  7 __xinit__Level                                                 0002C4 R
-  7 __xinit__LevelProgress                                         0002C6 R
-  7 __xinit__ManualBar                                             0002B6 R
+  0 _UpdateLevelScore                                              002D68 GR
+    __mulint                                                       ****** GX
+  7 __xinit__NumbersArray                                          0002E0 R
+  7 __xinit__NumbersData                                           000170 R
+  7 __xinit__SkaterFailSpriteData                                  000210 R
+  7 __xinit__SpriteData                                            000000 R
+  0 _difficultyInfluence                                           002DCF GR
+    _gbt_loop                                                      ****** GX
+    _gbt_play                                                      ****** GX
+    _joypad                                                        ****** GX
 ASxxxx Assembler V02.00 + NoICE + SDCC mods  (GameBoy Z80-like CPU), page 2.
 Hexadecimal [24-Bits]
 
 Symbol Table
 
-  7 __xinit__ManualBarDar                                          0002B8 R
-  7 __xinit__ManualBarInfluence                                    0002BA R
-  7 __xinit__NumbersArray                                          0002A0 R
-  7 __xinit__NumbersData                                           000170 R
-  7 __xinit__PlayerCounter                                         0002BE R
-  7 __xinit__PlayerXOffset                                         0002C2 R
-  7 __xinit__SkaterFailSpriteData                                  000210 R
-  7 __xinit__SpriteData                                            000000 R
-    _add_VBL                                                       ****** GX
-    _gbt_loop                                                      ****** GX
-    _gbt_play                                                      ****** GX
-    _joypad                                                        ****** GX
+  1 _r                                                             000000 GR
     _rand                                                          ****** GX
-  0 _randomXD                                                      002C7A GR
+  0 _randomDir                                                     002D15 GR
+  0 _randomXD                                                      002D0A GR
+  1 _score1                                                        00000B GR
+  1 _score2                                                        00000D GR
+  1 _score3                                                        00000E GR
+  1 _score4                                                        00000F GR
     _set_bkg_data                                                  ****** GX
     _set_bkg_tiles                                                 ****** GX
-    _set_interrupts                                                ****** GX
     _set_sprite_data                                               ****** GX
     _shadow_OAM                                                    ****** GX
-    _vbl_update                                                    ****** GX
+
 
 ASxxxx Assembler V02.00 + NoICE + SDCC mods  (GameBoy Z80-like CPU), page 3.
 Hexadecimal [24-Bits]
 
 Area Table
 
-   0 _CODE                                      size   311D   flags    0
-   1 _DATA                                      size     13   flags    0
-   2 _INITIALIZED                               size    2F0   flags    0
+   0 _CODE                                      size   32AD   flags    0
+   1 _DATA                                      size     23   flags    0
+   2 _INITIALIZED                               size    2F6   flags    0
    3 _DABS                                      size      0   flags    8
    4 _HOME                                      size      0   flags    0
    5 _GSINIT                                    size      0   flags    0
    6 _GSFINAL                                   size      0   flags    0
-   7 _INITIALIZER                               size    2F0   flags    0
+   7 _INITIALIZER                               size    2F6   flags    0
    8 _CABS                                      size      0   flags    8
 

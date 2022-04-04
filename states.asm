@@ -9,18 +9,20 @@
 ; Public variables in this module
 ;--------------------------------------------------------
 	.globl _GameFailState
+	.globl _GameLoadFailState
 	.globl _GameResetState
 	.globl _GameLoadState
-	.globl _GameState
 	.globl _MenuState
 	.globl _MenuLoadState
 	.globl _SplashState
 	.globl _SplashLoadState
+	.globl _GameState
 	.globl _LoadMusic
 	.globl _gbt_loop
 	.globl _gbt_play
-	.globl _UpdateLevelNumber
-	.globl _InitLevelNumber
+	.globl _UpdateLevelScore
+	.globl _InitLevelScore
+	.globl _randomDir
 	.globl _randomXD
 	.globl _rand
 	.globl _InitBalanceArrow
@@ -28,30 +30,29 @@
 	.globl _SetSkaterBoiPos
 	.globl _InitSkaterBoi
 	.globl _SetSpriteIndex
-	.globl _vbl_update
 	.globl _set_sprite_data
 	.globl _set_bkg_tiles
 	.globl _set_bkg_data
-	.globl _set_interrupts
 	.globl _joypad
-	.globl _add_VBL
-	.globl _CounterMaxLevelArray
-	.globl _InfluenceCounterMaxLevelArray
-	.globl _LevelProgress
-	.globl _Level
-	.globl _PlayerXOffset
-	.globl _InfluenceCounter
-	.globl _PlayerCounter
-	.globl _Counter
-	.globl _ManualBarInfluence
-	.globl _ManualBarDar
-	.globl _ManualBar
 	.globl _NumbersArray
 	.globl _SkaterFailSpriteData
 	.globl _NumbersData
 	.globl _SpriteData
 	.globl _BalanceArrow
 	.globl _SkaterBoi
+	.globl _score4
+	.globl _score3
+	.globl _score2
+	.globl _score1
+	.globl _GotoFailState
+	.globl _Counter
+	.globl _ButtonPressed
+	.globl _MarkerDirection
+	.globl _MarkerSpeed
+	.globl _PlayerPos
+	.globl _MarkerPos
+	.globl _r
+	.globl _difficultyInfluence
 	.globl _MainMenuBG_data
 	.globl _MainMenuBG_map
 	.globl _SplashBG_data
@@ -67,6 +68,30 @@
 ; ram data
 ;--------------------------------------------------------
 	.area _DATA
+_r::
+	.ds 1
+_MarkerPos::
+	.ds 2
+_PlayerPos::
+	.ds 2
+_MarkerSpeed::
+	.ds 2
+_MarkerDirection::
+	.ds 1
+_ButtonPressed::
+	.ds 1
+_Counter::
+	.ds 1
+_GotoFailState::
+	.ds 1
+_score1::
+	.ds 2
+_score2::
+	.ds 1
+_score3::
+	.ds 1
+_score4::
+	.ds 1
 _SkaterBoi::
 	.ds 11
 _BalanceArrow::
@@ -80,31 +105,9 @@ _SpriteData::
 _NumbersData::
 	.ds 160
 _SkaterFailSpriteData::
-	.ds 144
+	.ds 208
 _NumbersArray::
 	.ds 22
-_ManualBar::
-	.ds 2
-_ManualBarDar::
-	.ds 2
-_ManualBarInfluence::
-	.ds 2
-_Counter::
-	.ds 2
-_PlayerCounter::
-	.ds 2
-_InfluenceCounter::
-	.ds 2
-_PlayerXOffset::
-	.ds 2
-_Level::
-	.ds 2
-_LevelProgress::
-	.ds 2
-_InfluenceCounterMaxLevelArray::
-	.ds 20
-_CounterMaxLevelArray::
-	.ds 20
 ;--------------------------------------------------------
 ; absolute external ram data
 ;--------------------------------------------------------
@@ -150,20 +153,20 @@ _SetSpriteIndex::
 	add	a, a
 	add	a, #0x03
 	ld	c, a
-;C:/LudumDare50/gbdk/include/gb/gb.h:1447: shadow_OAM[nb].tile=tile;
+;C:/Users/rutha/Documents/GitHub/something_stupid/gbdk/include/gb/gb.h:1447: shadow_OAM[nb].tile=tile;
 	ld	hl, #(_shadow_OAM + 14)
 	ld	(hl), c
 ;skater_boi.c:21: set_sprite_tile(4, Offset + 1);
 	ld	b, c
 	inc	b
-;C:/LudumDare50/gbdk/include/gb/gb.h:1447: shadow_OAM[nb].tile=tile;
+;C:/Users/rutha/Documents/GitHub/something_stupid/gbdk/include/gb/gb.h:1447: shadow_OAM[nb].tile=tile;
 	ld	hl, #(_shadow_OAM + 18)
 	ld	(hl), b
 ;skater_boi.c:22: set_sprite_tile(5, Offset + 2);
 	ld	b, c
 	inc	b
 	inc	b
-;C:/LudumDare50/gbdk/include/gb/gb.h:1447: shadow_OAM[nb].tile=tile;
+;C:/Users/rutha/Documents/GitHub/something_stupid/gbdk/include/gb/gb.h:1447: shadow_OAM[nb].tile=tile;
 	ld	hl, #(_shadow_OAM + 22)
 	ld	(hl), b
 ;skater_boi.c:23: set_sprite_tile(6, Offset + 3);
@@ -171,7 +174,7 @@ _SetSpriteIndex::
 	inc	b
 	inc	b
 	inc	b
-;C:/LudumDare50/gbdk/include/gb/gb.h:1447: shadow_OAM[nb].tile=tile;
+;C:/Users/rutha/Documents/GitHub/something_stupid/gbdk/include/gb/gb.h:1447: shadow_OAM[nb].tile=tile;
 	ld	hl, #(_shadow_OAM + 26)
 	ld	(hl), b
 ;skater_boi.c:24: set_sprite_tile(7, Offset + 4);
@@ -180,14 +183,14 @@ _SetSpriteIndex::
 	inc	b
 	inc	b
 	inc	b
-;C:/LudumDare50/gbdk/include/gb/gb.h:1447: shadow_OAM[nb].tile=tile;
+;C:/Users/rutha/Documents/GitHub/something_stupid/gbdk/include/gb/gb.h:1447: shadow_OAM[nb].tile=tile;
 	ld	hl, #(_shadow_OAM + 30)
 	ld	(hl), b
 ;skater_boi.c:25: set_sprite_tile(8, Offset + 5);
 	ld	a, c
 	add	a, #0x05
 	ld	c, a
-;C:/LudumDare50/gbdk/include/gb/gb.h:1447: shadow_OAM[nb].tile=tile;
+;C:/Users/rutha/Documents/GitHub/something_stupid/gbdk/include/gb/gb.h:1447: shadow_OAM[nb].tile=tile;
 	ld	hl, #(_shadow_OAM + 34)
 	ld	(hl), c
 ;skater_boi.c:25: set_sprite_tile(8, Offset + 5);
@@ -195,7 +198,119 @@ _SetSpriteIndex::
 	ret
 _Manual_data:
 	.db #0x00	; 0
-	.db #0x80	; 128
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x3c	; 60
+	.db #0x3c	; 60
+	.db #0x60	; 96
+	.db #0x60	; 96
+	.db #0x3c	; 60
+	.db #0x3c	; 60
+	.db #0x0e	; 14
+	.db #0x0e	; 14
+	.db #0x4e	; 78	'N'
+	.db #0x4e	; 78	'N'
+	.db #0x3c	; 60
+	.db #0x3c	; 60
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x3c	; 60
+	.db #0x3c	; 60
+	.db #0x66	; 102	'f'
+	.db #0x66	; 102	'f'
+	.db #0x60	; 96
+	.db #0x60	; 96
+	.db #0x60	; 96
+	.db #0x60	; 96
+	.db #0x66	; 102	'f'
+	.db #0x66	; 102	'f'
+	.db #0x3c	; 60
+	.db #0x3c	; 60
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x3c	; 60
+	.db #0x3c	; 60
+	.db #0x66	; 102	'f'
+	.db #0x66	; 102	'f'
+	.db #0x66	; 102	'f'
+	.db #0x66	; 102	'f'
+	.db #0x66	; 102	'f'
+	.db #0x66	; 102	'f'
+	.db #0x66	; 102	'f'
+	.db #0x66	; 102	'f'
+	.db #0x3c	; 60
+	.db #0x3c	; 60
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x7c	; 124
+	.db #0x7c	; 124
+	.db #0x66	; 102	'f'
+	.db #0x66	; 102	'f'
+	.db #0x66	; 102	'f'
+	.db #0x66	; 102	'f'
+	.db #0x7c	; 124
+	.db #0x7c	; 124
+	.db #0x68	; 104	'h'
+	.db #0x68	; 104	'h'
+	.db #0x66	; 102	'f'
+	.db #0x66	; 102	'f'
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x7e	; 126
+	.db #0x7e	; 126
+	.db #0x60	; 96
+	.db #0x60	; 96
+	.db #0x7c	; 124
+	.db #0x7c	; 124
+	.db #0x60	; 96
+	.db #0x60	; 96
+	.db #0x60	; 96
+	.db #0x60	; 96
+	.db #0x7e	; 126
+	.db #0x7e	; 126
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0xff	; 255
+	.db #0xff	; 255
+	.db #0x00	; 0
+	.db #0xff	; 255
+	.db #0x00	; 0
+	.db #0xff	; 255
+	.db #0x00	; 0
+	.db #0xff	; 255
+	.db #0x00	; 0
+	.db #0xff	; 255
+	.db #0x00	; 0
+	.db #0xff	; 255
+	.db #0x00	; 0
+	.db #0xff	; 255
+	.db #0x00	; 0
+	.db #0xff	; 255
+	.db #0xff	; 255
+	.db #0xff	; 255
 	.db #0x00	; 0
 	.db #0xc0	; 192
 	.db #0x00	; 0
@@ -210,16 +325,8 @@ _Manual_data:
 	.db #0xfe	; 254
 	.db #0x00	; 0
 	.db #0xff	; 255
-	.db #0x00	; 0
-	.db #0x00	; 0
-	.db #0x00	; 0
-	.db #0x00	; 0
-	.db #0x00	; 0
-	.db #0x00	; 0
-	.db #0x00	; 0
-	.db #0x00	; 0
-	.db #0x00	; 0
-	.db #0x00	; 0
+	.db #0xff	; 255
+	.db #0xff	; 255
 	.db #0x00	; 0
 	.db #0x00	; 0
 	.db #0x00	; 0
@@ -235,31 +342,7 @@ _Manual_data:
 	.db #0x00	; 0
 	.db #0x00	; 0
 	.db #0xff	; 255
-	.db #0x00	; 0
 	.db #0xff	; 255
-	.db #0x00	; 0
-	.db #0xff	; 255
-	.db #0x00	; 0
-	.db #0xff	; 255
-	.db #0x00	; 0
-	.db #0x00	; 0
-	.db #0xff	; 255
-	.db #0x00	; 0
-	.db #0xff	; 255
-	.db #0x00	; 0
-	.db #0xff	; 255
-	.db #0x00	; 0
-	.db #0xff	; 255
-	.db #0x00	; 0
-	.db #0xff	; 255
-	.db #0x00	; 0
-	.db #0xff	; 255
-	.db #0x00	; 0
-	.db #0xff	; 255
-	.db #0x00	; 0
-	.db #0xff	; 255
-	.db #0xff	; 255
-	.db #0x00	; 0
 	.db #0x99	; 153
 	.db #0x00	; 0
 	.db #0x99	; 153
@@ -275,6 +358,37 @@ _Manual_data:
 	.db #0xff	; 255
 	.db #0x00	; 0
 	.db #0xff	; 255
+	.db #0xff	; 255
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0xff	; 255
+	.db #0x00	; 0
+	.db #0xff	; 255
+	.db #0x00	; 0
+	.db #0xff	; 255
+	.db #0x00	; 0
+	.db #0xff	; 255
+	.db #0x00	; 0
+	.db #0xff	; 255
+	.db #0xff	; 255
+	.db #0xff	; 255
+	.db #0x00	; 0
+	.db #0xff	; 255
+	.db #0x00	; 0
+	.db #0xff	; 255
+	.db #0x00	; 0
+	.db #0xff	; 255
+	.db #0x00	; 0
+	.db #0xff	; 255
+	.db #0x00	; 0
+	.db #0xff	; 255
+	.db #0x00	; 0
+	.db #0xff	; 255
+	.db #0x00	; 0
 	.db #0x00	; 0
 	.db #0xff	; 255
 	.db #0x00	; 0
@@ -290,6 +404,7 @@ _Manual_data:
 	.db #0x00	; 0
 	.db #0xff	; 255
 	.db #0x00	; 0
+	.db #0xff	; 255
 	.db #0x3f	; 63
 	.db #0x80	; 128
 	.db #0x1f	; 31
@@ -340,6 +455,22 @@ _Manual_data:
 	.db #0x08	; 8
 	.db #0xff	; 255
 	.db #0x00	; 0
+	.db #0x99	; 153
+	.db #0x00	; 0
+	.db #0x99	; 153
+	.db #0x00	; 0
+	.db #0xff	; 255
+	.db #0x00	; 0
+	.db #0xff	; 255
+	.db #0x00	; 0
+	.db #0x99	; 153
+	.db #0x00	; 0
+	.db #0x99	; 153
+	.db #0x00	; 0
+	.db #0xff	; 255
+	.db #0x00	; 0
+	.db #0xff	; 255
+	.db #0x00	; 0
 	.db #0xff	; 255
 	.db #0x00	; 0
 	.db #0xff	; 255
@@ -354,6 +485,22 @@ _Manual_data:
 	.db #0x00	; 0
 	.db #0x1f	; 31
 	.db #0x40	; 64
+	.db #0xff	; 255
+	.db #0x00	; 0
+	.db #0xff	; 255
+	.db #0x00	; 0
+	.db #0xff	; 255
+	.db #0x00	; 0
+	.db #0xff	; 255
+	.db #0x00	; 0
+	.db #0xff	; 255
+	.db #0x00	; 0
+	.db #0xff	; 255
+	.db #0x00	; 0
+	.db #0xff	; 255
+	.db #0x00	; 0
+	.db #0xff	; 255
+	.db #0x00	; 0
 	.db #0xfe	; 254
 	.db #0x00	; 0
 	.db #0xfe	; 254
@@ -614,16 +761,16 @@ _Manual_data:
 	.db #0x00	; 0
 	.db #0xfe	; 254
 	.db #0x00	; 0
+	.db #0xfe	; 254
+	.db #0x00	; 0
 	.db #0xfc	; 252
 	.db #0x00	; 0
-	.db #0xf8	; 248
-	.db #0x02	; 2
-	.db #0xc2	; 194
-	.db #0x04	; 4
+	.db #0xc3	; 195
+	.db #0x00	; 0
 	.db #0x3c	; 60
-	.db #0x02	; 2
+	.db #0x00	; 0
 	.db #0xc0	; 192
-	.db #0x1e	; 30
+	.db #0x02	; 2
 	.db #0x00	; 0
 	.db #0x3e	; 62
 	.db #0x00	; 0
@@ -2516,77 +2663,68 @@ _Manual_data:
 	.db #0xff	; 255
 _Manual_map:
 	.db #0x00	; 0
-	.db #0x01	; 1
-	.db #0x01	; 1
-	.db #0x01	; 1
-	.db #0x02	; 2
-	.db #0x02	; 2
-	.db #0x02	; 2
-	.db #0x01	; 1
-	.db #0x01	; 1
-	.db #0x01	; 1
-	.db #0x01	; 1
-	.db #0x01	; 1
-	.db #0x01	; 1
-	.db #0x01	; 1
-	.db #0x01	; 1
-	.db #0x03	; 3
-	.db #0x03	; 3
-	.db #0x03	; 3
-	.db #0x03	; 3
-	.db #0x03	; 3
-	.db #0x03	; 3
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
 	.db #0x00	; 0
 	.db #0x01	; 1
-	.db #0x01	; 1
-	.db #0x04	; 4
-	.db #0x04	; 4
-	.db #0x04	; 4
 	.db #0x02	; 2
-	.db #0x02	; 2
-	.db #0x05	; 5
-	.db #0x05	; 5
+	.db #0x03	; 3
 	.db #0x04	; 4
-	.db #0x04	; 4
-	.db #0x01	; 1
-	.db #0x01	; 1
-	.db #0x03	; 3
-	.db #0x03	; 3
-	.db #0x03	; 3
-	.db #0x03	; 3
-	.db #0x03	; 3
-	.db #0x03	; 3
-	.db #0x03	; 3
+	.db #0x05	; 5
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
 	.db #0x06	; 6
 	.db #0x07	; 7
 	.db #0x08	; 8
-	.db #0x04	; 4
-	.db #0x05	; 5
-	.db #0x04	; 4
+	.db #0x08	; 8
 	.db #0x09	; 9
-	.db #0x05	; 5
-	.db #0x04	; 4
-	.db #0x04	; 4
-	.db #0x05	; 5
-	.db #0x04	; 4
+	.db #0x09	; 9
+	.db #0x09	; 9
 	.db #0x0a	; 10
-	.db #0x03	; 3
+	.db #0x0a	; 10
 	.db #0x0b	; 11
+	.db #0x0b	; 11
+	.db #0x09	; 9
+	.db #0x09	; 9
+	.db #0x08	; 8
+	.db #0x08	; 8
+	.db #0x06	; 6
+	.db #0x06	; 6
+	.db #0x06	; 6
+	.db #0x06	; 6
+	.db #0x06	; 6
+	.db #0x0c	; 12
 	.db #0x0c	; 12
 	.db #0x0d	; 13
 	.db #0x0e	; 14
-	.db #0x03	; 3
-	.db #0x03	; 3
-	.db #0x03	; 3
 	.db #0x0f	; 15
+	.db #0x10	; 16
+	.db #0x10	; 16
 	.db #0x10	; 16
 	.db #0x11	; 17
 	.db #0x12	; 18
+	.db #0x10	; 16
+	.db #0x10	; 16
+	.db #0x12	; 18
+	.db #0x10	; 16
 	.db #0x13	; 19
+	.db #0x0c	; 12
 	.db #0x14	; 20
 	.db #0x15	; 21
 	.db #0x16	; 22
 	.db #0x17	; 23
+	.db #0x0c	; 12
+	.db #0x0c	; 12
+	.db #0x0c	; 12
 	.db #0x18	; 24
 	.db #0x19	; 25
 	.db #0x1a	; 26
@@ -2595,87 +2733,84 @@ _Manual_map:
 	.db #0x1d	; 29
 	.db #0x1e	; 30
 	.db #0x1f	; 31
-	.db #0x03	; 3
-	.db #0x03	; 3
-	.db #0x03	; 3
-	.db #0x03	; 3
 	.db #0x20	; 32
 	.db #0x21	; 33
 	.db #0x22	; 34
-	.db #0x03	; 3
-	.db #0x03	; 3
 	.db #0x23	; 35
 	.db #0x24	; 36
 	.db #0x25	; 37
 	.db #0x26	; 38
 	.db #0x27	; 39
 	.db #0x28	; 40
+	.db #0x0c	; 12
+	.db #0x0c	; 12
+	.db #0x0c	; 12
+	.db #0x0c	; 12
 	.db #0x29	; 41
 	.db #0x2a	; 42
 	.db #0x2b	; 43
+	.db #0x0c	; 12
+	.db #0x0c	; 12
 	.db #0x2c	; 44
-	.db #0x03	; 3
-	.db #0x03	; 3
-	.db #0x03	; 3
-	.db #0x03	; 3
-	.db #0x03	; 3
-	.db #0x03	; 3
 	.db #0x2d	; 45
-	.db #0x03	; 3
-	.db #0x03	; 3
-	.db #0x03	; 3
-	.db #0x03	; 3
-	.db #0x03	; 3
-	.db #0x03	; 3
-	.db #0x03	; 3
-	.db #0x03	; 3
 	.db #0x2e	; 46
 	.db #0x2f	; 47
 	.db #0x30	; 48	'0'
 	.db #0x31	; 49	'1'
 	.db #0x32	; 50	'2'
 	.db #0x33	; 51	'3'
-	.db #0x03	; 3
 	.db #0x34	; 52	'4'
 	.db #0x35	; 53	'5'
-	.db #0x03	; 3
-	.db #0x03	; 3
+	.db #0x0c	; 12
+	.db #0x0c	; 12
+	.db #0x0c	; 12
+	.db #0x0c	; 12
+	.db #0x0c	; 12
+	.db #0x0c	; 12
 	.db #0x36	; 54	'6'
-	.db #0x03	; 3
-	.db #0x03	; 3
-	.db #0x03	; 3
-	.db #0x03	; 3
-	.db #0x03	; 3
-	.db #0x03	; 3
+	.db #0x0c	; 12
+	.db #0x0c	; 12
+	.db #0x0c	; 12
+	.db #0x0c	; 12
+	.db #0x0c	; 12
+	.db #0x0c	; 12
+	.db #0x0c	; 12
+	.db #0x0c	; 12
 	.db #0x37	; 55	'7'
-	.db #0x03	; 3
-	.db #0x2e	; 46
 	.db #0x38	; 56	'8'
 	.db #0x39	; 57	'9'
 	.db #0x3a	; 58
 	.db #0x3b	; 59
 	.db #0x3c	; 60
-	.db #0x03	; 3
+	.db #0x0c	; 12
 	.db #0x3d	; 61
 	.db #0x3e	; 62
-	.db #0x03	; 3
+	.db #0x0c	; 12
+	.db #0x0c	; 12
 	.db #0x3f	; 63
+	.db #0x0c	; 12
+	.db #0x0c	; 12
+	.db #0x0c	; 12
+	.db #0x0c	; 12
+	.db #0x0c	; 12
+	.db #0x0c	; 12
 	.db #0x40	; 64
+	.db #0x0c	; 12
+	.db #0x37	; 55	'7'
 	.db #0x41	; 65	'A'
 	.db #0x42	; 66	'B'
 	.db #0x43	; 67	'C'
 	.db #0x44	; 68	'D'
 	.db #0x45	; 69	'E'
+	.db #0x0c	; 12
 	.db #0x46	; 70	'F'
 	.db #0x47	; 71	'G'
+	.db #0x0c	; 12
 	.db #0x48	; 72	'H'
 	.db #0x49	; 73	'I'
 	.db #0x4a	; 74	'J'
 	.db #0x4b	; 75	'K'
 	.db #0x4c	; 76	'L'
-	.db #0x03	; 3
-	.db #0x03	; 3
-	.db #0x03	; 3
 	.db #0x4d	; 77	'M'
 	.db #0x4e	; 78	'N'
 	.db #0x4f	; 79	'O'
@@ -2685,6 +2820,9 @@ _Manual_map:
 	.db #0x53	; 83	'S'
 	.db #0x54	; 84	'T'
 	.db #0x55	; 85	'U'
+	.db #0x0c	; 12
+	.db #0x0c	; 12
+	.db #0x0c	; 12
 	.db #0x56	; 86	'V'
 	.db #0x57	; 87	'W'
 	.db #0x58	; 88	'X'
@@ -2693,9 +2831,6 @@ _Manual_map:
 	.db #0x5b	; 91
 	.db #0x5c	; 92
 	.db #0x5d	; 93
-	.db #0x03	; 3
-	.db #0x03	; 3
-	.db #0x03	; 3
 	.db #0x5e	; 94
 	.db #0x5f	; 95
 	.db #0x60	; 96
@@ -2705,176 +2840,188 @@ _Manual_map:
 	.db #0x64	; 100	'd'
 	.db #0x65	; 101	'e'
 	.db #0x66	; 102	'f'
+	.db #0x0c	; 12
+	.db #0x0c	; 12
+	.db #0x0c	; 12
 	.db #0x67	; 103	'g'
 	.db #0x68	; 104	'h'
 	.db #0x69	; 105	'i'
 	.db #0x6a	; 106	'j'
 	.db #0x6b	; 107	'k'
-	.db #0x03	; 3
 	.db #0x6c	; 108	'l'
 	.db #0x6d	; 109	'm'
-	.db #0x03	; 3
-	.db #0x03	; 3
-	.db #0x03	; 3
 	.db #0x6e	; 110	'n'
 	.db #0x6f	; 111	'o'
 	.db #0x70	; 112	'p'
-	.db #0x03	; 3
 	.db #0x71	; 113	'q'
 	.db #0x72	; 114	'r'
-	.db #0x72	; 114	'r'
-	.db #0x72	; 114	'r'
-	.db #0x72	; 114	'r'
-	.db #0x72	; 114	'r'
-	.db #0x72	; 114	'r'
-	.db #0x72	; 114	'r'
-	.db #0x72	; 114	'r'
 	.db #0x73	; 115	's'
-	.db #0x03	; 3
 	.db #0x74	; 116	't'
+	.db #0x0c	; 12
 	.db #0x75	; 117	'u'
-	.db #0x03	; 3
-	.db #0x03	; 3
-	.db #0x03	; 3
 	.db #0x76	; 118	'v'
-	.db #0x03	; 3
-	.db #0x03	; 3
+	.db #0x0c	; 12
+	.db #0x0c	; 12
+	.db #0x0c	; 12
 	.db #0x77	; 119	'w'
-	.db #0x01	; 1
-	.db #0x01	; 1
-	.db #0x01	; 1
-	.db #0x01	; 1
-	.db #0x01	; 1
-	.db #0x01	; 1
-	.db #0x01	; 1
-	.db #0x01	; 1
-	.db #0x01	; 1
-	.db #0x01	; 1
 	.db #0x78	; 120	'x'
 	.db #0x79	; 121	'y'
-	.db #0x75	; 117	'u'
-	.db #0x03	; 3
-	.db #0x03	; 3
-	.db #0x03	; 3
-	.db #0x03	; 3
-	.db #0x03	; 3
+	.db #0x0c	; 12
 	.db #0x7a	; 122	'z'
 	.db #0x7b	; 123
-	.db #0x01	; 1
-	.db #0x01	; 1
-	.db #0x01	; 1
-	.db #0x01	; 1
-	.db #0x01	; 1
-	.db #0x01	; 1
-	.db #0x01	; 1
-	.db #0x01	; 1
-	.db #0x01	; 1
-	.db #0x01	; 1
+	.db #0x7b	; 123
+	.db #0x7b	; 123
+	.db #0x7b	; 123
+	.db #0x7b	; 123
+	.db #0x7b	; 123
+	.db #0x7b	; 123
+	.db #0x7b	; 123
 	.db #0x7c	; 124
+	.db #0x0c	; 12
 	.db #0x7d	; 125
-	.db #0x75	; 117	'u'
-	.db #0x03	; 3
-	.db #0x03	; 3
-	.db #0x03	; 3
-	.db #0x03	; 3
-	.db #0x7a	; 122	'z'
-	.db #0x05	; 5
 	.db #0x7e	; 126
-	.db #0x01	; 1
-	.db #0x01	; 1
-	.db #0x01	; 1
-	.db #0x01	; 1
-	.db #0x01	; 1
-	.db #0x01	; 1
-	.db #0x01	; 1
-	.db #0x01	; 1
-	.db #0x01	; 1
-	.db #0x01	; 1
-	.db #0x01	; 1
+	.db #0x0c	; 12
+	.db #0x0c	; 12
+	.db #0x0c	; 12
 	.db #0x7f	; 127
+	.db #0x0c	; 12
+	.db #0x0c	; 12
 	.db #0x80	; 128
-	.db #0x03	; 3
-	.db #0x03	; 3
-	.db #0x03	; 3
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
 	.db #0x81	; 129
 	.db #0x82	; 130
+	.db #0x7e	; 126
+	.db #0x0c	; 12
+	.db #0x0c	; 12
+	.db #0x0c	; 12
+	.db #0x0c	; 12
+	.db #0x0c	; 12
 	.db #0x83	; 131
-	.db #0x01	; 1
-	.db #0x01	; 1
-	.db #0x01	; 1
-	.db #0x01	; 1
-	.db #0x01	; 1
-	.db #0x01	; 1
-	.db #0x01	; 1
-	.db #0x01	; 1
-	.db #0x01	; 1
-	.db #0x01	; 1
-	.db #0x01	; 1
 	.db #0x84	; 132
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
 	.db #0x85	; 133
-	.db #0x05	; 5
 	.db #0x86	; 134
-	.db #0x03	; 3
+	.db #0x7e	; 126
+	.db #0x0c	; 12
+	.db #0x0c	; 12
+	.db #0x0c	; 12
+	.db #0x0c	; 12
+	.db #0x83	; 131
+	.db #0x12	; 18
 	.db #0x87	; 135
-	.db #0x88	; 136
-	.db #0x88	; 136
-	.db #0x88	; 136
-	.db #0x88	; 136
-	.db #0x88	; 136
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
 	.db #0x88	; 136
 	.db #0x89	; 137
-	.db #0x89	; 137
-	.db #0x89	; 137
-	.db #0x89	; 137
-	.db #0x89	; 137
-	.db #0x89	; 137
-	.db #0x88	; 136
-	.db #0x88	; 136
-	.db #0x88	; 136
-	.db #0x88	; 136
-	.db #0x88	; 136
-	.db #0x88	; 136
+	.db #0x0c	; 12
+	.db #0x0c	; 12
+	.db #0x0c	; 12
 	.db #0x8a	; 138
 	.db #0x8b	; 139
-	.db #0x03	; 3
-	.db #0x03	; 3
-	.db #0x03	; 3
-	.db #0x03	; 3
-	.db #0x03	; 3
-	.db #0x03	; 3
-	.db #0x01	; 1
-	.db #0x01	; 1
-	.db #0x01	; 1
-	.db #0x01	; 1
-	.db #0x01	; 1
-	.db #0x01	; 1
-	.db #0x03	; 3
-	.db #0x03	; 3
-	.db #0x03	; 3
-	.db #0x03	; 3
-	.db #0x03	; 3
-	.db #0x03	; 3
 	.db #0x8c	; 140
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
 	.db #0x8d	; 141
 	.db #0x8e	; 142
-	.db #0x8e	; 142
-	.db #0x8e	; 142
-	.db #0x8e	; 142
-	.db #0x8e	; 142
-	.db #0x8e	; 142
+	.db #0x12	; 18
 	.db #0x8f	; 143
-	.db #0x8f	; 143
-	.db #0x8f	; 143
-	.db #0x8f	; 143
-	.db #0x8f	; 143
-	.db #0x8f	; 143
-	.db #0x8e	; 142
-	.db #0x8e	; 142
-	.db #0x8e	; 142
-	.db #0x8e	; 142
-	.db #0x8e	; 142
-	.db #0x8e	; 142
+	.db #0x0c	; 12
 	.db #0x90	; 144
+	.db #0x91	; 145
+	.db #0x91	; 145
+	.db #0x91	; 145
+	.db #0x91	; 145
+	.db #0x91	; 145
+	.db #0x91	; 145
+	.db #0x92	; 146
+	.db #0x92	; 146
+	.db #0x92	; 146
+	.db #0x92	; 146
+	.db #0x92	; 146
+	.db #0x92	; 146
+	.db #0x91	; 145
+	.db #0x91	; 145
+	.db #0x91	; 145
+	.db #0x91	; 145
+	.db #0x91	; 145
+	.db #0x91	; 145
+	.db #0x93	; 147
+	.db #0x94	; 148
+	.db #0x0c	; 12
+	.db #0x0c	; 12
+	.db #0x0c	; 12
+	.db #0x0c	; 12
+	.db #0x0c	; 12
+	.db #0x0c	; 12
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x0c	; 12
+	.db #0x0c	; 12
+	.db #0x0c	; 12
+	.db #0x0c	; 12
+	.db #0x0c	; 12
+	.db #0x0c	; 12
+	.db #0x95	; 149
+	.db #0x96	; 150
+	.db #0x97	; 151
+	.db #0x97	; 151
+	.db #0x97	; 151
+	.db #0x97	; 151
+	.db #0x97	; 151
+	.db #0x97	; 151
+	.db #0x98	; 152
+	.db #0x98	; 152
+	.db #0x98	; 152
+	.db #0x98	; 152
+	.db #0x98	; 152
+	.db #0x98	; 152
+	.db #0x97	; 151
+	.db #0x97	; 151
+	.db #0x97	; 151
+	.db #0x97	; 151
+	.db #0x97	; 151
+	.db #0x97	; 151
+	.db #0x99	; 153
 _Manual_Manny_data:
 	.db #0xff	; 255
 	.db #0x00	; 0
@@ -11066,8 +11213,8 @@ _InitSkaterBoi::
 	ld	a, (de)
 	ld	(hl+), a
 	ld	a, (bc)
-;C:/LudumDare50/gbdk/include/gb/gb.h:1520: OAM_item_t * itm = &shadow_OAM[nb];
-;C:/LudumDare50/gbdk/include/gb/gb.h:1521: itm->y=y, itm->x=x;
+;C:/Users/rutha/Documents/GitHub/something_stupid/gbdk/include/gb/gb.h:1520: OAM_item_t * itm = &shadow_OAM[nb];
+;C:/Users/rutha/Documents/GitHub/something_stupid/gbdk/include/gb/gb.h:1521: itm->y=y, itm->x=x;
 	ld	(hl-), a
 	ld	de, #_shadow_OAM+12
 	ld	a, (hl+)
@@ -11086,8 +11233,8 @@ _InitSkaterBoi::
 	ld	(hl+), a
 	ld	a, (bc)
 	add	a, #0x08
-;C:/LudumDare50/gbdk/include/gb/gb.h:1520: OAM_item_t * itm = &shadow_OAM[nb];
-;C:/LudumDare50/gbdk/include/gb/gb.h:1521: itm->y=y, itm->x=x;
+;C:/Users/rutha/Documents/GitHub/something_stupid/gbdk/include/gb/gb.h:1520: OAM_item_t * itm = &shadow_OAM[nb];
+;C:/Users/rutha/Documents/GitHub/something_stupid/gbdk/include/gb/gb.h:1521: itm->y=y, itm->x=x;
 	ld	(hl-), a
 	ld	de, #_shadow_OAM+16
 	ld	a, (hl+)
@@ -11106,9 +11253,9 @@ _InitSkaterBoi::
 	ld	d, a
 	ld	a, (bc)
 	ld	e, a
-;C:/LudumDare50/gbdk/include/gb/gb.h:1520: OAM_item_t * itm = &shadow_OAM[nb];
+;C:/Users/rutha/Documents/GitHub/something_stupid/gbdk/include/gb/gb.h:1520: OAM_item_t * itm = &shadow_OAM[nb];
 	ld	hl, #(_shadow_OAM + 20)
-;C:/LudumDare50/gbdk/include/gb/gb.h:1521: itm->y=y, itm->x=x;
+;C:/Users/rutha/Documents/GitHub/something_stupid/gbdk/include/gb/gb.h:1521: itm->y=y, itm->x=x;
 	ld	a, d
 	ld	(hl+), a
 	ld	(hl), e
@@ -11123,9 +11270,9 @@ _InitSkaterBoi::
 	ld	a, (bc)
 	add	a, #0x08
 	ld	e, a
-;C:/LudumDare50/gbdk/include/gb/gb.h:1520: OAM_item_t * itm = &shadow_OAM[nb];
+;C:/Users/rutha/Documents/GitHub/something_stupid/gbdk/include/gb/gb.h:1520: OAM_item_t * itm = &shadow_OAM[nb];
 	ld	hl, #(_shadow_OAM + 24)
-;C:/LudumDare50/gbdk/include/gb/gb.h:1521: itm->y=y, itm->x=x;
+;C:/Users/rutha/Documents/GitHub/something_stupid/gbdk/include/gb/gb.h:1521: itm->y=y, itm->x=x;
 	ld	a, d
 	ld	(hl+), a
 	ld	(hl), e
@@ -11139,9 +11286,9 @@ _InitSkaterBoi::
 	ld	d, a
 	ld	a, (bc)
 	ld	e, a
-;C:/LudumDare50/gbdk/include/gb/gb.h:1520: OAM_item_t * itm = &shadow_OAM[nb];
+;C:/Users/rutha/Documents/GitHub/something_stupid/gbdk/include/gb/gb.h:1520: OAM_item_t * itm = &shadow_OAM[nb];
 	ld	hl, #(_shadow_OAM + 28)
-;C:/LudumDare50/gbdk/include/gb/gb.h:1521: itm->y=y, itm->x=x;
+;C:/Users/rutha/Documents/GitHub/something_stupid/gbdk/include/gb/gb.h:1521: itm->y=y, itm->x=x;
 	ld	a, d
 	ld	(hl+), a
 	ld	(hl), e
@@ -11156,9 +11303,9 @@ _InitSkaterBoi::
 	ld	a, (bc)
 	add	a, #0x08
 	ld	c, a
-;C:/LudumDare50/gbdk/include/gb/gb.h:1520: OAM_item_t * itm = &shadow_OAM[nb];
+;C:/Users/rutha/Documents/GitHub/something_stupid/gbdk/include/gb/gb.h:1520: OAM_item_t * itm = &shadow_OAM[nb];
 	ld	hl, #(_shadow_OAM + 32)
-;C:/LudumDare50/gbdk/include/gb/gb.h:1521: itm->y=y, itm->x=x;
+;C:/Users/rutha/Documents/GitHub/something_stupid/gbdk/include/gb/gb.h:1521: itm->y=y, itm->x=x;
 	ld	a, e
 	ld	(hl+), a
 	ld	(hl), c
@@ -11236,8 +11383,8 @@ _SetSkaterBoiPos::
 	ldhl	sp,	#8
 	ld	a, (hl)
 	ldhl	sp,	#1
-;C:/LudumDare50/gbdk/include/gb/gb.h:1520: OAM_item_t * itm = &shadow_OAM[nb];
-;C:/LudumDare50/gbdk/include/gb/gb.h:1521: itm->y=y, itm->x=x;
+;C:/Users/rutha/Documents/GitHub/something_stupid/gbdk/include/gb/gb.h:1520: OAM_item_t * itm = &shadow_OAM[nb];
+;C:/Users/rutha/Documents/GitHub/something_stupid/gbdk/include/gb/gb.h:1521: itm->y=y, itm->x=x;
 	ld	(hl-), a
 	ld	de, #(_shadow_OAM + 12)
 	ld	a, (hl+)
@@ -11254,9 +11401,9 @@ _SetSkaterBoiPos::
 	ld	(hl), a
 	ld	a, (hl+)
 	ld	(hl), a
-;C:/LudumDare50/gbdk/include/gb/gb.h:1520: OAM_item_t * itm = &shadow_OAM[nb];
+;C:/Users/rutha/Documents/GitHub/something_stupid/gbdk/include/gb/gb.h:1520: OAM_item_t * itm = &shadow_OAM[nb];
 	ld	bc, #(_shadow_OAM + 16)
-;C:/LudumDare50/gbdk/include/gb/gb.h:1521: itm->y=y, itm->x=x;
+;C:/Users/rutha/Documents/GitHub/something_stupid/gbdk/include/gb/gb.h:1521: itm->y=y, itm->x=x;
 	ldhl	sp,	#0
 	ld	a, (hl)
 	ld	(bc), a
@@ -11271,14 +11418,14 @@ _SetSkaterBoiPos::
 	add	a, #0x08
 	ld	b, a
 	ld	e, b
-;C:/LudumDare50/gbdk/include/gb/gb.h:1520: OAM_item_t * itm = &shadow_OAM[nb];
+;C:/Users/rutha/Documents/GitHub/something_stupid/gbdk/include/gb/gb.h:1520: OAM_item_t * itm = &shadow_OAM[nb];
 	ld	hl, #(_shadow_OAM + 20)
-;C:/LudumDare50/gbdk/include/gb/gb.h:1521: itm->y=y, itm->x=x;
+;C:/Users/rutha/Documents/GitHub/something_stupid/gbdk/include/gb/gb.h:1521: itm->y=y, itm->x=x;
 	ld	(hl), e
 	ld	de, #(_shadow_OAM + 21)
 	ldhl	sp,	#1
-;C:/LudumDare50/gbdk/include/gb/gb.h:1520: OAM_item_t * itm = &shadow_OAM[nb];
-;C:/LudumDare50/gbdk/include/gb/gb.h:1521: itm->y=y, itm->x=x;
+;C:/Users/rutha/Documents/GitHub/something_stupid/gbdk/include/gb/gb.h:1520: OAM_item_t * itm = &shadow_OAM[nb];
+;C:/Users/rutha/Documents/GitHub/something_stupid/gbdk/include/gb/gb.h:1521: itm->y=y, itm->x=x;
 	ld	a, (hl+)
 	ld	(de), a
 	ld	de, #_shadow_OAM+24
@@ -11286,8 +11433,8 @@ _SetSkaterBoiPos::
 	ld	(de), a
 	inc	de
 ;skater_boi.c:65: move_sprite(7, SkaterBoiPtr->XPos, SkaterBoiPtr->YPos + 16);
-;C:/LudumDare50/gbdk/include/gb/gb.h:1520: OAM_item_t * itm = &shadow_OAM[nb];
-;C:/LudumDare50/gbdk/include/gb/gb.h:1521: itm->y=y, itm->x=x;
+;C:/Users/rutha/Documents/GitHub/something_stupid/gbdk/include/gb/gb.h:1520: OAM_item_t * itm = &shadow_OAM[nb];
+;C:/Users/rutha/Documents/GitHub/something_stupid/gbdk/include/gb/gb.h:1521: itm->y=y, itm->x=x;
 	ld	a, (hl-)
 	ld	(de), a
 	ld	a, c
@@ -11296,8 +11443,8 @@ _SetSkaterBoiPos::
 	ld	bc, #_shadow_OAM+28
 	ld	(bc), a
 	inc	bc
-;C:/LudumDare50/gbdk/include/gb/gb.h:1520: OAM_item_t * itm = &shadow_OAM[nb];
-;C:/LudumDare50/gbdk/include/gb/gb.h:1521: itm->y=y, itm->x=x;
+;C:/Users/rutha/Documents/GitHub/something_stupid/gbdk/include/gb/gb.h:1520: OAM_item_t * itm = &shadow_OAM[nb];
+;C:/Users/rutha/Documents/GitHub/something_stupid/gbdk/include/gb/gb.h:1521: itm->y=y, itm->x=x;
 	ld	a, (hl+)
 	ld	(bc), a
 	ld	bc, #_shadow_OAM+32
@@ -11348,7 +11495,7 @@ _SetBalanceArrowPos::
 	ldhl	sp,	#0
 	ld	(hl), a
 	ld	a, (de)
-;C:/LudumDare50/gbdk/include/gb/gb.h:1520: OAM_item_t * itm = &shadow_OAM[nb];
+;C:/Users/rutha/Documents/GitHub/something_stupid/gbdk/include/gb/gb.h:1520: OAM_item_t * itm = &shadow_OAM[nb];
 	ld	l, a
 ;	spillPairReg hl
 ;	spillPairReg hl
@@ -11361,7 +11508,7 @@ _SetBalanceArrowPos::
 	add	hl, bc
 	ld	c, l
 	ld	b, h
-;C:/LudumDare50/gbdk/include/gb/gb.h:1521: itm->y=y, itm->x=x;
+;C:/Users/rutha/Documents/GitHub/something_stupid/gbdk/include/gb/gb.h:1521: itm->y=y, itm->x=x;
 	ldhl	sp,	#1
 	ld	a, (hl-)
 	ld	(bc), a
@@ -11379,7 +11526,7 @@ _SetBalanceArrowPos::
 ;	spillPairReg hl
 ;	spillPairReg hl
 	inc	hl
-;C:/LudumDare50/gbdk/include/gb/gb.h:1520: OAM_item_t * itm = &shadow_OAM[nb];
+;C:/Users/rutha/Documents/GitHub/something_stupid/gbdk/include/gb/gb.h:1520: OAM_item_t * itm = &shadow_OAM[nb];
 	ld	l, (hl)
 ;	spillPairReg hl
 ;	spillPairReg hl
@@ -11392,7 +11539,7 @@ _SetBalanceArrowPos::
 	ld	de, #_shadow_OAM
 	add	hl, de
 	pop	de
-;C:/LudumDare50/gbdk/include/gb/gb.h:1521: itm->y=y, itm->x=x;
+;C:/Users/rutha/Documents/GitHub/something_stupid/gbdk/include/gb/gb.h:1521: itm->y=y, itm->x=x;
 	ld	a, c
 	ld	(hl+), a
 	ld	c, l
@@ -11407,7 +11554,7 @@ _SetBalanceArrowPos::
 	inc	de
 	inc	de
 	ld	a, (de)
-;C:/LudumDare50/gbdk/include/gb/gb.h:1520: OAM_item_t * itm = &shadow_OAM[nb];
+;C:/Users/rutha/Documents/GitHub/something_stupid/gbdk/include/gb/gb.h:1520: OAM_item_t * itm = &shadow_OAM[nb];
 	ld	l, a
 	ld	de, #_shadow_OAM+0
 ;	spillPairReg hl
@@ -11418,7 +11565,7 @@ _SetBalanceArrowPos::
 	add	hl, hl
 	add	hl, hl
 	add	hl, de
-;C:/LudumDare50/gbdk/include/gb/gb.h:1521: itm->y=y, itm->x=x;
+;C:/Users/rutha/Documents/GitHub/something_stupid/gbdk/include/gb/gb.h:1521: itm->y=y, itm->x=x;
 	ld	a, c
 	ld	(hl+), a
 	ld	c, l
@@ -11448,13 +11595,13 @@ _InitBalanceArrow::
 	ld	hl, #0x0006
 	add	hl, bc
 	ld	(hl), #0x10
-;C:/LudumDare50/gbdk/include/gb/gb.h:1447: shadow_OAM[nb].tile=tile;
+;C:/Users/rutha/Documents/GitHub/something_stupid/gbdk/include/gb/gb.h:1447: shadow_OAM[nb].tile=tile;
 	ld	hl, #(_shadow_OAM + 2)
 	ld	(hl), #0x00
 ;balance_arrow.c:35: BalanceArrow->SpriteIDs[0] = 0;
 	xor	a, a
 	ld	(bc), a
-;C:/LudumDare50/gbdk/include/gb/gb.h:1447: shadow_OAM[nb].tile=tile;
+;C:/Users/rutha/Documents/GitHub/something_stupid/gbdk/include/gb/gb.h:1447: shadow_OAM[nb].tile=tile;
 	ld	hl, #(_shadow_OAM + 6)
 	ld	(hl), #0x01
 ;balance_arrow.c:38: BalanceArrow->SpriteIDs[1] = 1;
@@ -11466,7 +11613,7 @@ _InitBalanceArrow::
 ;	spillPairReg hl
 	inc	hl
 	ld	(hl), #0x01
-;C:/LudumDare50/gbdk/include/gb/gb.h:1447: shadow_OAM[nb].tile=tile;
+;C:/Users/rutha/Documents/GitHub/something_stupid/gbdk/include/gb/gb.h:1447: shadow_OAM[nb].tile=tile;
 	ld	hl, #(_shadow_OAM + 10)
 	ld	(hl), #0x02
 ;balance_arrow.c:41: BalanceArrow->SpriteIDs[2] = 2;
@@ -11495,46 +11642,103 @@ _InitBalanceArrow::
 	ld	(hl), #0x54
 ;balance_arrow.c:46: }
 	ret
-;random.c:5: bool randomXD()
+;random.c:7: bool randomXD()
 ;	---------------------------------
 ; Function randomXD
 ; ---------------------------------
 _randomXD::
-;random.c:7: return rand() > 127;
+;random.c:9: return rand() > 127;
 	call	_rand
 	ld	a, #0x7f
 	sub	a, e
 	ld	a, #0x00
 	rla
 	ld	e, a
-;random.c:8: }
+;random.c:10: }
 	ret
-;numbers.c:9: void InitLevelNumber(){
+;random.c:12: int8_t randomDir()
 ;	---------------------------------
-; Function InitLevelNumber
+; Function randomDir
 ; ---------------------------------
-_InitLevelNumber::
-;numbers.c:10: set_sprite_tile(9,NumbersArray[0]);
+_randomDir::
+;random.c:14: r = rand();
+	call	_rand
+	ld	hl, #_r
+	ld	(hl), e
+;random.c:15: if(r > 127){
+	ld	a, #0x7f
+	sub	a, (hl)
+	jr	NC, 00102$
+;random.c:16: return 1;
+	ld	e, #0x01
+	ret
+00102$:
+;random.c:18: return -1;
+	ld	e, #0xff
+;random.c:20: }
+	ret
+;numbers.c:13: void InitLevelScore(){
+;	---------------------------------
+; Function InitLevelScore
+; ---------------------------------
+_InitLevelScore::
+;numbers.c:14: set_sprite_tile(9,NumbersArray[0]);
 	ld	hl, #_NumbersArray
 	ld	c, (hl)
-;C:/LudumDare50/gbdk/include/gb/gb.h:1447: shadow_OAM[nb].tile=tile;
+;C:/Users/rutha/Documents/GitHub/something_stupid/gbdk/include/gb/gb.h:1447: shadow_OAM[nb].tile=tile;
 	ld	hl, #(_shadow_OAM + 38)
 	ld	(hl), c
-;C:/LudumDare50/gbdk/include/gb/gb.h:1520: OAM_item_t * itm = &shadow_OAM[nb];
+;numbers.c:15: set_sprite_tile(10,NumbersArray[0]);
+	ld	hl, #_NumbersArray
+	ld	c, (hl)
+;C:/Users/rutha/Documents/GitHub/something_stupid/gbdk/include/gb/gb.h:1447: shadow_OAM[nb].tile=tile;
+	ld	hl, #(_shadow_OAM + 42)
+	ld	(hl), c
+;numbers.c:16: set_sprite_tile(11,NumbersArray[0]);
+	ld	hl, #_NumbersArray
+	ld	c, (hl)
+;C:/Users/rutha/Documents/GitHub/something_stupid/gbdk/include/gb/gb.h:1447: shadow_OAM[nb].tile=tile;
+	ld	hl, #(_shadow_OAM + 46)
+	ld	(hl), c
+;numbers.c:17: set_sprite_tile(12,NumbersArray[0]);
+	ld	hl, #_NumbersArray
+	ld	c, (hl)
+;C:/Users/rutha/Documents/GitHub/something_stupid/gbdk/include/gb/gb.h:1447: shadow_OAM[nb].tile=tile;
+	ld	hl, #(_shadow_OAM + 50)
+	ld	(hl), c
+;C:/Users/rutha/Documents/GitHub/something_stupid/gbdk/include/gb/gb.h:1520: OAM_item_t * itm = &shadow_OAM[nb];
+	ld	hl, #(_shadow_OAM + 48)
+;C:/Users/rutha/Documents/GitHub/something_stupid/gbdk/include/gb/gb.h:1521: itm->y=y, itm->x=x;
+	ld	(hl), #0x11
+	inc	hl
+	ld	(hl), #0x88
+;C:/Users/rutha/Documents/GitHub/something_stupid/gbdk/include/gb/gb.h:1520: OAM_item_t * itm = &shadow_OAM[nb];
+	ld	hl, #(_shadow_OAM + 44)
+;C:/Users/rutha/Documents/GitHub/something_stupid/gbdk/include/gb/gb.h:1521: itm->y=y, itm->x=x;
+	ld	(hl), #0x11
+	inc	hl
+	ld	(hl), #0x90
+;C:/Users/rutha/Documents/GitHub/something_stupid/gbdk/include/gb/gb.h:1520: OAM_item_t * itm = &shadow_OAM[nb];
+	ld	hl, #(_shadow_OAM + 40)
+;C:/Users/rutha/Documents/GitHub/something_stupid/gbdk/include/gb/gb.h:1521: itm->y=y, itm->x=x;
+	ld	(hl), #0x11
+	inc	hl
+	ld	(hl), #0x98
+;C:/Users/rutha/Documents/GitHub/something_stupid/gbdk/include/gb/gb.h:1520: OAM_item_t * itm = &shadow_OAM[nb];
 	ld	hl, #(_shadow_OAM + 36)
-;C:/LudumDare50/gbdk/include/gb/gb.h:1521: itm->y=y, itm->x=x;
-	ld	a, #0x10
-	ld	(hl+), a
-	ld	(hl), #0x08
-;numbers.c:11: move_sprite(9, 8, 16);
-;numbers.c:12: }
+;C:/Users/rutha/Documents/GitHub/something_stupid/gbdk/include/gb/gb.h:1521: itm->y=y, itm->x=x;
+	ld	(hl), #0x11
+	inc	hl
+	ld	(hl), #0xa0
+;numbers.c:21: move_sprite(9,  160, 17);
+;numbers.c:22: }
 	ret
-;numbers.c:14: void UpdateLevelNumber(int Level){
+;numbers.c:24: void UpdateLevelScore(int s1, int s2, int s3, int s4){
 ;	---------------------------------
-; Function UpdateLevelNumber
+; Function UpdateLevelScore
 ; ---------------------------------
-_UpdateLevelNumber::
-;numbers.c:15: set_sprite_tile(9, NumbersArray[Level]);
+_UpdateLevelScore::
+;numbers.c:25: set_sprite_tile(9, NumbersArray[s1]);
 	ldhl	sp,#2
 	ld	a, (hl+)
 	ld	c, a
@@ -11544,25 +11748,59 @@ _UpdateLevelNumber::
 	ld	hl, #_NumbersArray
 	add	hl, bc
 	ld	c, (hl)
-;C:/LudumDare50/gbdk/include/gb/gb.h:1447: shadow_OAM[nb].tile=tile;
+;C:/Users/rutha/Documents/GitHub/something_stupid/gbdk/include/gb/gb.h:1447: shadow_OAM[nb].tile=tile;
 	ld	hl, #(_shadow_OAM + 38)
 	ld	(hl), c
-;numbers.c:15: set_sprite_tile(9, NumbersArray[Level]);
-;numbers.c:16: }
+;numbers.c:26: set_sprite_tile(10, NumbersArray[s2]);
+	ldhl	sp,#4
+	ld	a, (hl+)
+	ld	c, a
+	ld	b, (hl)
+	sla	c
+	rl	b
+	ld	hl, #_NumbersArray
+	add	hl, bc
+	ld	c, (hl)
+;C:/Users/rutha/Documents/GitHub/something_stupid/gbdk/include/gb/gb.h:1447: shadow_OAM[nb].tile=tile;
+	ld	hl, #(_shadow_OAM + 42)
+	ld	(hl), c
+;numbers.c:27: set_sprite_tile(11, NumbersArray[s3]);
+	ldhl	sp,#6
+	ld	a, (hl+)
+	ld	c, a
+	ld	b, (hl)
+	sla	c
+	rl	b
+	ld	hl, #_NumbersArray
+	add	hl, bc
+	ld	c, (hl)
+;C:/Users/rutha/Documents/GitHub/something_stupid/gbdk/include/gb/gb.h:1447: shadow_OAM[nb].tile=tile;
+	ld	hl, #(_shadow_OAM + 46)
+	ld	(hl), c
+;numbers.c:28: set_sprite_tile(12, NumbersArray[s4]);
+	ldhl	sp,#8
+	ld	a, (hl+)
+	ld	c, a
+	ld	b, (hl)
+	sla	c
+	rl	b
+	ld	hl, #_NumbersArray
+	add	hl, bc
+	ld	c, (hl)
+;C:/Users/rutha/Documents/GitHub/something_stupid/gbdk/include/gb/gb.h:1447: shadow_OAM[nb].tile=tile;
+	ld	hl, #(_shadow_OAM + 50)
+	ld	(hl), c
+;numbers.c:28: set_sprite_tile(12, NumbersArray[s4]);
+;numbers.c:29: }
 	ret
-;states.c:56: void LoadMusic(const unsigned char * MusicData[], int loop, int speed)
+;states.c:65: void LoadMusic(const unsigned char * MusicData[], int loop, int speed)
 ;	---------------------------------
 ; Function LoadMusic
 ; ---------------------------------
 _LoadMusic::
-;C:/LudumDare50/gbdk/include/gb/gb.h:671: __asm__("di");
+;C:/Users/rutha/Documents/GitHub/something_stupid/gbdk/include/gb/gb.h:671: __asm__("di");
 	di
-;states.c:61: add_VBL(vbl_update);
-	ld	de, #_vbl_update
-	push	de
-	call	_add_VBL
-	pop	hl
-;states.c:63: gbt_play(MusicData, 2, speed);
+;states.c:70: gbt_play(MusicData, 2, speed);
 	ldhl	sp,	#6
 	ld	a, (hl)
 	ldhl	sp,	#2
@@ -11575,306 +11813,308 @@ _LoadMusic::
 	push	bc
 	call	_gbt_play
 	add	sp, #4
-;states.c:64: gbt_loop(loop);
+;states.c:71: gbt_loop(loop);
 	ldhl	sp,	#4
 	ld	a, (hl)
 	push	af
 	inc	sp
 	call	_gbt_loop
 	inc	sp
-;states.c:66: set_interrupts(VBL_IFLAG);
-	ld	a, #0x01
-	push	af
-	inc	sp
-	call	_set_interrupts
-	inc	sp
-;C:/LudumDare50/gbdk/include/gb/gb.h:655: __asm__("ei");
+;C:/Users/rutha/Documents/GitHub/something_stupid/gbdk/include/gb/gb.h:655: __asm__("ei");
 	ei
-;states.c:67: enable_interrupts();	
-;states.c:68: }
+;states.c:73: enable_interrupts();	
+;states.c:74: }
 	ret
-;states.c:70: int SplashLoadState()
-;	---------------------------------
-; Function SplashLoadState
-; ---------------------------------
-_SplashLoadState::
-;states.c:72: set_bkg_data(0, 145, SplashBG_data);
-	ld	de, #_SplashBG_data
-	push	de
-	ld	hl, #0x9100
-	push	hl
-	call	_set_bkg_data
-	add	sp, #4
-;states.c:73: set_bkg_tiles(0, 0, 20, 18, SplashBG_map);
-	ld	de, #_SplashBG_map
-	push	de
-	ld	hl, #0x1214
-	push	hl
-	xor	a, a
-	rrca
-	push	af
-	call	_set_bkg_tiles
-	add	sp, #6
-;states.c:75: LoadMusic(ManualStart_Data, 1, 7);
-	ld	de, #0x0007
-	push	de
-	ld	de, #0x0001
-	push	de
-	ld	de, #_ManualStart_Data
-	push	de
-	call	_LoadMusic
-	add	sp, #6
-;states.c:77: SHOW_BKG;
-	ldh	a, (_LCDC_REG + 0)
-	or	a, #0x01
-	ldh	(_LCDC_REG + 0), a
-;states.c:78: return SPLASHSTATE;    
-	ld	de, #0x0000
-;states.c:79: }
-	ret
-;states.c:81: int SplashState()
-;	---------------------------------
-; Function SplashState
-; ---------------------------------
-_SplashState::
-;states.c:83: switch(joypad())
-	call	_joypad
-	ld	a, e
-	cp	a, #0x10
-	jr	Z, 00102$
-	sub	a, #0x80
-	jr	NZ, 00103$
-;states.c:86: case J_A: 
-00102$:
-;states.c:87: return MENUSTATELOAD;
-	ld	de, #0x0003
-	ret
-;states.c:89: }
-00103$:
-;states.c:90: return SPLASHSTATE;
-	ld	de, #0x0000
-;states.c:91: }
-	ret
-;states.c:93: int MenuLoadState()
-;	---------------------------------
-; Function MenuLoadState
-; ---------------------------------
-_MenuLoadState::
-;states.c:95: set_bkg_data(0, 148, Manual_Manny_data);
-	ld	de, #_Manual_Manny_data
-	push	de
-	ld	hl, #0x9400
-	push	hl
-	call	_set_bkg_data
-	add	sp, #4
-;states.c:96: set_bkg_tiles(0, 0, 20, 18, Manual_Manny_map);
-	ld	de, #_Manual_Manny_map
-	push	de
-	ld	hl, #0x1214
-	push	hl
-	xor	a, a
-	rrca
-	push	af
-	call	_set_bkg_tiles
-	add	sp, #6
-;states.c:98: LoadMusic(ManualStart_Data, 1, 7);
-	ld	de, #0x0007
-	push	de
-	ld	de, #0x0001
-	push	de
-	ld	de, #_ManualStart_Data
-	push	de
-	call	_LoadMusic
-	add	sp, #6
-;states.c:100: SHOW_BKG;
-	ldh	a, (_LCDC_REG + 0)
-	or	a, #0x01
-	ldh	(_LCDC_REG + 0), a
-;states.c:101: return MENUSTATE;
-	ld	de, #0x0002
-;states.c:102: }
-	ret
-;states.c:104: int MenuState() // State 0 
-;	---------------------------------
-; Function MenuState
-; ---------------------------------
-_MenuState::
-;states.c:106: switch(joypad())
-	call	_joypad
-	ld	a, e
-	sub	a, #0x10
-	jr	NZ, 00102$
-;states.c:109: return GAMESTATELOAD;
-	ld	de, #0x0005
-	ret
-;states.c:111: }
-00102$:
-;states.c:112: return MENUSTATE;
-	ld	de, #0x0002
-;states.c:113: }
-	ret
-;states.c:115: int GameState() // State 1 
+_difficultyInfluence:
+	.dw #0x0001
+	.dw #0x0002
+	.dw #0x0003
+	.dw #0x0004
+	.dw #0x0005
+	.dw #0x0006
+	.dw #0x0007
+	.dw #0x0008
+	.dw #0x0009
+	.dw #0x000a
+;states.c:80: int GameState() //Main Game state 
 ;	---------------------------------
 ; Function GameState
 ; ---------------------------------
 _GameState::
-;states.c:117: Counter++;
+	add	sp, #-4
+;states.c:84: switch(joypad()){
+	call	_joypad
+	ld	l, e
+;	spillPairReg hl
+;	spillPairReg hl
+;states.c:88: MarkerSpeed -= 15;
+	push	hl
+	ld	hl, #_MarkerSpeed
+	ld	b, (hl)
+	pop	hl
+	ld	a, (_MarkerSpeed + 1)
+	ld	h, a
+;	spillPairReg hl
+;	spillPairReg hl
+;states.c:104: MarkerSpeed += 15;
+	ld	a, b
+	add	a, #0x0f
+	ld	e, a
+	ld	a, h
+	adc	a, #0x00
+	ld	d, a
+;states.c:84: switch(joypad()){
+	ld	a, l
+	dec	a
+	jr	Z, 00107$
+;states.c:88: MarkerSpeed -= 15;
+	ld	a, b
+	add	a, #0xf1
+	ld	c, a
+	ld	a, h
+	adc	a, #0xff
+	ld	b, a
+;states.c:84: switch(joypad()){
+	ld	a,l
+	cp	a,#0x02
+	jr	Z, 00101$
+	cp	a,#0x10
+	jr	Z, 00110$
+	sub	a, #0x20
+	jr	Z, 00104$
+	jr	00113$
+;states.c:85: case J_LEFT: 
+00101$:
+;states.c:86: if(ButtonPressed == 0){
+	ld	a, (#_ButtonPressed)
+	or	a, a
+	jr	NZ, 00114$
+;states.c:87: MarkerDirection = -1;
+	ld	hl, #_MarkerDirection
+	ld	(hl), #0xff
+;states.c:88: MarkerSpeed -= 15;
+	ld	hl, #_MarkerSpeed
+	ld	a, c
+	ld	(hl+), a
+	ld	(hl), b
+;states.c:90: ButtonPressed = 1;
+	ld	hl, #_ButtonPressed
+	ld	(hl), #0x01
+;states.c:92: break;
+	jr	00114$
+;states.c:93: case J_B: 
+00104$:
+;states.c:94: if(ButtonPressed == 0){
+	ld	a, (#_ButtonPressed)
+	or	a, a
+	jr	NZ, 00114$
+;states.c:95: MarkerDirection = -1;
+	ld	hl, #_MarkerDirection
+	ld	(hl), #0xff
+;states.c:96: MarkerSpeed -= 15;
+	ld	hl, #_MarkerSpeed
+	ld	a, c
+	ld	(hl+), a
+	ld	(hl), b
+;states.c:98: ButtonPressed = 1;
+	ld	hl, #_ButtonPressed
+	ld	(hl), #0x01
+;states.c:100: break;
+	jr	00114$
+;states.c:101: case J_RIGHT: 
+00107$:
+;states.c:102: if(ButtonPressed == 0){
+	ld	a, (#_ButtonPressed)
+	or	a, a
+	jr	NZ, 00114$
+;states.c:103: MarkerDirection = 1;
+	ld	hl, #_MarkerDirection
+	ld	(hl), #0x01
+;states.c:104: MarkerSpeed += 15;
+	ld	hl, #_MarkerSpeed
+	ld	a, e
+	ld	(hl+), a
+	ld	(hl), d
+;states.c:106: ButtonPressed = 1;
+	ld	hl, #_ButtonPressed
+	ld	(hl), #0x01
+;states.c:108: break;
+	jr	00114$
+;states.c:109: case J_A: 
+00110$:
+;states.c:110: if(ButtonPressed == 0){
+	ld	a, (#_ButtonPressed)
+	or	a, a
+	jr	NZ, 00114$
+;states.c:111: MarkerDirection = 1;
+	ld	hl, #_MarkerDirection
+	ld	(hl), #0x01
+;states.c:112: MarkerSpeed += 15;
+	ld	hl, #_MarkerSpeed
+	ld	a, e
+	ld	(hl+), a
+	ld	(hl), d
+;states.c:114: ButtonPressed = 1;
+	ld	hl, #_ButtonPressed
+	ld	(hl), #0x01
+;states.c:116: break;
+	jr	00114$
+;states.c:117: default:
+00113$:
+;states.c:118: ButtonPressed = 0;
+	ld	hl, #_ButtonPressed
+	ld	(hl), #0x00
+;states.c:120: }
+00114$:
+;states.c:123: Counter++;
 	ld	hl, #_Counter
 	inc	(hl)
-	jr	NZ, 00230$
-	inc	hl
-	inc	(hl)
-00230$:
-;states.c:118: if(Counter > CounterMaxLevelArray[Level]){
-	ld	hl, #_Level
+;states.c:124: if(Counter > COUNTERMAX){
+	ld	a, #0xc8
+	sub	a, (hl)
+	jr	NC, 00116$
+;states.c:125: MarkerDirection = randomDir();
+	call	_randomDir
+	ld	hl, #_MarkerDirection
+	ld	(hl), e
+;states.c:126: MarkerSpeed += 10;
+	ld	hl, #_MarkerSpeed
 	ld	a, (hl+)
-	ld	c, a
 	ld	b, (hl)
-	sla	c
-	rl	b
-	ld	hl, #_CounterMaxLevelArray
+	dec	hl
+	add	a, #0x0a
+	ld	c, a
+	ld	a, b
+	adc	a, #0x00
+	ld	(hl), c
+	inc	hl
+	ld	(hl), a
+;states.c:127: Counter = 0;
+	ld	hl, #_Counter
+	ld	(hl), #0x00
+00116$:
+;states.c:131: MarkerSpeed += difficultyInfluence[score4] * MarkerDirection;
+	ld	bc, #_difficultyInfluence+0
+	ld	hl, #_score4
+	ld	l, (hl)
+;	spillPairReg hl
+;	spillPairReg hl
+	ld	h, #0x00
+;	spillPairReg hl
+;	spillPairReg hl
+	add	hl, hl
 	add	hl, bc
 	ld	a, (hl+)
 	ld	c, a
 	ld	b, (hl)
-	ld	hl, #_Counter
-	ld	a, c
-	sub	a, (hl)
-	inc	hl
-	ld	a, b
-	sbc	a, (hl)
-	ld	a, b
+	ld	a, (#_MarkerDirection)
+	ld	e, a
+	rlca
+	sbc	a, a
 	ld	d, a
-	bit	7, (hl)
-	jr	Z, 00232$
-	bit	7, d
-	jr	NZ, 00233$
-	cp	a, a
-	jr	00233$
-00232$:
-	bit	7, d
-	jr	Z, 00233$
-	scf
-00233$:
-	jp	NC, 00117$
-;states.c:120: switch(joypad()){
-	call	_joypad
-	ld	a, e
-;states.c:128: ManualBarInfluence += 1;
-	ld	hl, #_ManualBarInfluence
-	ld	c, (hl)
+	push	de
+	push	bc
+	call	__mulint
+	add	sp, #4
+	ld	hl, #_MarkerSpeed
+	ld	l, (hl)
+;	spillPairReg hl
+;	spillPairReg hl
+	ld	a, (_MarkerSpeed + 1)
+	ld	h, a
+;	spillPairReg hl
+;	spillPairReg hl
+	add	hl, de
+	ld	c, l
+	ld	a, h
+	ld	hl, #_MarkerSpeed
+	ld	(hl), c
 	inc	hl
+;states.c:132: if(MarkerSpeed > 100){
+	ld	(hl-), a
+	ld	a, (hl+)
+	ld	c, a
 	ld	b, (hl)
-	inc	bc
-;states.c:120: switch(joypad()){
-	cp	a, #0x01
-	jr	Z, 00103$
-;states.c:122: ManualBarInfluence -= 1;
-	dec	hl
-	ld	e, (hl)
-	inc	hl
+	ld	e, b
+	ld	d, #0x00
+	ld	a, #0x64
+	cp	a, c
+	ld	a, #0x00
+	sbc	a, b
+	bit	7, e
+	jr	Z, 00241$
+	bit	7, d
+	jr	NZ, 00242$
+	cp	a, a
+	jr	00242$
+00241$:
+	bit	7, d
+	jr	Z, 00242$
+	scf
+00242$:
+	jr	NC, 00118$
+;states.c:133: MarkerSpeed = 100;
+	ld	hl, #_MarkerSpeed
+	ld	a, #0x64
+	ld	(hl+), a
+	xor	a, a
+	ld	(hl), a
+00118$:
+;states.c:135: if(MarkerSpeed < -100){
+	ld	hl, #_MarkerSpeed
+	ld	a, (hl+)
+	sub	a, #0x9c
+	ld	a, (hl)
+	sbc	a, #0xff
 	ld	d, (hl)
-	dec	de
-;states.c:120: switch(joypad()){
-	cp	a, #0x02
-	jr	Z, 00101$
-	cp	a, #0x10
-	jr	Z, 00104$
-	sub	a, #0x20
-	jr	Z, 00102$
-	jr	00105$
-;states.c:121: case J_LEFT: 
-00101$:
-;states.c:122: ManualBarInfluence -= 1;
-	ld	hl, #_ManualBarInfluence
-	ld	a, e
+	ld	a, #0xff
+	bit	7,a
+	jr	Z, 00243$
+	bit	7, d
+	jr	NZ, 00244$
+	cp	a, a
+	jr	00244$
+00243$:
+	bit	7, d
+	jr	Z, 00244$
+	scf
+00244$:
+	jr	NC, 00120$
+;states.c:136: MarkerSpeed = -100;
+	ld	hl, #_MarkerSpeed
+	ld	a, #0x9c
 	ld	(hl+), a
-	ld	(hl), d
-;states.c:123: break;
-	jr	00105$
-;states.c:124: case J_B: 
-00102$:
-;states.c:125: ManualBarInfluence -= 1;
-	ld	hl, #_ManualBarInfluence
-	ld	a, e
-	ld	(hl+), a
-	ld	(hl), d
-;states.c:126: break;
-	jr	00105$
-;states.c:127: case J_RIGHT: 
-00103$:
-;states.c:128: ManualBarInfluence += 1;
-	ld	hl, #_ManualBarInfluence
-	ld	a, c
-	ld	(hl+), a
-	ld	(hl), b
-;states.c:129: break;
-	jr	00105$
-;states.c:130: case J_A: 
-00104$:
-;states.c:131: ManualBarInfluence += 1;
-	ld	hl, #_ManualBarInfluence
-	ld	a, c
-	ld	(hl+), a
-	ld	(hl), b
-;states.c:133: }
-00105$:
-;states.c:135: ManualBar += ManualBarInfluence; // Increment the manual bar 
-	ld	a, (#_ManualBar)
-	ld	hl, #_ManualBarInfluence
-	add	a, (hl)
-	ld	hl, #_ManualBar
+	ld	(hl), #0xff
+00120$:
+;states.c:139: MarkerPos += MarkerSpeed;
+	ld	hl, #_MarkerSpeed
+	ld	a, (hl+)
+	ld	c, a
+	ld	b, (hl)
+	ld	hl, #_MarkerPos
+	ld	a, (hl)
+	add	a, c
 	ld	(hl+), a
 	ld	a, (hl)
-	ld	hl, #_ManualBarInfluence + 1
-	adc	a, (hl)
-	ld	hl, #_ManualBar + 1
-;states.c:138: if(ManualBar > 157){
+	adc	a, b
+;states.c:142: if (MarkerPos>>4 > 108)
 	ld	(hl-), a
-	ld	a, #0x9d
-	sub	a, (hl)
-	inc	hl
+	ld	a, (hl+)
+	ld	c, a
+	ld	b, (hl)
+	srl	b
+	rr	c
+	srl	b
+	rr	c
+	srl	b
+	rr	c
+	srl	b
+	rr	c
+	ld	a, #0x6c
+	cp	a, c
 	ld	a, #0x00
-	sbc	a, (hl)
-	ld	a, #0x00
-	ld	d, a
-	bit	7, (hl)
-	jr	Z, 00238$
-	bit	7, d
-	jr	NZ, 00239$
-	cp	a, a
-	jr	00239$
-00238$:
-	bit	7, d
-	jr	Z, 00239$
-	scf
-00239$:
-	jr	NC, 00107$
-;states.c:139: return GAMESTATERESET;
-	ld	de, #0x0007
-	ret
-00107$:
-;states.c:142: if (ManualBar > 104)
-	ld	hl, #_ManualBar
-	ld	a, #0x68
-	sub	a, (hl)
-	inc	hl
-	ld	a, #0x00
-	sbc	a, (hl)
-	ld	a, #0x00
-	ld	d, a
-	bit	7, (hl)
-	jr	Z, 00240$
-	bit	7, d
-	jr	NZ, 00241$
-	cp	a, a
-	jr	00241$
-00240$:
-	bit	7, d
-	jr	Z, 00241$
-	scf
-00241$:
-	jr	NC, 00112$
+	sbc	a, b
+	jr	NC, 00125$
 ;states.c:144: SetSpriteIndex(&SkaterBoi, 2);
 	ld	a, #0x02
 	push	af
@@ -11883,30 +12123,32 @@ _GameState::
 	push	de
 	call	_SetSpriteIndex
 	add	sp, #3
-	jr	00113$
-00112$:
-;states.c:146: else if (ManualBar > 56)
-	ld	hl, #_ManualBar
-	ld	a, #0x38
-	sub	a, (hl)
+;states.c:145: PlayerPos++;
+	ld	hl, #_PlayerPos
+	inc	(hl)
+	jr	NZ, 00245$
 	inc	hl
+	inc	(hl)
+00245$:
+;states.c:146: score1+=1;
+	ld	hl, #_score1
+	ld	a, (hl+)
+	ld	c, a
+	ld	a, (hl-)
+	ld	b, a
+	inc	bc
+	ld	a, c
+	ld	(hl+), a
+	ld	(hl), b
+	jr	00126$
+00125$:
+;states.c:148: else if (MarkerPos>>4 > 56)
+	ld	a, #0x38
+	cp	a, c
 	ld	a, #0x00
-	sbc	a, (hl)
-	ld	a, #0x00
-	ld	d, a
-	bit	7, (hl)
-	jr	Z, 00242$
-	bit	7, d
-	jr	NZ, 00243$
-	cp	a, a
-	jr	00243$
-00242$:
-	bit	7, d
-	jr	Z, 00243$
-	scf
-00243$:
-	jr	NC, 00109$
-;states.c:148: SetSpriteIndex(&SkaterBoi, 1);
+	sbc	a, b
+	jr	NC, 00122$
+;states.c:150: SetSpriteIndex(&SkaterBoi, 1);
 	ld	a, #0x01
 	push	af
 	inc	sp
@@ -11914,9 +12156,21 @@ _GameState::
 	push	de
 	call	_SetSpriteIndex
 	add	sp, #3
-	jr	00113$
-00109$:
-;states.c:152: SetSpriteIndex(&SkaterBoi, 0);
+;states.c:151: score1+=10;
+	ld	hl, #_score1
+	ld	a, (hl+)
+	ld	c, (hl)
+	dec	hl
+	add	a, #0x0a
+	ld	b, a
+	ld	a, c
+	adc	a, #0x00
+	ld	(hl), b
+	inc	hl
+	ld	(hl), a
+	jr	00126$
+00122$:
+;states.c:155: SetSpriteIndex(&SkaterBoi, 0);
 	xor	a, a
 	push	af
 	inc	sp
@@ -11924,238 +12178,8 @@ _GameState::
 	push	de
 	call	_SetSpriteIndex
 	add	sp, #3
-00113$:
-;states.c:156: if(ManualBar < 11){
-	ld	hl, #_ManualBar
-	ld	a, (hl+)
-	sub	a, #0x0b
-	ld	a, (hl)
-	sbc	a, #0x00
-	ld	d, (hl)
-	ld	a, #0x00
-	bit	7,a
-	jr	Z, 00244$
-	bit	7, d
-	jr	NZ, 00245$
-	cp	a, a
-	jr	00245$
-00244$:
-	bit	7, d
-	jr	Z, 00245$
-	scf
-00245$:
-	jr	NC, 00115$
-;states.c:157: return GAMESTATERESET;
-	ld	de, #0x0007
-	ret
-00115$:
-;states.c:160: Counter = 0;
-	xor	a, a
-	ld	hl, #_Counter
-	ld	(hl+), a
-	ld	(hl), a
-00117$:
-;states.c:163: PlayerCounter++;
-	ld	hl, #_PlayerCounter
-	inc	(hl)
-	jr	NZ, 00246$
-	inc	hl
-	inc	(hl)
-00246$:
-;states.c:164: if(PlayerCounter > PLAYERCOUNTERMAX)
-	ld	hl, #_PlayerCounter
-	ld	a, #0xc8
-	sub	a, (hl)
-	inc	hl
-	ld	a, #0x00
-	sbc	a, (hl)
-	ld	a, #0x00
-	ld	d, a
-	bit	7, (hl)
-	jr	Z, 00247$
-	bit	7, d
-	jr	NZ, 00248$
-	cp	a, a
-	jr	00248$
-00247$:
-	bit	7, d
-	jr	Z, 00248$
-	scf
-00248$:
-	jp	NC, 00128$
-;states.c:166: if (ManualBar > 124)
-	ld	hl, #_ManualBar
-	ld	a, #0x7c
-	sub	a, (hl)
-	inc	hl
-	ld	a, #0x00
-	sbc	a, (hl)
-	ld	a, #0x00
-	ld	d, a
-	bit	7, (hl)
-	jr	Z, 00249$
-	bit	7, d
-	jr	NZ, 00250$
-	cp	a, a
-	jr	00250$
-00249$:
-	bit	7, d
-	jr	Z, 00250$
-	scf
-00250$:
-	jr	NC, 00125$
-;states.c:168: PlayerXOffset++;
-	ld	hl, #_PlayerXOffset
-	inc	(hl)
-	jr	NZ, 00251$
-	inc	hl
-	inc	(hl)
-00251$:
-;states.c:169: if(PlayerXOffset > 10)
-	ld	hl, #_PlayerXOffset
-	ld	a, #0x0a
-	sub	a, (hl)
-	inc	hl
-	ld	a, #0x00
-	sbc	a, (hl)
-	ld	a, #0x00
-	ld	d, a
-	bit	7, (hl)
-	jr	Z, 00252$
-	bit	7, d
-	jr	NZ, 00253$
-	cp	a, a
-	jr	00253$
-00252$:
-	bit	7, d
-	jr	Z, 00253$
-	scf
-00253$:
-	jr	NC, 00126$
-;states.c:171: PlayerXOffset = 10;
-	ld	hl, #_PlayerXOffset
-	ld	a, #0x0a
-	ld	(hl+), a
-	xor	a, a
-	ld	(hl), a
-	jr	00126$
-00125$:
-;states.c:174: else if (ManualBar <= 36)
-	ld	hl, #_ManualBar
-	ld	a, #0x24
-	sub	a, (hl)
-	inc	hl
-	ld	a, #0x00
-	sbc	a, (hl)
-	ld	a, #0x00
-	ld	d, a
-	bit	7, (hl)
-	jr	Z, 00254$
-	bit	7, d
-	jr	NZ, 00255$
-	cp	a, a
-	jr	00255$
-00254$:
-	bit	7, d
-	jr	Z, 00255$
-	scf
-00255$:
-	jr	C, 00126$
-;states.c:176: PlayerXOffset--;
-	ld	hl, #_PlayerXOffset
-	ld	a, (hl+)
-	ld	e, a
-	ld	a, (hl-)
-	ld	d, a
-	dec	de
-	ld	a, e
-	ld	(hl+), a
-;states.c:177: if(PlayerXOffset < -10)
-	ld	a, d
-	ld	(hl-), a
-	ld	a, (hl+)
-	sub	a, #0xf6
-	ld	a, (hl)
-	sbc	a, #0xff
-	ld	d, (hl)
-	ld	a, #0xff
-	bit	7,a
-	jr	Z, 00256$
-	bit	7, d
-	jr	NZ, 00257$
-	cp	a, a
-	jr	00257$
-00256$:
-	bit	7, d
-	jr	Z, 00257$
-	scf
-00257$:
-	jr	NC, 00126$
-;states.c:179: PlayerXOffset = -10;
-	ld	hl, #_PlayerXOffset
-	ld	a, #0xf6
-	ld	(hl+), a
-	ld	(hl), #0xff
-00126$:
-;states.c:182: PlayerCounter = 0 ;   
-	xor	a, a
-	ld	hl, #_PlayerCounter
-	ld	(hl+), a
-	ld	(hl), a
-00128$:
-;states.c:185: InfluenceCounter++;
-	ld	hl, #_InfluenceCounter
-	inc	(hl)
-	jr	NZ, 00258$
-	inc	hl
-	inc	(hl)
-00258$:
-;states.c:186: if(InfluenceCounter > InfluenceCounterMaxLevelArray[Level])
-	ld	hl, #_Level
-	ld	a, (hl+)
-	ld	c, a
-	ld	b, (hl)
-	sla	c
-	rl	b
-	ld	hl, #_InfluenceCounterMaxLevelArray
-	add	hl, bc
-	ld	a, (hl+)
-	ld	c, a
-	ld	b, (hl)
-	ld	hl, #_InfluenceCounter
-	ld	a, c
-	sub	a, (hl)
-	inc	hl
-	ld	a, b
-	sbc	a, (hl)
-	ld	a, b
-	ld	d, a
-	bit	7, (hl)
-	jr	Z, 00260$
-	bit	7, d
-	jr	NZ, 00261$
-	cp	a, a
-	jr	00261$
-00260$:
-	bit	7, d
-	jr	Z, 00261$
-	scf
-00261$:
-	jp	NC, 00137$
-;states.c:188: if(randomXD() == true)
-	call	_randomXD
-	bit	0, e
-	jr	Z, 00130$
-;states.c:190: ManualBarInfluence++; 
-	ld	hl, #_ManualBarInfluence
-	inc	(hl)
-	jr	NZ, 00131$
-	inc	hl
-	inc	(hl)
-	jr	00131$
-00130$:
-;states.c:194: ManualBarInfluence--; 
-	ld	hl, #_ManualBarInfluence
+;states.c:156: PlayerPos--;
+	ld	hl, #_PlayerPos
 	ld	a, (hl+)
 	ld	e, a
 	ld	a, (hl-)
@@ -12164,90 +12188,150 @@ _GameState::
 	ld	a, e
 	ld	(hl+), a
 	ld	(hl), d
-00131$:
-;states.c:196: InfluenceCounter = 0;
-	xor	a, a
-	ld	hl, #_InfluenceCounter
-	ld	(hl+), a
-	ld	(hl), a
-;states.c:197: LevelProgress++;
-	ld	hl, #_LevelProgress
-	inc	(hl)
-	jr	NZ, 00263$
-	inc	hl
-	inc	(hl)
-00263$:
-;states.c:198: if(LevelProgress >= 50)
-	ld	hl, #_LevelProgress
+;states.c:157: score1+=1;
+	ld	hl, #_score1
 	ld	a, (hl+)
-	sub	a, #0x32
-	ld	a, (hl)
-	sbc	a, #0x00
-	ld	d, (hl)
-	ld	a, #0x00
-	bit	7,a
-	jr	Z, 00264$
-	bit	7, d
-	jr	NZ, 00265$
-	cp	a, a
-	jr	00265$
-00264$:
-	bit	7, d
-	jr	Z, 00265$
-	scf
-00265$:
-	jr	C, 00137$
-;states.c:200: Level++; 
-	ld	hl, #_Level
-	inc	(hl)
-	jr	NZ, 00266$
-	inc	hl
-	inc	(hl)
-00266$:
-;states.c:201: UpdateLevelNumber(Level);
-	ld	hl, #_Level
-	ld	a, (hl+)
-	ld	e, a
-	ld	d, (hl)
-	push	de
-	call	_UpdateLevelNumber
-	pop	hl
-;states.c:202: LevelProgress = 0;
-	xor	a, a
-	ld	hl, #_LevelProgress
-	ld	(hl+), a
-	ld	(hl), a
-;states.c:203: if(Level >= 9){
-	ld	hl, #_Level
-	ld	a, (hl+)
-	sub	a, #0x09
-	ld	a, (hl)
-	sbc	a, #0x00
-	ld	d, (hl)
-	ld	a, #0x00
-	bit	7,a
-	jr	Z, 00267$
-	bit	7, d
-	jr	NZ, 00268$
-	cp	a, a
-	jr	00268$
-00267$:
-	bit	7, d
-	jr	Z, 00268$
-	scf
-00268$:
-	jr	C, 00137$
-;states.c:204: Level = 9;
-	ld	hl, #_Level
-	ld	a, #0x09
-	ld	(hl+), a
-	xor	a, a
-	ld	(hl), a
-00137$:
-;states.c:210: SetSkaterBoiPos(&SkaterBoi, SKATERCENTER+PlayerXOffset, 101); // 70 - 90 
-	ld	a, (#_PlayerXOffset)
-	add	a, #0x50
+	ld	c, a
+	ld	a, (hl-)
 	ld	b, a
+	inc	bc
+	ld	a, c
+	ld	(hl+), a
+	ld	(hl), b
+00126$:
+;states.c:161: if(score1>>4 >= 10){
+	ld	hl, #_score1
+	ld	a, (hl+)
+	ld	c, a
+	ld	b, (hl)
+	srl	b
+	rr	c
+	srl	b
+	rr	c
+	srl	b
+	rr	c
+	srl	b
+	rr	c
+	ld	a, c
+	sub	a, #0x0a
+	ld	a, b
+	sbc	a, #0x00
+	jr	C, 00128$
+;states.c:162: score1 = 0;
+	dec	hl
+	xor	a, a
+	ld	(hl+), a
+	ld	(hl), a
+;states.c:163: score2++;
+	ld	hl, #_score2
+	inc	(hl)
+00128$:
+;states.c:165: if(score2 >= 10){
+	ld	hl, #_score2
+	ld	a, (hl)
+	sub	a, #0x0a
+	jr	C, 00130$
+;states.c:166: score2 = 0;
+	ld	(hl), #0x00
+;states.c:167: score3++;
+	ld	hl, #_score3
+	inc	(hl)
+00130$:
+;states.c:169: if(score3 >= 10){
+	ld	hl, #_score3
+	ld	a, (hl)
+	sub	a, #0x0a
+	jr	C, 00132$
+;states.c:170: score3 = 0;
+	ld	(hl), #0x00
+;states.c:171: score4++; 
+	ld	hl, #_score4
+	inc	(hl)
+00132$:
+;states.c:175: if(MarkerPos>>4 > 157){
+	ld	hl, #_MarkerPos
+	ld	a, (hl+)
+	ld	c, a
+	ld	b, (hl)
+	srl	b
+	rr	c
+	srl	b
+	rr	c
+	srl	b
+	rr	c
+	srl	b
+	rr	c
+	ld	a, #0x9d
+	cp	a, c
+	ld	a, #0x00
+	sbc	a, b
+	jr	NC, 00134$
+;states.c:176: GotoFailState = 1;
+	ld	hl, #_GotoFailState
+	ld	(hl), #0x01
+;states.c:177: MarkerPos = 157 << 4;
+	ld	hl, #_MarkerPos
+	ld	a, #0xd0
+	ld	(hl+), a
+	ld	(hl), #0x09
+;states.c:178: SetSpriteIndex(&SkaterBoi, 4);
+	ld	a, #0x04
+	push	af
+	inc	sp
+	ld	de, #_SkaterBoi
+	push	de
+	call	_SetSpriteIndex
+	add	sp, #3
+00134$:
+;states.c:181: if(MarkerPos>>4 < 11){
+	ld	hl, #_MarkerPos
+	ld	a, (hl+)
+	ld	c, a
+	ld	b, (hl)
+	srl	b
+	rr	c
+	srl	b
+	rr	c
+	srl	b
+	rr	c
+	srl	b
+	rr	c
+	ld	a, c
+	sub	a, #0x0b
+	ld	a, b
+	sbc	a, #0x00
+	jr	NC, 00136$
+;states.c:182: GotoFailState = 1;
+	ld	hl, #_GotoFailState
+	ld	(hl), #0x01
+;states.c:183: MarkerPos = 11 << 4;
+	ld	hl, #_MarkerPos
+	ld	a, #0xb0
+	ld	(hl+), a
+	xor	a, a
+	ld	(hl), a
+;states.c:184: SetSpriteIndex(&SkaterBoi, 3);
+	ld	a, #0x03
+	push	af
+	inc	sp
+	ld	de, #_SkaterBoi
+	push	de
+	call	_SetSpriteIndex
+	add	sp, #3
+00136$:
+;states.c:189: SetSkaterBoiPos(&SkaterBoi, PlayerPos>>4, 101); // 70 - 90 
+	ld	hl, #_PlayerPos
+	ld	a, (hl+)
+	ld	b, a
+	ld	c, (hl)
+	srl	c
+	rr	b
+	srl	c
+	rr	b
+	srl	c
+	rr	b
+	srl	c
+	rr	b
 	ld	a, #0x65
 	push	af
 	inc	sp
@@ -12257,9 +12341,57 @@ _GameState::
 	push	de
 	call	_SetSkaterBoiPos
 	add	sp, #4
-;states.c:211: SetBalanceArrowPos(&BalanceArrow, ManualBar, 125); // 11 - 157
-	ld	hl, #_ManualBar
+;states.c:190: UpdateLevelScore(score1>>4, score2, score3, score4);
+	ld	hl, #_score4
+	ld	c, (hl)
+	ld	b, #0x00
+	ld	a, (#_score3)
+	ldhl	sp,	#0
+	ld	(hl+), a
+	ld	(hl), #0x00
+	ld	a, (#_score2)
+	ldhl	sp,	#2
+	ld	(hl+), a
+	ld	(hl), #0x00
+	ld	hl, #_score1
+	ld	a, (hl+)
+	ld	e, a
+	ld	d, (hl)
+	srl	d
+	rr	e
+	srl	d
+	rr	e
+	srl	d
+	rr	e
+	srl	d
+	rr	e
+	push	bc
+	ldhl	sp,	#2
+	ld	a, (hl+)
+	ld	c, a
+	ld	a, (hl+)
+	ld	b, a
+	push	bc
+	ld	a, (hl+)
+	ld	c, a
 	ld	b, (hl)
+	push	bc
+	push	de
+	call	_UpdateLevelScore
+	add	sp, #8
+;states.c:191: SetBalanceArrowPos(&BalanceArrow, MarkerPos >> 4, 125); // 11 - 157
+	ld	hl, #_MarkerPos
+	ld	a, (hl+)
+	ld	b, a
+	ld	c, (hl)
+	srl	c
+	rr	b
+	srl	c
+	rr	b
+	srl	c
+	rr	b
+	srl	c
+	rr	b
 	ld	a, #0x7d
 	push	af
 	inc	sp
@@ -12269,23 +12401,153 @@ _GameState::
 	push	de
 	call	_SetBalanceArrowPos
 	add	sp, #4
-;states.c:212: return GAMESTATE;
+;states.c:193: if(GotoFailState == 1){
+	ld	a, (#_GotoFailState)
+	dec	a
+	jr	NZ, 00138$
+;states.c:194: return GAMESTATELOADFAIL;
+	ld	de, #0x0008
+	jr	00140$
+00138$:
+;states.c:196: return GAMESTATE;
 	ld	de, #0x0004
-;states.c:213: }
+00140$:
+;states.c:199: }
+	add	sp, #4
 	ret
-;states.c:215: int GameLoadState() // State 2 
+;states.c:205: int SplashLoadState()
 ;	---------------------------------
-; Function GameLoadState
+; Function SplashLoadState
 ; ---------------------------------
-_GameLoadState::
-;states.c:217: set_bkg_data(0, 145, Manual_data);
-	ld	de, #_Manual_data
+_SplashLoadState::
+;states.c:207: set_bkg_data(0, 145, SplashBG_data);
+	ld	de, #_SplashBG_data
 	push	de
 	ld	hl, #0x9100
 	push	hl
 	call	_set_bkg_data
 	add	sp, #4
-;states.c:218: set_bkg_tiles(0, 0, 20, 18, Manual_map);
+;states.c:208: set_bkg_tiles(0, 0, 20, 18, SplashBG_map);
+	ld	de, #_SplashBG_map
+	push	de
+	ld	hl, #0x1214
+	push	hl
+	xor	a, a
+	rrca
+	push	af
+	call	_set_bkg_tiles
+	add	sp, #6
+;states.c:210: LoadMusic(ManualStart_Data, 1, 7);
+	ld	de, #0x0007
+	push	de
+	ld	de, #0x0001
+	push	de
+	ld	de, #_ManualStart_Data
+	push	de
+	call	_LoadMusic
+	add	sp, #6
+;states.c:212: SHOW_BKG;
+	ldh	a, (_LCDC_REG + 0)
+	or	a, #0x01
+	ldh	(_LCDC_REG + 0), a
+;states.c:213: return SPLASHSTATE;    
+	ld	de, #0x0000
+;states.c:214: }
+	ret
+;states.c:216: int SplashState()
+;	---------------------------------
+; Function SplashState
+; ---------------------------------
+_SplashState::
+;states.c:218: switch(joypad())
+	call	_joypad
+	ld	a, e
+	cp	a, #0x10
+	jr	Z, 00102$
+	sub	a, #0x80
+	jr	NZ, 00103$
+;states.c:221: case J_A: 
+00102$:
+;states.c:222: return MENUSTATELOAD;
+	ld	de, #0x0003
+	ret
+;states.c:224: }
+00103$:
+;states.c:225: return SPLASHSTATE;
+	ld	de, #0x0000
+;states.c:226: }
+	ret
+;states.c:228: int MenuLoadState()
+;	---------------------------------
+; Function MenuLoadState
+; ---------------------------------
+_MenuLoadState::
+;states.c:230: set_bkg_data(0, 148, Manual_Manny_data);
+	ld	de, #_Manual_Manny_data
+	push	de
+	ld	hl, #0x9400
+	push	hl
+	call	_set_bkg_data
+	add	sp, #4
+;states.c:231: set_bkg_tiles(0, 0, 20, 18, Manual_Manny_map);
+	ld	de, #_Manual_Manny_map
+	push	de
+	ld	hl, #0x1214
+	push	hl
+	xor	a, a
+	rrca
+	push	af
+	call	_set_bkg_tiles
+	add	sp, #6
+;states.c:233: LoadMusic(ManualStart_Data, 1, 7);
+	ld	de, #0x0007
+	push	de
+	ld	de, #0x0001
+	push	de
+	ld	de, #_ManualStart_Data
+	push	de
+	call	_LoadMusic
+	add	sp, #6
+;states.c:235: SHOW_BKG;
+	ldh	a, (_LCDC_REG + 0)
+	or	a, #0x01
+	ldh	(_LCDC_REG + 0), a
+;states.c:236: return MENUSTATE;
+	ld	de, #0x0002
+;states.c:237: }
+	ret
+;states.c:239: int MenuState() // State 0 
+;	---------------------------------
+; Function MenuState
+; ---------------------------------
+_MenuState::
+;states.c:241: switch(joypad())
+	call	_joypad
+	ld	a, e
+	sub	a, #0x80
+	jr	NZ, 00102$
+;states.c:244: return GAMESTATELOAD;
+	ld	de, #0x0005
+	ret
+;states.c:246: }
+00102$:
+;states.c:247: return MENUSTATE;
+	ld	de, #0x0002
+;states.c:248: }
+	ret
+;states.c:250: int GameLoadState() // State 2 
+;	---------------------------------
+; Function GameLoadState
+; ---------------------------------
+_GameLoadState::
+;states.c:252: set_bkg_data(0, 154, Manual_data);
+	ld	de, #_Manual_data
+	push	de
+	ld	hl, #0x9a00
+	push	hl
+	call	_set_bkg_data
+	add	sp, #4
+;states.c:253: set_bkg_tiles(0, 0, 20, 18, Manual_map);
 	ld	de, #_Manual_map
 	push	de
 	ld	hl, #0x1214
@@ -12295,7 +12557,7 @@ _GameLoadState::
 	push	af
 	call	_set_bkg_tiles
 	add	sp, #6
-;states.c:220: LoadMusic(ThemeSong_Data, 1, 7);
+;states.c:255: LoadMusic(ThemeSong_Data, 1, 7);
 	ld	de, #0x0007
 	push	de
 	ld	de, #0x0001
@@ -12304,120 +12566,180 @@ _GameLoadState::
 	push	de
 	call	_LoadMusic
 	add	sp, #6
-;states.c:222: set_sprite_data(0, 21, SpriteData);
+;states.c:257: MarkerPos = MANUALBARCENTER << 4;
+	ld	hl, #_MarkerPos
+	ld	a, #0x40
+	ld	(hl+), a
+	ld	(hl), #0x05
+;states.c:258: PlayerPos = SKATERCENTER << 4;
+	ld	hl, #_PlayerPos
+	xor	a, a
+	ld	(hl+), a
+	ld	(hl), #0x05
+;states.c:259: MarkerDirection = randomDir();
+	call	_randomDir
+	ld	hl, #_MarkerDirection
+	ld	(hl), e
+;states.c:260: ButtonPressed = 0;
+	ld	hl, #_ButtonPressed
+	ld	(hl), #0x00
+;states.c:261: score1 = 0;
+	xor	a, a
+	ld	hl, #_score1
+	ld	(hl+), a
+	ld	(hl), a
+;states.c:262: score2 = 0;
+	ld	hl, #_score2
+	ld	(hl), #0x00
+;states.c:263: score3 = 0;
+	ld	hl, #_score3
+	ld	(hl), #0x00
+;states.c:264: score4 = 0;
+	ld	hl, #_score4
+	ld	(hl), #0x00
+;states.c:267: set_sprite_data(0, 21, SpriteData);
 	ld	de, #_SpriteData
 	push	de
 	ld	hl, #0x1500
 	push	hl
 	call	_set_sprite_data
 	add	sp, #4
-;states.c:223: set_sprite_data(21, 10, NumbersData);
-	ld	de, #_NumbersData
-	push	de
-	ld	hl, #0xa15
-	push	hl
-	call	_set_sprite_data
-	add	sp, #4
-;states.c:224: set_sprite_data(31, 9, SkaterFailSpriteData);
+;states.c:268: set_sprite_data(21, 12, SkaterFailSpriteData);
 	ld	de, #_SkaterFailSpriteData
 	push	de
-	ld	hl, #0x91f
+	ld	hl, #0xc15
 	push	hl
 	call	_set_sprite_data
 	add	sp, #4
-;states.c:225: InitSkaterBoi(&SkaterBoi);
+;states.c:269: set_sprite_data(33, 10, NumbersData);
+	ld	de, #_NumbersData
+	push	de
+	ld	hl, #0xa21
+	push	hl
+	call	_set_sprite_data
+	add	sp, #4
+;states.c:271: InitSkaterBoi(&SkaterBoi);
 	ld	de, #_SkaterBoi
 	push	de
 	call	_InitSkaterBoi
 	pop	hl
-;states.c:226: InitBalanceArrow(&BalanceArrow);
+;states.c:272: InitBalanceArrow(&BalanceArrow);
 	ld	de, #_BalanceArrow
 	push	de
 	call	_InitBalanceArrow
 	pop	hl
-;states.c:227: InitLevelNumber();
-	call	_InitLevelNumber
-;states.c:229: UpdateLevelNumber(Level);
-	ld	hl, #_Level
-	ld	a, (hl+)
-	ld	e, a
-	ld	d, (hl)
-	push	de
-	call	_UpdateLevelNumber
-	pop	hl
-;states.c:231: SHOW_BKG;
+;states.c:273: InitLevelScore();
+	call	_InitLevelScore
+;states.c:277: SHOW_BKG;
 	ldh	a, (_LCDC_REG + 0)
 	or	a, #0x01
 	ldh	(_LCDC_REG + 0), a
-;states.c:232: return GAMESTATE;
+;states.c:278: return GAMESTATE;
 	ld	de, #0x0004
-;states.c:233: }
+;states.c:279: }
 	ret
-;states.c:235: int GameResetState() // State 3  
+;states.c:281: int GameResetState() // State 3  
 ;	---------------------------------
 ; Function GameResetState
 ; ---------------------------------
 _GameResetState::
-;states.c:237: ManualBar = 88;
-	ld	hl, #_ManualBar
-	ld	a, #0x58
+;states.c:283: LoadMusic(ThemeSong_Data, 1, 7);
+	ld	de, #0x0007
+	push	de
+	ld	de, #0x0001
+	push	de
+	ld	de, #_ThemeSong_Data
+	push	de
+	call	_LoadMusic
+	add	sp, #6
+;states.c:285: MarkerPos = MANUALBARCENTER << 4;
+	ld	hl, #_MarkerPos
+	ld	a, #0x40
 	ld	(hl+), a
+	ld	(hl), #0x05
+;states.c:286: PlayerPos = SKATERCENTER << 4;
+	ld	hl, #_PlayerPos
 	xor	a, a
+	ld	(hl+), a
+	ld	(hl), #0x05
+;states.c:287: MarkerSpeed = 0; 
+	xor	a, a
+	ld	hl, #_MarkerSpeed
+	ld	(hl+), a
 	ld	(hl), a
-;states.c:238: ManualBarDar = -1;
-	ld	hl, #_ManualBarDar
-	ld	a, #0xff
-	ld	(hl+), a
-	ld	(hl), #0xff
-;states.c:239: ManualBarInfluence = 1;
-	ld	hl, #_ManualBarInfluence
-	ld	a, #0x01
-	ld	(hl+), a
-	xor	a, a
-	ld	(hl), a
-;states.c:240: Counter = 0;
-	xor	a, a
+;states.c:288: MarkerDirection = randomDir();
+	call	_randomDir
+	ld	hl, #_MarkerDirection
+	ld	(hl), e
+;states.c:289: ButtonPressed = 0;
+	ld	hl, #_ButtonPressed
+	ld	(hl), #0x00
+;states.c:292: Counter = 0;
 	ld	hl, #_Counter
-	ld	(hl+), a
-	ld	(hl), a
-;states.c:241: PlayerCounter = 0; 
+	ld	(hl), #0x00
+;states.c:293: GotoFailState = 0;
+	ld	hl, #_GotoFailState
+	ld	(hl), #0x00
+;states.c:295: score1 = 0;
 	xor	a, a
-	ld	hl, #_PlayerCounter
+	ld	hl, #_score1
 	ld	(hl+), a
 	ld	(hl), a
-;states.c:242: InfluenceCounter = 0;
-	xor	a, a
-	ld	hl, #_InfluenceCounter
-	ld	(hl+), a
-	ld	(hl), a
-;states.c:243: PlayerXOffset = 0;
-	xor	a, a
-	ld	hl, #_PlayerXOffset
-	ld	(hl+), a
-	ld	(hl), a
-;states.c:244: Level = 1;
-	ld	hl, #_Level
-	ld	a, #0x01
-	ld	(hl+), a
-	xor	a, a
-	ld	(hl), a
-;states.c:245: LevelProgress = 0;
-	xor	a, a
-	ld	hl, #_LevelProgress
-	ld	(hl+), a
-	ld	(hl), a
-;states.c:246: return GAMESTATE;
+;states.c:296: score2 = 0;
+	ld	hl, #_score2
+	ld	(hl), #0x00
+;states.c:297: score3 = 0;
+	ld	hl, #_score3
+	ld	(hl), #0x00
+;states.c:298: score4 = 0;
+	ld	hl, #_score4
+;states.c:299: return GAMESTATE;
 	ld	de, #0x0004
-;states.c:247: }
+	ld	(hl), d
+;states.c:300: }
 	ret
-;states.c:249: int GameFailState()
+;states.c:302: int GameLoadFailState()
+;	---------------------------------
+; Function GameLoadFailState
+; ---------------------------------
+_GameLoadFailState::
+;states.c:304: LoadMusic(GameOver_Data, 0, 7);
+	ld	de, #0x0007
+	push	de
+	ld	de, #0x0000
+	push	de
+	ld	de, #_GameOver_Data
+	push	de
+	call	_LoadMusic
+	add	sp, #6
+;states.c:305: gbt_loop(0);
+	xor	a, a
+	push	af
+	inc	sp
+	call	_gbt_loop
+	inc	sp
+;states.c:306: return GAMESTATEFAIL;
+	ld	de, #0x0006
+;states.c:307: }
+	ret
+;states.c:309: int GameFailState()
 ;	---------------------------------
 ; Function GameFailState
 ; ---------------------------------
 _GameFailState::
-;states.c:251: return GAMESTATE;
-	ld	de, #0x0004
-;states.c:252: }
+;states.c:311: switch(joypad()){
+	call	_joypad
+	ld	a, e
+	sub	a, #0x80
+	jr	NZ, 00102$
+;states.c:313: return GAMESTATERESET;
+	ld	de, #0x0007
+	ret
+;states.c:314: }
+00102$:
+;states.c:315: return GAMESTATEFAIL;
+	ld	de, #0x0006
+;states.c:316: }
 	ret
 	.area _CODE
 	.area _INITIALIZER
@@ -12954,129 +13276,194 @@ __xinit__NumbersData:
 __xinit__SkaterFailSpriteData:
 	.db #0x00	; 0
 	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x01	; 1
+	.db #0x01	; 1
 	.db #0x03	; 3
 	.db #0x03	; 3
 	.db #0x07	; 7
 	.db #0x07	; 7
-	.db #0x0f	; 15
-	.db #0x0f	; 15
-	.db #0x3e	; 62
-	.db #0x3e	; 62
-	.db #0x09	; 9
-	.db #0x09	; 9
-	.db #0x08	; 8
-	.db #0x08	; 8
+	.db #0x1f	; 31
+	.db #0x1f	; 31
+	.db #0x04	; 4
+	.db #0x04	; 4
 	.db #0x04	; 4
 	.db #0x04	; 4
 	.db #0x00	; 0
 	.db #0x00	; 0
-	.db #0xc0	; 192
-	.db #0xc0	; 192
+	.db #0x00	; 0
+	.db #0x00	; 0
 	.db #0xe0	; 224
 	.db #0xe0	; 224
 	.db #0xf0	; 240
 	.db #0xf0	; 240
-	.db #0x10	; 16
-	.db #0x10	; 16
-	.db #0x30	; 48	'0'
-	.db #0x30	; 48	'0'
-	.db #0x10	; 16
-	.db #0x10	; 16
-	.db #0x20	; 32
-	.db #0x20	; 32
-	.db #0x0f	; 15
-	.db #0x0f	; 15
-	.db #0x15	; 21
-	.db #0x15	; 21
-	.db #0x25	; 37
-	.db #0x25	; 37
-	.db #0x24	; 36
-	.db #0x24	; 36
-	.db #0x02	; 2
-	.db #0x02	; 2
-	.db #0x01	; 1
-	.db #0x01	; 1
-	.db #0x00	; 0
-	.db #0x00	; 0
-	.db #0x00	; 0
-	.db #0x00	; 0
-	.db #0xc0	; 192
-	.db #0xc0	; 192
-	.db #0x00	; 0
-	.db #0x00	; 0
-	.db #0x18	; 24
-	.db #0x18	; 24
-	.db #0x60	; 96
-	.db #0x60	; 96
+	.db #0xf8	; 248
+	.db #0xf8	; 248
+	.db #0x08	; 8
+	.db #0x08	; 8
 	.db #0x98	; 152
 	.db #0x98	; 152
-	.db #0xe0	; 224
-	.db #0xe0	; 224
-	.db #0x00	; 0
-	.db #0x00	; 0
-	.db #0x00	; 0
-	.db #0x00	; 0
-	.db #0x00	; 0
-	.db #0x00	; 0
-	.db #0x00	; 0
-	.db #0x00	; 0
-	.db #0x20	; 32
-	.db #0x20	; 32
-	.db #0x40	; 64
-	.db #0x40	; 64
-	.db #0x4d	; 77	'M'
-	.db #0x4d	; 77	'M'
-	.db #0x53	; 83	'S'
-	.db #0x52	; 82	'R'
-	.db #0x67	; 103	'g'
-	.db #0x65	; 101	'e'
-	.db #0x27	; 39
-	.db #0x27	; 39
-	.db #0x00	; 0
-	.db #0x00	; 0
-	.db #0x00	; 0
-	.db #0x00	; 0
-	.db #0x00	; 0
-	.db #0x00	; 0
-	.db #0x00	; 0
-	.db #0x00	; 0
-	.db #0xe0	; 224
-	.db #0xe0	; 224
-	.db #0xf0	; 240
-	.db #0x10	; 16
-	.db #0xf0	; 240
-	.db #0xf0	; 240
-	.db #0xf0	; 240
-	.db #0xf0	; 240
-	.db #0x17	; 23
-	.db #0x17	; 23
-	.db #0x0f	; 15
-	.db #0x0f	; 15
-	.db #0x1d	; 29
-	.db #0x1d	; 29
-	.db #0x24	; 36
-	.db #0x24	; 36
-	.db #0x22	; 34
-	.db #0x22	; 34
+	.db #0x08	; 8
+	.db #0x08	; 8
+	.db #0x02	; 2
+	.db #0x02	; 2
+	.db #0x07	; 7
+	.db #0x07	; 7
+	.db #0x0a	; 10
+	.db #0x0a	; 10
+	.db #0x12	; 18
+	.db #0x12	; 18
+	.db #0x12	; 18
+	.db #0x12	; 18
 	.db #0x01	; 1
 	.db #0x01	; 1
 	.db #0x00	; 0
 	.db #0x00	; 0
 	.db #0x00	; 0
 	.db #0x00	; 0
-	.db #0xf8	; 248
-	.db #0xf8	; 248
-	.db #0xf8	; 248
-	.db #0xf8	; 248
-	.db #0xf8	; 248
-	.db #0xf8	; 248
-	.db #0xe8	; 232
-	.db #0xe8	; 232
 	.db #0x10	; 16
 	.db #0x10	; 16
 	.db #0xe0	; 224
 	.db #0xe0	; 224
+	.db #0x80	; 128
+	.db #0x80	; 128
+	.db #0x8c	; 140
+	.db #0x8c	; 140
+	.db #0x30	; 48	'0'
+	.db #0x30	; 48	'0'
+	.db #0x4c	; 76	'L'
+	.db #0x4c	; 76	'L'
+	.db #0xf0	; 240
+	.db #0xf0	; 240
 	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x10	; 16
+	.db #0x10	; 16
+	.db #0x20	; 32
+	.db #0x20	; 32
+	.db #0x26	; 38
+	.db #0x26	; 38
+	.db #0x29	; 41
+	.db #0x29	; 41
+	.db #0x33	; 51	'3'
+	.db #0x32	; 50	'2'
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0xf0	; 240
+	.db #0xf0	; 240
+	.db #0xf8	; 248
+	.db #0x08	; 8
+	.db #0xf8	; 248
+	.db #0xf8	; 248
+	.db #0x13	; 19
+	.db #0x13	; 19
+	.db #0x0b	; 11
+	.db #0x0b	; 11
+	.db #0x07	; 7
+	.db #0x07	; 7
+	.db #0x0e	; 14
+	.db #0x0e	; 14
+	.db #0x12	; 18
+	.db #0x12	; 18
+	.db #0x11	; 17
+	.db #0x11	; 17
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0xf8	; 248
+	.db #0xf8	; 248
+	.db #0xfc	; 252
+	.db #0xfc	; 252
+	.db #0xfc	; 252
+	.db #0xfc	; 252
+	.db #0xfc	; 252
+	.db #0xfc	; 252
+	.db #0x74	; 116	't'
+	.db #0x74	; 116	't'
+	.db #0x08	; 8
+	.db #0x08	; 8
+	.db #0xf0	; 240
+	.db #0xf0	; 240
 	.db #0x00	; 0
 	.db #0x00	; 0
 	.db #0x00	; 0
@@ -13087,65 +13474,24 @@ __xinit__SkaterFailSpriteData:
 	.db #0x00	; 0
 	.db #0x00	; 0
 	.db #0x81	; 129
-	.db #0x81	; 129
+	.db #0x00	; 0
 	.db #0x7e	; 126
-	.db #0x7e	; 126
-	.db #0x66	; 102	'f'
+	.db #0x00	; 0
 	.db #0x66	; 102	'f'
 	.db #0x00	; 0
 	.db #0x00	; 0
 	.db #0x00	; 0
 	.db #0x00	; 0
 __xinit__NumbersArray:
-	.dw #0x0015
-	.dw #0x0016
-	.dw #0x0017
-	.dw #0x0018
-	.dw #0x0019
-	.dw #0x001a
-	.dw #0x001b
-	.dw #0x001c
-	.dw #0x001d
-	.dw #0x001e
-	.dw #0x001f
-__xinit__ManualBar:
-	.dw #0x0058
-__xinit__ManualBarDar:
-	.dw #0xffff
-__xinit__ManualBarInfluence:
-	.dw #0x0001
-__xinit__Counter:
-	.dw #0x0000
-__xinit__PlayerCounter:
-	.dw #0x0000
-__xinit__InfluenceCounter:
-	.dw #0x0000
-__xinit__PlayerXOffset:
-	.dw #0x0000
-__xinit__Level:
-	.dw #0x0001
-__xinit__LevelProgress:
-	.dw #0x0000
-__xinit__InfluenceCounterMaxLevelArray:
-	.dw #0x03e8
-	.dw #0x0320
-	.dw #0x0258
-	.dw #0x01f4
-	.dw #0x0190
-	.dw #0x012c
-	.dw #0x00c8
-	.dw #0x0064
-	.dw #0x0032
-	.dw #0x0019
-__xinit__CounterMaxLevelArray:
-	.dw #0x0001
-	.dw #0x0001
-	.dw #0x0001
-	.dw #0x0001
-	.dw #0x0001
-	.dw #0x0001
-	.dw #0x0001
-	.dw #0x0001
-	.dw #0x0001
-	.dw #0x0001
+	.dw #0x0021
+	.dw #0x0022
+	.dw #0x0023
+	.dw #0x0024
+	.dw #0x0025
+	.dw #0x0026
+	.dw #0x0027
+	.dw #0x0028
+	.dw #0x0029
+	.dw #0x002a
+	.dw #0x002b
 	.area _CABS (ABS)

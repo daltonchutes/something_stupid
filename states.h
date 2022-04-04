@@ -10,5 +10,6 @@ int GameState(void);
 int GameLoadState(void);
 int GameResetState(void); 
 int GameFailState(void);
+int GameLoadFailState(void);
 
 #endif

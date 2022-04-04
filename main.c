@@ -25,6 +25,12 @@ void main()
 void Init()
 {
 
+	// Do some stuff
+    disable_interrupts();
+	add_VBL(vbl_update);
+    set_interrupts(VBL_IFLAG);
+    enable_interrupts();	
+
 	CurrentState = MENUSTATELOAD;
 	SHOW_BKG;
 	SHOW_SPRITES;
@@ -75,5 +81,24 @@ void UpdateGame()
 		case GAMESTATERESET: // Game Reset State!
 			CurrentState = GameResetState();
 			break;
+		case GAMESTATELOADFAIL:
+			CurrentState = GameLoadFailState();
+			break;
 	}
+}
+
+int sign(int x) {
+    return (x > 0) - (x < 0);
+}
+
+int min(int a, int b) {
+    if (a > b)
+        return b;
+    return a;
+}
+
+int max(int a, int b) {
+    if (a < b)
+        return b;
+    return a;
 }

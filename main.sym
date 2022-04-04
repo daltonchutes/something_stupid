@@ -9,6 +9,7 @@ Symbol Table
     .__.H$L.                                                    =  000000 L
   1 _CurrentState                                                  000000 GR
     _GameFailState                                                 ****** GX
+    _GameLoadFailState                                             ****** GX
     _GameLoadState                                                 ****** GX
     _GameResetState                                                ****** GX
     _GameState                                                     ****** GX
@@ -18,10 +19,15 @@ Symbol Table
     _MenuState                                                     ****** GX
     _SplashLoadState                                               ****** GX
     _SplashState                                                   ****** GX
-  0 _Update                                                        000029 GR
-  0 _UpdateGame                                                    000041 GR
+  0 _Update                                                        00003B GR
+  0 _UpdateGame                                                    000053 GR
+    _add_VBL                                                       ****** GX
     _gbt_update                                                    ****** GX
   0 _main                                                          000008 GR
+  0 _max                                                           000155 GR
+  0 _min                                                           000129 GR
+    _set_interrupts                                                ****** GX
+  0 _sign                                                          0000F8 GR
   1 _vbl_count                                                     000002 GR
   0 _vbl_update                                                    000000 GR
     _wait_vbl_done                                                 ****** GX
@@ -32,7 +38,7 @@ Hexadecimal [24-Bits]
 
 Area Table
 
-   0 _CODE                                      size     D9   flags    0
+   0 _CODE                                      size    181   flags    0
    1 _DATA                                      size      4   flags    0
    2 _INITIALIZED                               size      0   flags    0
    3 _DABS                                      size      0   flags    8

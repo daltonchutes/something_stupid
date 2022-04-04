@@ -9,6 +9,7 @@
 #define GAMESTATELOAD 5
 #define GAMESTATEFAIL 6
 #define GAMESTATERESET 7
+#define GAMESTATELOADFAIL 8
 
 
 // FUNCTIONS
@@ -16,6 +17,9 @@ void Init();
 void Update();
 void UpdateGame();
 void vbl_update();
+int sign(int x);
+int min(int a, int b);
+int max(int a, int b);
 
 // INPUT
 void PollInput();

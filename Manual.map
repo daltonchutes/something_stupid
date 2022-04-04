@@ -25,17 +25,17 @@ Area                       Addr        Size        Decimal Bytes (Attributes)
      00000002  l__HEADER |    00000003  l__HEADER |    00000003  l__HRAM12
      00000005  l__HEADER |    00000006  l__HEADER |    00000007  l__HEADER
      00000008  l__HEADER |    0000000C  l__GSINIT |    00000030  l__HEADER
-     0000004E  l__HEADER |    00000072  l__DATA   |    00000082  l__HEADER
-     000001B5  l__HOME   |    00000200  s__CODE   |    00000343  l__INITIA
-     00000343  l__INITIA |    00000671  l__CODE_1 |    000015F3  l__CODE_2
-     00002000  _rROMB0   |    00003000  _rROMB1   |    000033F8  l__CODE  
-     000035F8  s__HOME   |    000037AD  s__BASE   |    000037AD  s__CODE_0
-     000037AD  s__INITIA |    000037AD  s__LIT    |    00003AF0  s__GSINIT
-     00003AFC  s__GSFINA |    00004000  _rRAMB    |    00008000  __VRAM   
+     0000004E  l__HEADER |    00000082  l__DATA   |    00000082  l__HEADER
+     00000200  s__CODE   |    0000020D  l__HOME   |    00000349  l__INITIA
+     00000349  l__INITIA |    00000671  l__CODE_1 |    000015F3  l__CODE_2
+     00002000  _rROMB0   |    00003000  _rROMB1   |    00003630  l__CODE  
+     00003830  s__HOME   |    00003A3D  s__BASE   |    00003A3D  s__CODE_0
+     00003A3D  s__INITIA |    00003A3D  s__LIT    |    00003D86  s__GSINIT
+     00003D92  s__GSFINA |    00004000  _rRAMB    |    00008000  __VRAM   
      00008000  __VRAM800 |    00008800  __VRAM880 |    00009000  __VRAM900
      00009800  __SCRN0   |    00009C00  __SCRN1   |    0000A000  __SRAM   
      0000C000  __RAM     |    0000C000  _shadow_O |    0000C0A0  s__DATA  
-     0000C112  s__BSS    |    0000C112  s__INITIA |    0000C455  s__HEAP  
+     0000C122  s__BSS    |    0000C122  s__INITIA |    0000C46B  s__HEAP  
      0000D000  __RAMBANK |    0000E000  .STACK    |    0000FE00  __OAMRAM 
      0000FF00  _P1_REG   |    0000FF00  __IO      |    0000FF01  _SB_REG  
      0000FF02  _SC_REG   |    0000FF04  _DIV_REG  |    0000FF05  _TIMA_REG
@@ -73,23 +73,25 @@ Hexadecimal  [32-Bits]
 
 Area                       Addr        Size        Decimal Bytes (Attributes)
 --------------------       ----        ----        ------- ----- ------------
-_CODE                  00000200    000033F8 =       13304. bytes (REL,CON)
+_CODE                  00000200    00003630 =       13872. bytes (REL,CON)
 
         Value  Global            Value  Global            Value  Global    
         -----  ------            -----  ------            -----  ------    
      00000200  _vbl_upda |    00000208  _main     |    0000020E  _Init    
-     00000229  _Update   |    00000241  _UpdateGa |    000002D9  _SetSprit
-     00000319  _Manual_d |    00000C29  _Manual_m |    00000D91  _Manual_M
-     000016D1  _Manual_M |    00001839  _SplashBG |    000019A1  _SplashBG
-     000022B1  _MainMenu |    00002419  _MainMenu |    00002D29  _InitSkat
-     00002E0D  _SetSkate |    00002EA5  _SetBalan |    00002F10  _InitBala
-     00002F53  _randomXD |    00002F5E  _InitLeve |    00002F6F  _UpdateLe
-     00002F82  _LoadMusi |    00002FB0  _SplashLo |    00002FE8  _SplashSt
-     00002FFC  _MenuLoad |    00003034  _MenuStat |    00003044  _GameStat
-     00003333  _GameLoad |    000033B0  _GameRese |    000033F2  _GameFail
-     000033F6  gbt_get_p |    00003413  _gbt_play |    000034CE  _gbt_paus
-     000034DA  _gbt_loop |    000034E1  _gbt_stop |    000034EC  _gbt_enab
-     000034F3  _gbt_upda
+     0000023B  _Update   |    00000253  _UpdateGa |    000002F8  _sign    
+     00000329  _min      |    00000355  _max      |    00000381  _SetSprit
+     000003C1  _Manual_d |    00000D61  _Manual_m |    00000EC9  _Manual_M
+     00001809  _Manual_M |    00001971  _SplashBG |    00001AD9  _SplashBG
+     000023E9  _MainMenu |    00002551  _MainMenu |    00002E61  _InitSkat
+     00002F45  _SetSkate |    00002FDD  _SetBalan |    00003048  _InitBala
+     0000308B  _randomXD |    00003096  _randomDi |    000030A8  _InitLeve
+     000030E9  _UpdateLe |    00003132  _LoadMusi |    00003150  _difficul
+     00003164  _GameStat |    00003478  _SplashLo |    000034B0  _SplashSt
+     000034C4  _MenuLoad |    000034FC  _MenuStat |    0000350C  _GameLoad
+     000035AE  _GameRese |    00003602  _GameLoad |    0000361E  _GameFail
+     0000362E  gbt_get_p |    0000364B  _gbt_play |    00003706  _gbt_paus
+     00003712  _gbt_loop |    00003719  _gbt_stop |    00003724  _gbt_enab
+     0000372B  _gbt_upda
 ASxxxx Linker V03.00 + NoICE + sdld,  page 4.
 Hexadecimal  [32-Bits]
 
@@ -264,26 +266,28 @@ Hexadecimal  [32-Bits]
 
 Area                       Addr        Size        Decimal Bytes (Attributes)
 --------------------       ----        ----        ------- ----- ------------
-_HOME                  000035F8    000001B5 =         437. bytes (REL,CON)
+_HOME                  00003830    0000020D =         525. bytes (REL,CON)
 
         Value  Global            Value  Global            Value  Global    
         -----  ------            -----  ------            -----  ------    
-     000035F8  .memset_s |    00003601  .memcpy_s |    0000361E  .remove_V
-     00003621  .remove_i |    0000363E  .add_VBL  |    00003641  .add_int 
-     0000364C  .wait_vbl |    0000364C  _wait_vbl |    0000365C  .display_
-     0000365C  _display_ |    00003674  _remove_V |    0000367F  _add_VBL 
-     0000368A  _rand     |    0000368A  _randw    |    000036B5  _initrand
-     000036B7  .initrand |    000036C0  _set_tile |    000036C5  _set_bkg_
-     000036C5  _set_win_ |    000036CD  _set_spri |    000036FD  .padup   
-     000036FD  _waitpadu |    0000370D  .jpad     |    0000370D  _joypad  
-     00003735  _waitpad  |    00003738  .wait_pad |    0000373F  _set_bkg_
-     00003753  .set_xy_w |    0000375C  .set_xy_b |    0000376B  .set_xy_t
+     00003830  .memset_s |    00003839  .memcpy_s |    00003856  .remove_V
+     00003859  .remove_i |    00003876  .add_VBL  |    00003879  .add_int 
+     00003884  .wait_vbl |    00003884  _wait_vbl |    00003894  .display_
+     00003894  _display_ |    000038AC  _remove_V |    000038B7  _add_VBL 
+     000038C2  _rand     |    000038C2  _randw    |    000038ED  _initrand
+     000038EF  .initrand |    000038F8  __mulsuch |    00003902  __mulusch
+     0000390C  __mulscha |    0000391E  __mulucha |    0000392A  __mulint 
+     00003950  _set_tile |    00003955  _set_bkg_ |    00003955  _set_win_
+     0000395D  _set_spri |    0000398D  .padup    |    0000398D  _waitpadu
+     0000399D  .jpad     |    0000399D  _joypad   |    000039C5  _waitpad 
+     000039C8  .wait_pad |    000039CF  _set_bkg_ |    000039E3  .set_xy_w
+     000039EC  .set_xy_b |    000039FB  .set_xy_t
 ASxxxx Linker V03.00 + NoICE + sdld,  page 23.
 Hexadecimal  [32-Bits]
 
 Area                       Addr        Size        Decimal Bytes (Attributes)
 --------------------       ----        ----        ------- ----- ------------
-_INITIALIZER           000037AD    00000343 =         835. bytes (REL,CON)
+_INITIALIZER           00003A3D    00000349 =         841. bytes (REL,CON)
 
         Value  Global            Value  Global            Value  Global    
         -----  ------            -----  ------            -----  ------    
@@ -292,17 +296,17 @@ Hexadecimal  [32-Bits]
 
 Area                       Addr        Size        Decimal Bytes (Attributes)
 --------------------       ----        ----        ------- ----- ------------
-_GSINIT                00003AF0    0000000C =          12. bytes (REL,CON)
+_GSINIT                00003D86    0000000C =          12. bytes (REL,CON)
 
         Value  Global            Value  Global            Value  Global    
         -----  ------            -----  ------            -----  ------    
-     00003AF0  gsinit   
+     00003D86  gsinit   
 ASxxxx Linker V03.00 + NoICE + sdld,  page 25.
 Hexadecimal  [32-Bits]
 
 Area                       Addr        Size        Decimal Bytes (Attributes)
 --------------------       ----        ----        ------- ----- ------------
-_GSFINAL               00003AFC    00000001 =           1. bytes (REL,CON)
+_GSFINAL               00003D92    00000001 =           1. bytes (REL,CON)
 
         Value  Global            Value  Global            Value  Global    
         -----  ------            -----  ------            -----  ------    
@@ -311,37 +315,37 @@ Hexadecimal  [32-Bits]
 
 Area                       Addr        Size        Decimal Bytes (Attributes)
 --------------------       ----        ----        ------- ----- ------------
-_DATA                  0000C0A0    00000072 =         114. bytes (REL,CON)
+_DATA                  0000C0A0    00000082 =         130. bytes (REL,CON)
 
         Value  Global            Value  Global            Value  Global    
         -----  ------            -----  ------            -----  ------    
      0000C0A0  __cpu     |    0000C0A1  __is_GBA  |    0000C0A2  .mode    
      0000C0A3  .sys_time |    0000C0A3  _sys_time |    0000C0A5  .int_0x40
-     0000C0B9  _CurrentS |    0000C0BB  _vbl_coun |    0000C0BD  _SkaterBo
-     0000C0C8  _BalanceA |    0000C0D0  gbt_playi |    0000C0D1  gbt_song 
-     0000C0D3  gbt_bank  |    0000C0D4  gbt_speed |    0000C0D5  gbt_temp_
-     0000C0E1  gbt_loop_ |    0000C0E2  gbt_ticks |    0000C0E3  gbt_curre
-     0000C0E4  gbt_curre |    0000C0E5  gbt_curre |    0000C0E7  gbt_chann
-     0000C0E8  gbt_pan   |    0000C0EC  gbt_vol   |    0000C0F0  gbt_instr
-     0000C0F4  gbt_freq  |    0000C0FA  gbt_chann |    0000C0FB  gbt_arpeg
-     0000C104  gbt_arpeg |    0000C107  gbt_arpeg |    0000C10A  gbt_cut_n
-     0000C10E  gbt_have_ |    0000C10F  gbt_updat |    0000C110  ___rand_s
+     0000C0B9  _CurrentS |    0000C0BB  _vbl_coun |    0000C0BD  _r       
+     0000C0BE  _MarkerPo |    0000C0C0  _PlayerPo |    0000C0C2  _MarkerSp
+     0000C0C4  _MarkerDi |    0000C0C5  _ButtonPr |    0000C0C6  _Counter 
+     0000C0C7  _GotoFail |    0000C0C8  _score1   |    0000C0CA  _score2  
+     0000C0CB  _score3   |    0000C0CC  _score4   |    0000C0CD  _SkaterBo
+     0000C0D8  _BalanceA |    0000C0E0  gbt_playi |    0000C0E1  gbt_song 
+     0000C0E3  gbt_bank  |    0000C0E4  gbt_speed |    0000C0E5  gbt_temp_
+     0000C0F1  gbt_loop_ |    0000C0F2  gbt_ticks |    0000C0F3  gbt_curre
+     0000C0F4  gbt_curre |    0000C0F5  gbt_curre |    0000C0F7  gbt_chann
+     0000C0F8  gbt_pan   |    0000C0FC  gbt_vol   |    0000C100  gbt_instr
+     0000C104  gbt_freq  |    0000C10A  gbt_chann |    0000C10B  gbt_arpeg
+     0000C114  gbt_arpeg |    0000C117  gbt_arpeg |    0000C11A  gbt_cut_n
+     0000C11E  gbt_have_ |    0000C11F  gbt_updat |    0000C120  ___rand_s
 ASxxxx Linker V03.00 + NoICE + sdld,  page 27.
 Hexadecimal  [32-Bits]
 
 Area                       Addr        Size        Decimal Bytes (Attributes)
 --------------------       ----        ----        ------- ----- ------------
-_INITIALIZED           0000C112    00000343 =         835. bytes (REL,CON)
+_INITIALIZED           0000C122    00000349 =         841. bytes (REL,CON)
 
         Value  Global            Value  Global            Value  Global    
         -----  ------            -----  ------            -----  ------    
-     0000C112  _SpriteDa |    0000C282  _NumbersD |    0000C322  _SkaterFa
-     0000C3B2  _NumbersA |    0000C3C8  _ManualBa |    0000C3CA  _ManualBa
-     0000C3CC  _ManualBa |    0000C3CE  _Counter  |    0000C3D0  _PlayerCo
-     0000C3D2  _Influenc |    0000C3D4  _PlayerXO |    0000C3D6  _Level   
-     0000C3D8  _LevelPro |    0000C3DA  _Influenc |    0000C3EE  _CounterM
-     0000C402  _ManualSt |    0000C416  _ThemeSon |    0000C450  _GameOver
-     0000C454  __map_til
+     0000C122  _SpriteDa |    0000C292  _NumbersD |    0000C332  _SkaterFa
+     0000C402  _NumbersA |    0000C418  _ManualSt |    0000C42C  _ThemeSon
+     0000C466  _GameOver |    0000C46A  __map_til
 ASxxxx Linker V03.00 + NoICE + sdld,  page 28.
 Hexadecimal  [32-Bits]
 
@@ -382,7 +386,7 @@ _CODE_1                00014000    00000671 =        1649. bytes (REL,CON)
 
 Files Linked                              [ module(s) ]
 
-C:\LudumDare50\gbdk\lib/small/asxxxx/gb/crt0.o
+C:\Users\rutha\Documents\GitHub\something_stupid\gbdk\lib/small/asxxxx/gb/crt0.o
                                           [ Runtime ]
 main.o                                    [ main ]
 states.o                                  [ states ]
@@ -393,17 +397,19 @@ gbt_player_bank1.o                        [  ]
 
 Libraries Linked                          [ object file ]
 
-C:\LudumDare50\gbdk\lib/small/asxxxx/gbz80/gbz80.lib
+C:\Users\rutha\Documents\GitHub\something_stupid\gbdk\lib/small/asxxxx/gbz80/gbz80.lib
                                           [ rand.o ]
-C:\LudumDare50\gbdk\lib/small/asxxxx/gb/gb.lib
+C:\Users\rutha\Documents\GitHub\something_stupid\gbdk\lib/small/asxxxx/gbz80/gbz80.lib
+                                          [ mul.o ]
+C:\Users\rutha\Documents\GitHub\something_stupid\gbdk\lib/small/asxxxx/gb/gb.lib
                                           [ set_data.o ]
-C:\LudumDare50\gbdk\lib/small/asxxxx/gb/gb.lib
+C:\Users\rutha\Documents\GitHub\something_stupid\gbdk\lib/small/asxxxx/gb/gb.lib
                                           [ pad.o ]
-C:\LudumDare50\gbdk\lib/small/asxxxx/gb/gb.lib
+C:\Users\rutha\Documents\GitHub\something_stupid\gbdk\lib/small/asxxxx/gb/gb.lib
                                           [ sfr.o ]
-C:\LudumDare50\gbdk\lib/small/asxxxx/gb/gb.lib
+C:\Users\rutha\Documents\GitHub\something_stupid\gbdk\lib/small/asxxxx/gb/gb.lib
                                           [ set_bk_t.o ]
-C:\LudumDare50\gbdk\lib/small/asxxxx/gb/gb.lib
+C:\Users\rutha\Documents\GitHub\something_stupid\gbdk\lib/small/asxxxx/gb/gb.lib
                                           [ set_xy_t.o ]
 
 ASxxxx Linker V03.00 + NoICE + sdld,  page 32.

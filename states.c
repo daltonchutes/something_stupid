@@ -19,36 +19,45 @@
 #include "gbt_player.h"
 
 #define BARMAX 146
-#define COUNTERMAX 50
+#define COUNTERMAX 200
 #define PLAYERCOUNTERMAX 200 // Countmax * 4
 #define SKATERCENTER 80
+#define MANUALBARCENTER 84
 #define PLAYERXOFFSETMAX 15
 #define PLAYERXOFFSETMIN -15
 
-int ManualBar = 88;
-int ManualBarDar = -1;
-int ManualBarInfluence = 1;
-int Counter = 0;
-int PlayerCounter = 0; 
-int InfluenceCounter = 0;
-int PlayerXOffset = 0;
-int Level = 1;
-int LevelProgress = 0;
+uint16_t MarkerPos;
+uint16_t PlayerPos;
+int16_t MarkerSpeed; 
+int8_t MarkerDirection;
+int8_t ButtonPressed;
+
+uint8_t Counter;
+uint8_t GotoFailState;
+
+uint16_t score1;
+uint8_t score2;
+uint8_t score3;
+uint8_t score4;
+
+const int difficultyInfluence[] = {
+    1, // Level 0 
+    2, // Level 1
+    3, // Level 2
+    4, // Level 3
+    5, // Level 4
+    6, // Level 5
+    7, // Level 6
+    8, // Level 7
+    9, // Level 8
+    10, // Level 8
+
+};
+
 
 extern const unsigned char * GameOver_Data[];
 extern const unsigned char * ThemeSong_Data[];
 extern const unsigned char * ManualStart_Data[];
-
-int InfluenceCounterMaxLevelArray[] ={
-    1000, 800, 600, 500, 400, 300, 200, 100, 50, 25
-};
-
-//int CounterMaxLevelArray[] ={
-//    50, 50, 45, 45, 40, 40, 35, 35, 30, 25
-//};
-int CounterMaxLevelArray[] ={
-    1, 1, 1, 1, 1, 1, 1, 1, 1, 1
-};
 
 struct SSkaterBoi SkaterBoi;
 struct SBalanceArrow BalanceArrow;
@@ -57,15 +66,141 @@ void LoadMusic(const unsigned char * MusicData[], int loop, int speed)
 {
     // Load The Music
     disable_interrupts();
-	
-	add_VBL(vbl_update);
 
     gbt_play(MusicData, 2, speed);
     gbt_loop(loop);
 
-    set_interrupts(VBL_IFLAG);
     enable_interrupts();	
 }
+
+/********************************************************************************************************
+*                                         Main Game Loop Starts here
+********************************************************************************************************/
+
+int GameState() //Main Game state 
+{
+
+    // Controls 
+    switch(joypad()){
+        case J_LEFT: 
+            if(ButtonPressed == 0){
+                MarkerDirection = -1;
+                MarkerSpeed -= 15;
+                //MarkerPos -= 2 << 4;
+                ButtonPressed = 1;
+            }
+            break;
+        case J_B: 
+            if(ButtonPressed == 0){
+                MarkerDirection = -1;
+                MarkerSpeed -= 15;
+                //MarkerPos -= 2 << 4;
+                ButtonPressed = 1;
+            }
+            break;
+        case J_RIGHT: 
+            if(ButtonPressed == 0){
+                MarkerDirection = 1;
+                MarkerSpeed += 15;
+                //MarkerPos += 2 << 4;
+                ButtonPressed = 1;
+            }
+            break;
+        case J_A: 
+            if(ButtonPressed == 0){
+                MarkerDirection = 1;
+                MarkerSpeed += 15;
+                //MarkerPos += 2 << 4;
+                ButtonPressed = 1;
+            }
+            break;
+        default:
+            ButtonPressed = 0;
+            break;
+    }
+
+    // Counting when we should shift the marker
+    Counter++;
+    if(Counter > COUNTERMAX){
+        MarkerDirection = randomDir();
+        MarkerSpeed += 10;
+        Counter = 0;
+    }
+
+    // Cap Marker Speed
+    MarkerSpeed += difficultyInfluence[score4] * MarkerDirection;
+    if(MarkerSpeed > 100){
+        MarkerSpeed = 100;
+    }
+    if(MarkerSpeed < -100){
+        MarkerSpeed = -100;
+    }
+
+    MarkerPos += MarkerSpeed;
+
+    // Change the image of the skater
+    if (MarkerPos>>4 > 108)
+    {
+        SetSpriteIndex(&SkaterBoi, 2);
+        PlayerPos++;
+        score1+=1;
+    }
+    else if (MarkerPos>>4 > 56)
+    {
+        SetSpriteIndex(&SkaterBoi, 1);
+        score1+=10;
+    }
+    else
+    {
+        SetSpriteIndex(&SkaterBoi, 0);
+        PlayerPos--;
+        score1+=1;
+    }
+
+    // Modifiy the score
+    if(score1>>4 >= 10){
+        score1 = 0;
+        score2++;
+    }
+    if(score2 >= 10){
+        score2 = 0;
+        score3++;
+    }
+    if(score3 >= 10){
+        score3 = 0;
+        score4++; 
+    }
+
+    // Determine if we've failed
+    if(MarkerPos>>4 > 157){
+        GotoFailState = 1;
+        MarkerPos = 157 << 4;
+        SetSpriteIndex(&SkaterBoi, 4);
+    }
+
+    if(MarkerPos>>4 < 11){
+        GotoFailState = 1;
+        MarkerPos = 11 << 4;
+        SetSpriteIndex(&SkaterBoi, 3);
+    }
+
+
+    // Update scores and Positions of Sprites on the screen.
+    SetSkaterBoiPos(&SkaterBoi, PlayerPos>>4, 101); // 70 - 90 
+    UpdateLevelScore(score1>>4, score2, score3, score4);
+    SetBalanceArrowPos(&BalanceArrow, MarkerPos >> 4, 125); // 11 - 157
+
+    if(GotoFailState == 1){
+        return GAMESTATELOADFAIL;
+    }else{
+        return GAMESTATE;
+    }
+    
+}
+
+/********************************************************************************************************
+*                                         Main Game Loop Ends here
+********************************************************************************************************/
 
 int SplashLoadState()
 {
@@ -105,128 +240,39 @@ int MenuState() // State 0
 {
     switch(joypad())
     {
-        case J_A:
+        case J_START:
             return GAMESTATELOAD;
             break;
     }
     return MENUSTATE;
 }
 
-int GameState() // State 1 
-{
-    Counter++;
-    if(Counter > CounterMaxLevelArray[Level]){
-
-        switch(joypad()){
-            case J_LEFT: 
-                ManualBarInfluence -= 1;
-                break;
-            case J_B: 
-                ManualBarInfluence -= 1;
-                break;
-            case J_RIGHT: 
-                ManualBarInfluence += 1;
-                break;
-            case J_A: 
-                ManualBarInfluence += 1;
-                break;
-        }
-
-        ManualBar += ManualBarInfluence; // Increment the manual bar 
-
-        // High End Fail 
-        if(ManualBar > 157){
-            return GAMESTATERESET;
-        }
-
-        if (ManualBar > 104)
-        {
-            SetSpriteIndex(&SkaterBoi, 2);
-        }
-        else if (ManualBar > 56)
-        {
-            SetSpriteIndex(&SkaterBoi, 1);
-        }
-        else
-        {
-            SetSpriteIndex(&SkaterBoi, 0);
-        }
-
-        // Low End Fail
-        if(ManualBar < 11){
-            return GAMESTATERESET;
-        }
-        // Reset the time counter 
-        Counter = 0;
-    }
-
-    PlayerCounter++;
-    if(PlayerCounter > PLAYERCOUNTERMAX)
-    {
-        if (ManualBar > 124)
-        {
-            PlayerXOffset++;
-            if(PlayerXOffset > 10)
-            {
-                PlayerXOffset = 10;
-            }
-        }
-        else if (ManualBar <= 36)
-        {
-            PlayerXOffset--;
-            if(PlayerXOffset < -10)
-            {
-                PlayerXOffset = -10;
-            }           
-        } 
-        PlayerCounter = 0 ;   
-    }
-
-    InfluenceCounter++;
-    if(InfluenceCounter > InfluenceCounterMaxLevelArray[Level])
-    {
-        if(randomXD() == true)
-        {
-            ManualBarInfluence++; 
-        }
-        else
-        {
-            ManualBarInfluence--; 
-        }    
-        InfluenceCounter = 0;
-        LevelProgress++;
-        if(LevelProgress >= 50)
-        {
-            Level++; 
-            UpdateLevelNumber(Level);
-            LevelProgress = 0;
-            if(Level >= 9){
-                Level = 9;
-            }
-        }
-    }
-
-
-    SetSkaterBoiPos(&SkaterBoi, SKATERCENTER+PlayerXOffset, 101); // 70 - 90 
-    SetBalanceArrowPos(&BalanceArrow, ManualBar, 125); // 11 - 157
-    return GAMESTATE;
-}
-
 int GameLoadState() // State 2 
 {
-    set_bkg_data(0, 145, Manual_data);
+    set_bkg_data(0, 154, Manual_data);
     set_bkg_tiles(0, 0, 20, 18, Manual_map);
 
     LoadMusic(ThemeSong_Data, 1, 7);
+    
+    MarkerPos = MANUALBARCENTER << 4;
+    PlayerPos = SKATERCENTER << 4;
+    MarkerDirection = randomDir();
+    ButtonPressed = 0;
+    score1 = 0;
+    score2 = 0;
+    score3 = 0;
+    score4 = 0;
+
 
     set_sprite_data(0, 21, SpriteData);
-    set_sprite_data(21, 10, NumbersData);
-    set_sprite_data(31, 9, SkaterFailSpriteData);
+    set_sprite_data(21, 12, SkaterFailSpriteData);
+    set_sprite_data(33, 10, NumbersData);
+    
     InitSkaterBoi(&SkaterBoi);
     InitBalanceArrow(&BalanceArrow);
-    InitLevelNumber();
+    InitLevelScore();
 
-    UpdateLevelNumber(Level);
+    //UpdateLevelNumber(Level);
 
     SHOW_BKG;
     return GAMESTATE;
@@ -234,19 +280,36 @@ int GameLoadState() // State 2
 
 int GameResetState() // State 3  
 {
-    ManualBar = 88;
-    ManualBarDar = -1;
-    ManualBarInfluence = 1;
+    LoadMusic(ThemeSong_Data, 1, 7);
+
+    MarkerPos = MANUALBARCENTER << 4;
+    PlayerPos = SKATERCENTER << 4;
+    MarkerSpeed = 0; 
+    MarkerDirection = randomDir();
+    ButtonPressed = 0;
+ 
+
     Counter = 0;
-    PlayerCounter = 0; 
-    InfluenceCounter = 0;
-    PlayerXOffset = 0;
-    Level = 1;
-    LevelProgress = 0;
+    GotoFailState = 0;
+
+    score1 = 0;
+    score2 = 0;
+    score3 = 0;
+    score4 = 0;
     return GAMESTATE;
+}
+
+int GameLoadFailState()
+{
+    LoadMusic(GameOver_Data, 0, 7);
+    return GAMESTATEFAIL;
 }
 
 int GameFailState()
 {
-    return GAMESTATE;
+    switch(joypad()){
+        case J_START:
+            return GAMESTATERESET;
+    }
+    return GAMESTATEFAIL;
 }
